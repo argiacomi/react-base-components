@@ -1,0 +1,289 @@
+Please help with javascript code for the following react component
+
+Name: Pagination
+
+Functionality:
+The Pagination component is a user interface component for navigating through pages of a dataset. It displays a series of PaginationItem components for navigating to specific pages, as well as optional buttons for navigating to the first, last, previous, or next pages.
+
+Props:
+
+boundaryCount (number): Number of always visible pages at the beginning and end; default is 1.
+className (string): Custom CSS class to be applied to the component.
+color (string): Color of the pagination items; default is 'default'.
+count (number): Total number of pages; default is 1.
+defaultPage (number): The initial page to display; default is 1.
+disabled (bool): Disables the pagination if set to true; default is false.
+hideNextButton (bool): If true, hides the next page button; default is false.
+hidePrevButton (bool): If true, hides the previous page button; default is false.
+onChange (func): Callback function triggered when the page is changed.
+page (number): The current page number.
+renderItem (func): A function that renders the PaginationItem; default is a function that returns a PaginationItem with the given item props.
+shape (string): The shape of the pagination items; default is 'circular'.
+showFirstButton (bool): If true, displays a button to navigate to the first page; default is false.
+showLastButton (bool): If true, displays a button to navigate to the last page; default is false.
+siblingCount (number): Number of additional page numbers to show on each side of the current page; default is 1.
+size (string): The size of the pagination items; default is 'medium'.
+variant (string): The variant of the pagination items; default is 'text'.
+
+State:
+This component does not use local state; it relies on props passed down from a parent component or state management system.
+
+Lifecycle methods or hooks:
+This component uses the React.forwardRef higher-order component to allow passing a ref from a parent component, but it doesn't implement any specific lifecycle methods or hooks.
+
+Interactions:
+The Pagination component is primarily a presentational component and does not interact with any services or other components directly. It handles user interactions by invoking the provided onChange callback when a page change occurs. The parent component or state management system is responsible for managing the actual data and interactions, such as API calls or Redux actions.
+
+------------
+
+Name: PaginationItem
+
+Functionality:
+The PaginationItem component is a part of a larger pagination system, representing individual items within the pagination, such as page numbers, ellipsis, or navigation controls (previous, next, first, and last).
+
+Props:
+
+className (string): className applied to the root element
+color (string, default: 'default'): color of the PaginationItem, the default is 'default'
+component (elementType): the component used for the root element
+components (object): a map of components to override the default ones used in PaginationItem
+disabled (bool, default: false): if true, the PaginationItem will be disabled
+page (number): the page number associated with this PaginationItem
+selected (bool, default: false): if true, the PaginationItem will be displayed as selected
+shape (string, default: 'circular'): shape of the PaginationItem, can be 'circular' or 'rounded'
+size (string, default: 'medium'): size of the PaginationItem, can be 'small', 'medium', or 'large'
+type (string, default: 'page'): type of the PaginationItem, can be 'page', 'start-ellipsis', 'end-ellipsis', 'previous', 'next', 'first', or 'last'
+variant (string, default: 'text'): variant of the PaginationItem, can be 'text' or 'outlined'
+
+State:
+The PaginationItem component does not have any local state.
+
+Lifecycle methods or hooks:
+The component doesn't implement any specific lifecycle methods or hooks.
+
+Interactions:
+This component does not interact with any APIs, Redux actions, or other services directly. It is meant to be used within a larger Pagination component that manages the interaction with other services.
+
+------------
+
+Name: usePagination
+
+Functionality:
+This component is a custom hook called usePagination that manages the logic of pagination, including which pages to display and how to handle clicks on the pagination controls.
+
+Props:
+
+boundaryCount (number, default: 1): Number of always visible pages at the beginning and end.
+componentName (string, default: 'usePagination'): Name of the component for use with the controlled state.
+count (number, default: 1): Total number of pages.
+defaultPage (number, default: 1): The initial page when not controlled.
+disabled (boolean, default: false): If true, pagination buttons will be disabled.
+hideNextButton (boolean, default: false): If true, hides the next button.
+hidePrevButton (boolean, default: false): If true, hides the previous button.
+onChange (function): Callback fired when the page is changed.
+page (number): The current page, required when using controlled mode.
+showFirstButton (boolean, default: false): If true, shows the first page button.
+showLastButton (boolean, default: false): If true, shows the last page button.
+siblingCount (number, default: 1): Number of sibling pages to show around the current page.
+other (object): Any additional props passed to the hook.
+
+State:
+
+page (number): The current page number. It's managed using the useControlled hook, which handles both controlled and uncontrolled modes.
+
+Lifecycle methods or hooks:
+useControlled: A custom hook used to manage the page state.
+
+Interactions:
+handleClick (function): This function handles clicks on pagination items, updating the local page state if not controlled, and calling the onChange prop with the event and new page value.
+range (function): A utility function to generate an array of numbers within a specified range.
+itemList (array): An array representing the pagination items to be displayed, including special items such as ellipses and navigation buttons.
+buttonPage (function): A utility function to map button types to their corresponding page numbers.
+items (array): The final array of pagination items with their properties, ready to be rendered by the consuming component.
+
+------------
+
+import React, { useRef, useCallback, useEffect } from 'react';
+import { cva } from 'class-variance-authority';
+
+import { cn } from '../../lib/utils';
+
+const buttonVariants = cva(
+	'relative border-none inline-flex items-center justify-center rounded-md overflow-hidden transition-colors focus:outline-none cursor-pointer hover:scale-105 font-medium drop-shadow-md',
+	{
+		variants: {
+			color: {
+				default: 'bg-inherit text-white',
+				primary: 'bg-primary text-white',
+				secondary: 'bg-secondary text-white',
+				success: 'bg-success text-white',
+				warning: 'bg-warning text-white',
+				danger: 'bg-danger text-white',
+				monochrome: 'bg-white text-black border border-solid border-black'
+			},
+			variant: {
+				text: 'bg-opacity-0 border-none text-black dark:text-white',
+				outline: 'bg-opacity-0 border border-solid border-current'
+			},
+			size: {
+				xs: 'px-2 py-1 leading-4 text-xs w-auto min-w-[64px]',
+				sm: 'px-3 py-1 leading-4 text-sm w-auto min-w-[64px]',
+				md: 'px-3 py-1 leading-6 text-base w-auto min-w-[64px]',
+				lg: 'px-5 py-1 leading-7 text-lg w-auto min-w-[64px]',
+				xl: 'px-7 py-2 leading-8 text-xl w-auto min-w-[64px]'
+			},
+			disabled: {
+				true: 'pointer-events-none bg-gray-100 text-gray-400 dark:bg-gray-300 dark:text-gray-600'
+			}
+		},
+		compoundVariants: [
+			{
+				variant: 'text',
+				color: 'default',
+				className: 'text-text dark:text-darkText'
+			},
+			{
+				variant: 'outline',
+				color: 'default',
+				className: 'text-text dark:text-darkText'
+			},
+			{
+				variant: 'outline',
+				color: 'primary',
+				className: 'text-primary'
+			},
+			{
+				variant: 'outline',
+				color: 'secondary',
+				className: 'text-secondary'
+			},
+			{
+				variant: 'outline',
+				color: 'success',
+				className: 'text-success'
+			},
+			{
+				variant: 'outline',
+				color: 'warning',
+				className: 'text-warning'
+			},
+			{
+				variant: 'outline',
+				color: 'danger',
+				className: 'text-danger'
+			},
+			{
+				variant: 'outline',
+				color: 'monochrome',
+				className: 'text-monochrome'
+			},
+			{
+				variant: ['text', 'outline'],
+				color: 'default',
+				className: 'dark:hover:text-gray-300 hover:bg-gray-100/30'
+			},
+			{
+				variant: ['text', 'outline'],
+				color: 'primary',
+				className: 'dark:hover:text-primary hover:bg-primary/30'
+			},
+			{
+				variant: ['text', 'outline'],
+				color: 'secondary',
+				className: 'dark:hover:text-secondary hover:bg-secondary/30'
+			},
+			{
+				variant: ['text', 'outline'],
+				color: 'success',
+				className: 'dark:hover:text-success hover:bg-success/30'
+			},
+			{
+				variant: ['text', 'outline'],
+				color: 'warning',
+				className: 'dark:hover:text-warning hover:bg-warning/30'
+			},
+			{
+				variant: ['text', 'outline'],
+				color: 'danger',
+				className: 'dark:hover:text-danger hover:bg-danger/30'
+			},
+			{
+				variant: ['text', 'outline'],
+				color: 'monochrome',
+				className:
+					'dark:text-white hover:text-black dark:hover:text-white hover:bg-gray-100 hover:bg-opacity-30'
+			}
+		],
+		defaultVariants: {
+			color: 'default',
+			size: 'md'
+		}
+	}
+);
+
+const Button = React.forwardRef(
+	(
+		{ className, color, variant, size, fullWidth, disabled, onClick, ...props },
+		ref
+	) => {
+		const rippleTimeoutRef = useRef(null);
+
+		const createRipple = useCallback((event) => {
+			const button = event.currentTarget;
+
+			const circle = document.createElement('span');
+			const diameter = Math.max(button.clientWidth, button.clientHeight);
+			const radius = diameter / 2;
+
+			circle.style.width = `${diameter}px`;
+			circle.style.height = `${diameter}px`;
+			circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+			circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+			circle.classList.add('ripple');
+
+			const ripple = button.querySelector('.ripple');
+
+			if (ripple) {
+				ripple.remove();
+			}
+
+			button.appendChild(circle);
+
+			rippleTimeoutRef.current = setTimeout(() => {
+				circle.remove();
+			}, 650);
+		}, []);
+
+		useEffect(() => {
+			return () => {
+				if (rippleTimeoutRef.current !== null) {
+					clearTimeout(rippleTimeoutRef.current);
+				}
+			};
+		}, [rippleTimeoutRef]);
+
+		return (
+			<button
+				onClick={(e) => {
+					if (typeof onClick === 'function') onClick(e);
+					createRipple(e);
+				}}
+				className={cn(
+					buttonVariants({
+						color,
+						variant,
+						size,
+						fullWidth,
+						disabled,
+						className
+					})
+				)}
+				ref={ref}
+				{...props}
+			/>
+		);
+	}
+);
+Button.displayName = 'Button';
+
+export { Button, buttonVariants };

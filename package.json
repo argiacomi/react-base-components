@@ -1,6 +1,6 @@
 {
-	"name": "react-base-components",
-	"private": false,
+	"name": "vite-project",
+	"private": true,
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
@@ -10,7 +10,13 @@
 	},
 	"dependencies": {
 		"@faker-js/faker": "^7.6.0",
+		"@fortawesome/fontawesome-svg-core": "^6.4.0",
+		"@fortawesome/free-brands-svg-icons": "^6.4.0",
+		"@fortawesome/react-fontawesome": "^0.2.0",
 		"@radix-ui/react-separator": "^1.0.2",
+		"@supabase/supabase-js": "^2.20.0",
+		"@tanstack/react-query": "^4.29.1",
+		"@tanstack/react-query-devtools": "^4.29.1",
 		"@tanstack/react-table": "^8.8.5",
 		"class-variance-authority": "^0.5.2",
 		"clsx": "^1.2.1",

@@ -1,13 +1,12 @@
 import React, { useRef, useCallback, useEffect } from 'react';
 import { cva } from 'class-variance-authority';
-
 import { cn } from '../../lib/utils';
 
 const buttonVariants = cva(
 	'relative border-none inline-flex items-center justify-center rounded-md overflow-hidden transition-colors focus:outline-none cursor-pointer hover:scale-105 font-medium drop-shadow-md',
 	{
 		variants: {
-			variant: {
+			color: {
 				default: 'bg-inherit text-white',
 				primary: 'bg-primary text-white',
 				secondary: 'bg-secondary text-white',
@@ -16,7 +15,7 @@ const buttonVariants = cva(
 				danger: 'bg-danger text-white',
 				monochrome: 'bg-white text-black border border-solid border-black'
 			},
-			modifier: {
+			variant: {
 				text: 'bg-opacity-0 border-none text-black dark:text-white',
 				outline: 'bg-opacity-0 border border-solid border-current'
 			},
@@ -33,84 +32,84 @@ const buttonVariants = cva(
 		},
 		compoundVariants: [
 			{
-				modifier: 'text',
-				variant: 'default',
+				variant: 'text',
+				color: 'default',
 				className: 'text-text dark:text-darkText'
 			},
 			{
-				modifier: 'outline',
-				variant: 'default',
+				variant: 'outline',
+				color: 'default',
 				className: 'text-text dark:text-darkText'
 			},
 			{
-				modifier: 'outline',
-				variant: 'primary',
+				variant: 'outline',
+				color: 'primary',
 				className: 'text-primary'
 			},
 			{
-				modifier: 'outline',
-				variant: 'secondary',
+				variant: 'outline',
+				color: 'secondary',
 				className: 'text-secondary'
 			},
 			{
-				modifier: 'outline',
-				variant: 'success',
+				variant: 'outline',
+				color: 'success',
 				className: 'text-success'
 			},
 			{
-				modifier: 'outline',
-				variant: 'warning',
+				variant: 'outline',
+				color: 'warning',
 				className: 'text-warning'
 			},
 			{
-				modifier: 'outline',
-				variant: 'danger',
+				variant: 'outline',
+				color: 'danger',
 				className: 'text-danger'
 			},
 			{
-				modifier: 'outline',
-				variant: 'monochrome',
+				variant: 'outline',
+				color: 'monochrome',
 				className: 'text-monochrome'
 			},
 			{
-				modifier: ['text', 'outline'],
-				variant: 'default',
+				variant: ['text', 'outline'],
+				color: 'default',
 				className: 'dark:hover:text-gray-300 hover:bg-gray-100/30'
 			},
 			{
-				modifier: ['text', 'outline'],
-				variant: 'primary',
+				variant: ['text', 'outline'],
+				color: 'primary',
 				className: 'dark:hover:text-primary hover:bg-primary/30'
 			},
 			{
-				modifier: ['text', 'outline'],
-				variant: 'secondary',
+				variant: ['text', 'outline'],
+				color: 'secondary',
 				className: 'dark:hover:text-secondary hover:bg-secondary/30'
 			},
 			{
-				modifier: ['text', 'outline'],
-				variant: 'success',
+				variant: ['text', 'outline'],
+				color: 'success',
 				className: 'dark:hover:text-success hover:bg-success/30'
 			},
 			{
-				modifier: ['text', 'outline'],
-				variant: 'warning',
+				variant: ['text', 'outline'],
+				color: 'warning',
 				className: 'dark:hover:text-warning hover:bg-warning/30'
 			},
 			{
-				modifier: ['text', 'outline'],
-				variant: 'danger',
+				variant: ['text', 'outline'],
+				color: 'danger',
 				className: 'dark:hover:text-danger hover:bg-danger/30'
 			},
 			{
-				modifier: ['text', 'outline'],
-				variant: 'monochrome',
+				variant: ['text', 'outline'],
+				color: 'monochrome',
 				className:
 					'dark:text-white hover:text-black dark:hover:text-white hover:bg-gray-100 hover:bg-opacity-30'
 			}
 		],
 		defaultVariants: {
-			variant: 'default',
+			color: 'default',
 			size: 'md'
 		}
 	}
@@ -118,16 +117,7 @@ const buttonVariants = cva(
 
 const Button = React.forwardRef(
 	(
-		{
-			className,
-			variant,
-			modifier,
-			size,
-			fullWidth,
-			disabled,
-			onClick,
-			...props
-		},
+		{ className, color, variant, size, fullWidth, disabled, onClick, ...props },
 		ref
 	) => {
 		const rippleTimeoutRef = useRef(null);
@@ -174,8 +164,8 @@ const Button = React.forwardRef(
 				}}
 				className={cn(
 					buttonVariants({
+						color,
 						variant,
-						modifier,
 						size,
 						fullWidth,
 						disabled,

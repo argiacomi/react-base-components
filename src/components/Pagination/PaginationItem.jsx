@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
-import { Button } from './Button';
+import { Button } from '../ui/Button';
 
 const paginationItemVariants = cva(
 	'inline-flex items-center justify-center cursor-pointer',

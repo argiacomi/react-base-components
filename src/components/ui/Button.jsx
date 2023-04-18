@@ -119,7 +119,7 @@ const buttonVariants = cva(
   }
 );
 
-const DrewButton = forwardRef(
+const Button = forwardRef(
   (
     { className, color, variant, size, fullWidth, disabled, onClick, ...props },
     ref
@@ -142,6 +142,6 @@ const DrewButton = forwardRef(
     );
   }
 );
-DrewButton.displayName = 'DrewButton';
+Button.displayName = 'Button';
 
-export { DrewButton, buttonVariants };
+export { Button, buttonVariants };

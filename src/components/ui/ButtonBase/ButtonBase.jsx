@@ -11,7 +11,7 @@ import useEventCallback from '../../utils/useEventCallback';
 import useIsFocusVisible from '../../utils/useIsFocusVisible';
 import TouchRipple from './TouchRipple';
 
-const DrewButtonBase = forwardRef(function ButtonBase(props, ref) {
+const ButtonBase = forwardRef(function ButtonBase(props, ref) {
   const {
     action,
     centerRipple = false,
@@ -302,4 +302,4 @@ const DrewButtonBase = forwardRef(function ButtonBase(props, ref) {
   );
 });
 
-export default DrewButtonBase;
+export default ButtonBase;

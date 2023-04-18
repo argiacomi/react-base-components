@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { createContext } from 'react';
 
-const TableContext = React.createContext();
+const TableContext = createContext();
 
 if (process.env.NODE_ENV !== 'production') {
-	TableContext.displayName = 'TableContext';
+  TableContext.displayName = 'TableContext';
 }
 
 export default TableContext;

@@ -4,30 +4,25 @@
 @tailwind utilities;
 
 html {
-	font-family: 'Source Sans Pro', 'Schibsted Grotesk', 'Lato', 'Montserrat',
-		'Poppins', sans-serif !important;
-	background-color: var(--color-bg);
-	color: var(--color-fg);
+  font-family: 'Source Sans Pro', 'Schibsted Grotesk', 'Lato', 'Montserrat',
+    'Poppins', sans-serif !important;
+  background-color: var(--color-bg);
+  color: var(--color-fg);
 }
 
 :root {
-	--color-bg: #000000;
-	--color-fg: #ffffff;
+  --color-bg: #121212;
+  --color-fg: #ffffff;
 }
 
 html * {
-	font-family: inherit;
-}
-
-@layer utilities {
-	.ripple {
-		@apply absolute animate-ripple rounded-full bg-current opacity-30;
-	}
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media (prefers-color-scheme: light) {
-	:root {
-		--color-bg: #f2f2f2;
-		--color-fg: #000000;
-	}
+  :root {
+    --color-bg: #f2f2f2;
+    --color-fg: #121212;
+  }
 }

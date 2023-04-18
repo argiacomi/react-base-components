@@ -1,183 +1,147 @@
-import React, { useRef, useCallback, useEffect } from 'react';
+import { forwardRef, useRef, useCallback, useEffect } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
+import ButtonBase from './ButtonBase/ButtonBase';
 
 const buttonVariants = cva(
-	'relative border-none inline-flex items-center justify-center rounded-md overflow-hidden transition-colors focus:outline-none cursor-pointer hover:scale-105 font-medium drop-shadow-md',
-	{
-		variants: {
-			color: {
-				default: 'bg-inherit text-white',
-				primary: 'bg-primary text-white',
-				secondary: 'bg-secondary text-white',
-				success: 'bg-success text-white',
-				warning: 'bg-warning text-white',
-				danger: 'bg-danger text-white',
-				monochrome: 'bg-white text-black border border-solid border-black'
-			},
-			variant: {
-				text: 'bg-opacity-0 border-none text-black dark:text-white',
-				outline: 'bg-opacity-0 border border-solid border-current'
-			},
-			size: {
-				xs: 'px-2 py-1 leading-4 text-xs w-auto min-w-[64px]',
-				sm: 'px-3 py-1 leading-4 text-sm w-auto min-w-[64px]',
-				md: 'px-3 py-1 leading-6 text-base w-auto min-w-[64px]',
-				lg: 'px-5 py-1 leading-7 text-lg w-auto min-w-[64px]',
-				xl: 'px-7 py-2 leading-8 text-xl w-auto min-w-[64px]'
-			},
-			disabled: {
-				true: 'pointer-events-none bg-gray-100 text-gray-400 dark:bg-gray-300 dark:text-gray-600'
-			}
-		},
-		compoundVariants: [
-			{
-				variant: 'text',
-				color: 'default',
-				className: 'text-text dark:text-darkText'
-			},
-			{
-				variant: 'outline',
-				color: 'default',
-				className: 'text-text dark:text-darkText'
-			},
-			{
-				variant: 'outline',
-				color: 'primary',
-				className: 'text-primary'
-			},
-			{
-				variant: 'outline',
-				color: 'secondary',
-				className: 'text-secondary'
-			},
-			{
-				variant: 'outline',
-				color: 'success',
-				className: 'text-success'
-			},
-			{
-				variant: 'outline',
-				color: 'warning',
-				className: 'text-warning'
-			},
-			{
-				variant: 'outline',
-				color: 'danger',
-				className: 'text-danger'
-			},
-			{
-				variant: 'outline',
-				color: 'monochrome',
-				className: 'text-monochrome'
-			},
-			{
-				variant: ['text', 'outline'],
-				color: 'default',
-				className: 'dark:hover:text-gray-300 hover:bg-gray-100/30'
-			},
-			{
-				variant: ['text', 'outline'],
-				color: 'primary',
-				className: 'dark:hover:text-primary hover:bg-primary/30'
-			},
-			{
-				variant: ['text', 'outline'],
-				color: 'secondary',
-				className: 'dark:hover:text-secondary hover:bg-secondary/30'
-			},
-			{
-				variant: ['text', 'outline'],
-				color: 'success',
-				className: 'dark:hover:text-success hover:bg-success/30'
-			},
-			{
-				variant: ['text', 'outline'],
-				color: 'warning',
-				className: 'dark:hover:text-warning hover:bg-warning/30'
-			},
-			{
-				variant: ['text', 'outline'],
-				color: 'danger',
-				className: 'dark:hover:text-danger hover:bg-danger/30'
-			},
-			{
-				variant: ['text', 'outline'],
-				color: 'monochrome',
-				className:
-					'dark:text-white hover:text-black dark:hover:text-white hover:bg-gray-100 hover:bg-opacity-30'
-			}
-		],
-		defaultVariants: {
-			color: 'default',
-			size: 'md'
-		}
-	}
+  'relative border-none inline-flex items-center justify-center rounded-md overflow-hidden transition-colors focus:outline-none cursor-pointer font-medium drop-shadow-md  w-auto min-w-[64px] active:scale-95',
+  {
+    variants: {
+      color: {
+        default: 'bg-gray-600 hover:bg-gray-700',
+        primary: 'bg-primary-500 hover:bg-primary-600',
+        secondary: 'bg-secondary-500 hover:bg-secondary-600',
+        success: 'bg-success-500 hover:bg-success-600',
+        warning: 'bg-warning-500 hover:bg-warning-600',
+        danger: 'bg-danger-500 hover:bg-danger-600',
+        monochrome: 'bg-black hover:bg-gray-900'
+      },
+      variant: {
+        contain: 'bg-opacity-100 text-white',
+        text: 'bg-opacity-0 text-black dark:text-white ',
+        outline: 'bg-opacity-0 border border-solid border-current'
+      },
+      size: {
+        xs: 'px-2 py-1 leading-4 text-xs',
+        sm: 'px-3 py-1 leading-4 text-sm',
+        md: 'px-3 py-1 leading-6 text-base',
+        lg: 'px-5 py-1 leading-7 text-lg',
+        xl: 'px-7 py-2 leading-8 text-xl'
+      },
+      disabled: {
+        true: 'pointer-events-none bg-gray-100 text-gray-400 dark:bg-gray-300 dark:text-gray-600'
+      }
+    },
+    compoundVariants: [
+      {
+        variant: 'outline',
+        color: 'default',
+        className: 'text-gray-600'
+      },
+      {
+        variant: 'outline',
+        color: 'primary',
+        className: 'text-primary-500'
+      },
+      {
+        variant: 'outline',
+        color: 'secondary',
+        className: 'text-secondary-500'
+      },
+      {
+        variant: 'outline',
+        color: 'success',
+        className: 'text-success-500'
+      },
+      {
+        variant: 'outline',
+        color: 'warning',
+        className: 'text-warning-500'
+      },
+      {
+        variant: 'outline',
+        color: 'danger',
+        className: 'text-danger-500'
+      },
+      {
+        variant: 'outline',
+        color: 'monochrome',
+        className: 'text-monochrome'
+      },
+      {
+        variant: ['text', 'outline'],
+        color: 'default',
+        className:
+          'hover:text-gray-700 dark:hover:text-gray-700 hover:bg-gray-700/20'
+      },
+      {
+        variant: ['text', 'outline'],
+        color: 'primary',
+        className:
+          'hover:text-primary-500 dark:hover:text-primary-500 hover:bg-primary-500/20'
+      },
+      {
+        variant: ['text', 'outline'],
+        color: 'secondary',
+        className:
+          'hover:text-secondary-500dark:hover:text-secondary-500 hover:bg-secondary-500/20'
+      },
+      {
+        variant: ['text', 'outline'],
+        color: 'success',
+        className:
+          'hover:text-success-500 dark:hover:text-success-500 hover:bg-success-500/20'
+      },
+      {
+        variant: ['text', 'outline'],
+        color: 'warning',
+        className:
+          'hover:text-warning-500 dark:hover:text-warning-500 hover:bg-warning-500/20'
+      },
+      {
+        variant: ['text', 'outline'],
+        color: 'danger',
+        className:
+          'hover:text-danger-500 dark:hover:text-danger-500 hover:bg-danger-500/20'
+      },
+      {
+        variant: ['text', 'outline'],
+        color: 'monochrome',
+        className:
+          'dark:text-white hover:text-black dark:hover:text-white hover:bg-gray-900/20'
+      }
+    ],
+    defaultVariants: {
+      color: 'default',
+      variant: 'text',
+      size: 'md'
+    }
+  }
 );
 
-const Button = React.forwardRef(
-	(
-		{ className, color, variant, size, fullWidth, disabled, onClick, ...props },
-		ref
-	) => {
-		const rippleTimeoutRef = useRef(null);
-
-		const createRipple = useCallback((event) => {
-			const button = event.currentTarget;
-
-			const circle = document.createElement('span');
-			const diameter = Math.max(button.clientWidth, button.clientHeight);
-			const radius = diameter / 2;
-
-			circle.style.width = `${diameter}px`;
-			circle.style.height = `${diameter}px`;
-			circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
-			circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
-			circle.classList.add('ripple');
-
-			const ripple = button.querySelector('.ripple');
-
-			if (ripple) {
-				ripple.remove();
-			}
-
-			button.appendChild(circle);
-
-			rippleTimeoutRef.current = setTimeout(() => {
-				circle.remove();
-			}, 650);
-		}, []);
-
-		useEffect(() => {
-			return () => {
-				if (rippleTimeoutRef.current !== null) {
-					clearTimeout(rippleTimeoutRef.current);
-				}
-			};
-		}, [rippleTimeoutRef]);
-
-		return (
-			<button
-				onClick={(e) => {
-					if (typeof onClick === 'function') onClick(e);
-					createRipple(e);
-				}}
-				className={cn(
-					buttonVariants({
-						color,
-						variant,
-						size,
-						fullWidth,
-						disabled,
-						className
-					})
-				)}
-				ref={ref}
-				{...props}
-			/>
-		);
-	}
+const DrewButton = forwardRef(
+  (
+    { className, color, variant, size, fullWidth, disabled, onClick, ...props },
+    ref
+  ) => {
+    return (
+      <ButtonBase
+        className={cn(
+          buttonVariants({
+            color,
+            variant,
+            size,
+            fullWidth,
+            disabled,
+            className
+          })
+        )}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
 );
-Button.displayName = 'Button';
+DrewButton.displayName = 'DrewButton';
 
-export { Button, buttonVariants };
+export { DrewButton, buttonVariants };

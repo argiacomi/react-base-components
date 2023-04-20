@@ -28,14 +28,11 @@ const Pagination = forwardRef(
 
     const handleClick = (event, newPage) => {
       if (!disabled) {
-        console.log('Ping 3');
         if (controlledPage === null) {
-          console.log('Ping 4');
           setPage(newPage);
         }
 
         if (typeof onChange === 'function') {
-          console.log('Ping 5');
           onChange(event, newPage);
         }
       }

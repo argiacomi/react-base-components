@@ -2,7 +2,9 @@ import React, { useMemo, useReducer, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './App.css';
 import { Separator } from './components/ui/Separator';
-import { DrewButton } from './components/ui/Button';
+import ButtonGroup from './components/ui/ButtonGroup';
+import { Button } from './components/ui/Button';
+import ButtonBase from './components/ui/ButtonBase/ButtonBase';
 import {
   Table,
   TableBody,
@@ -18,6 +20,7 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 import { makeData } from './lib/makeData';
+import {} from '@mui/material';
 
 export default function App(props) {
   const rerender = useReducer(() => ({}), {})[1];
@@ -100,15 +103,12 @@ export default function App(props) {
 
   return (
     <>
-      <DrewButton className='m-4' variant='contain'>
-        Drew
-      </DrewButton>
-      <DrewButton className='m-4' variant='text'>
-        Drew
-      </DrewButton>
-      <DrewButton className='m-4' variant='outline'>
-        Drew
-      </DrewButton>
+      <ButtonGroup>
+        <Button>ONE</Button>
+        <Button>TWO</Button>
+        <Button>THREE</Button>
+        <Button>FOUR</Button>
+      </ButtonGroup>
     </>
   );
 }

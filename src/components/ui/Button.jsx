@@ -1,25 +1,27 @@
-import { forwardRef, useRef, useCallback, useEffect } from 'react';
+import { forwardRef, useRef, useCallback, useContext, useEffect } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 import ButtonBase from './ButtonBase/ButtonBase';
+import { ButtonGroupContext } from './ButtonGroup';
 
 const buttonVariants = cva(
-  'relative border-none inline-flex items-center justify-center rounded-md overflow-hidden transition-colors focus:outline-none cursor-pointer font-medium drop-shadow-md  w-auto min-w-[64px] active:scale-95',
+  'inline-flex min-w-[64px] active:scale-95 rounded-md transition-colors items-center justify-center relative box-border font-medium w-auto bg-transparent outline-0 border-none border m-0 p-0 cursor-pointer select-none align-middle no-underline overflow-hidden',
   {
     variants: {
       color: {
-        default: 'bg-gray-600 hover:bg-gray-700',
+        inherit: 'bg-gray-600 hover:bg-gray-700',
         primary: 'bg-primary-500 hover:bg-primary-600',
         secondary: 'bg-secondary-500 hover:bg-secondary-600',
         success: 'bg-success-500 hover:bg-success-600',
         warning: 'bg-warning-500 hover:bg-warning-600',
         danger: 'bg-danger-500 hover:bg-danger-600',
-        monochrome: 'bg-black hover:bg-gray-900'
+        monochrome:
+          'bg-black hover:bg-gray-900 dark:bg-white dark:hover:bg-gray-500 dark:text-black'
       },
       variant: {
-        contain: 'bg-opacity-100 text-white',
-        text: 'bg-opacity-0 text-black dark:text-white ',
-        outline: 'bg-opacity-0 border border-solid border-current'
+        contain: 'bg-opacity-100 text-white shadow-md',
+        text: 'bg-opacity-0 text-black dark:text-white drop-shadow-md',
+        outline: 'bg-opacity-0 border border-solid border-current shadow-md'
       },
       size: {
         xs: 'px-2 py-1 leading-4 text-xs',
@@ -27,16 +29,13 @@ const buttonVariants = cva(
         md: 'px-3 py-1 leading-6 text-base',
         lg: 'px-5 py-1 leading-7 text-lg',
         xl: 'px-7 py-2 leading-8 text-xl'
-      },
-      disabled: {
-        true: 'pointer-events-none bg-gray-100 text-gray-400 dark:bg-gray-300 dark:text-gray-600'
       }
     },
     compoundVariants: [
       {
         variant: 'outline',
-        color: 'default',
-        className: 'text-gray-600'
+        color: 'inherit',
+        className: 'text-gray-700 dark:text-gray-600'
       },
       {
         variant: 'outline',
@@ -70,9 +69,9 @@ const buttonVariants = cva(
       },
       {
         variant: ['text', 'outline'],
-        color: 'default',
+        color: 'inherit',
         className:
-          'hover:text-gray-700 dark:hover:text-gray-700 hover:bg-gray-700/20'
+          'hover:text-gray-500 dark:hover:text-gray-500 hover:bg-gray-800/20'
       },
       {
         variant: ['text', 'outline'],
@@ -84,7 +83,7 @@ const buttonVariants = cva(
         variant: ['text', 'outline'],
         color: 'secondary',
         className:
-          'hover:text-secondary-500dark:hover:text-secondary-500 hover:bg-secondary-500/20'
+          'hover:text-secondary-500 dark:hover:text-secondary-500 hover:bg-secondary-500/20'
       },
       {
         variant: ['text', 'outline'],
@@ -112,36 +111,81 @@ const buttonVariants = cva(
       }
     ],
     defaultVariants: {
-      color: 'default',
-      variant: 'text',
+      color: 'primary',
+      variant: 'contain',
       size: 'md'
     }
   }
 );
 
-const Button = forwardRef(
-  (
-    { className, color, variant, size, fullWidth, disabled, onClick, ...props },
-    ref
-  ) => {
-    return (
-      <ButtonBase
-        className={cn(
-          buttonVariants({
-            color,
-            variant,
-            size,
-            fullWidth,
-            disabled,
-            className
-          })
-        )}
-        ref={ref}
-        {...props}
-      />
-    );
-  }
-);
+const Button = forwardRef((props, ref) => {
+  const contextProps = useContext(ButtonGroupContext);
+  const resolvedProps = {
+    ...props,
+    ...contextProps
+  };
+
+  const {
+    children,
+    className,
+    classes,
+    color,
+    component = 'button',
+    disabled = false,
+    disableElevation = false,
+    disableFocusRipple = false,
+    endIcon: endIconProp,
+    focusVisibleClassName,
+    fullWidth = false,
+    size,
+    startIcon: startIconProp,
+    type,
+    variant,
+    ...other
+  } = resolvedProps;
+
+  console.log(
+    cn(
+      buttonVariants({
+        color,
+        variant,
+        size
+      }),
+      disabled
+        ? ' pointer-events-none border-none bg-disabledLight text-gray-900/90 shadow-none drop-shadow-none dark:bg-disabledDark dark:text-gray-900/70'
+        : '',
+      disableElevation ? 'shadow-none drop-shadow-none' : '',
+      fullWidth ? 'w-full' : '',
+      className,
+      classes
+    )
+  );
+
+  return (
+    <ButtonBase
+      className={cn(
+        buttonVariants({
+          color,
+          variant,
+          size
+        }),
+        classes,
+        disabled
+          ? 'dark:shadown-none pointer-events-none border-none bg-disabledLight text-gray-800 shadow-none drop-shadow-none dark:border-none dark:bg-disabledDark dark:text-gray-800 dark:drop-shadow-none'
+          : '',
+        disableElevation ? 'shadow-none drop-shadow-none' : '',
+        fullWidth ? 'w-full' : '',
+        className
+      )}
+      focusRipple={!disableFocusRipple}
+      ref={ref}
+      type={type}
+      {...other}
+    >
+      {children}
+    </ButtonBase>
+  );
+});
 Button.displayName = 'Button';
 
 export { Button, buttonVariants };

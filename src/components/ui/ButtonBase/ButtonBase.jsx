@@ -264,11 +264,11 @@ const ButtonBase = forwardRef(function ButtonBase(props, ref) {
   }
 
   const classes = {
-    root: 'inline-flex items-center justify-center align-middle text-center relative box-border bg-transparent outline-none border-none border-0 rounded-none rounded-0 m-0 p-0 cursor-pointer select-none appearance-none no-underline text-current'
+    root: 'relative m-0 box-border inline-flex cursor-pointer select-none items-center justify-center rounded-none border-none bg-transparent p-0 align-middle text-inherit no-underline outline-0'
   };
 
   return (
-    <button
+    <ComponentProp
       as={ComponentProp}
       className={cn(classes.root, className)}
       onBlur={handleBlur}
@@ -298,7 +298,7 @@ const ButtonBase = forwardRef(function ButtonBase(props, ref) {
           {...TouchRippleProps}
         />
       ) : null}
-    </button>
+    </ComponentProp>
   );
 });
 

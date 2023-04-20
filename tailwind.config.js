@@ -25,23 +25,13 @@ export default {
         paper3:
           '0px 3px 3px -2px rgba(0,0,0,0.2),0px 3px 4px 0px rgba(0,0,0,0.14),0px 1px 8px 0px rgba(0,0,0,0.12)'
       },
-      opacity: {
-        hover: '0.04',
-        foverDark: '0.08',
-        selected: '0.08',
-        selectedDark: '0.16',
-        disabled: '0.38',
-        focus: '0.12',
-        activated: '0.12',
-        activatedDark: '0.24'
-      },
       colors: {
         transparent: 'transparent',
         current: 'currentColor',
         white: '#FFFFFF',
         black: '#000000',
-        disabledLight: 'rgba(0, 0, 0, 0.38)',
-        disabledDark: 'rgba(255, 255, 255, 0.5)',
+        disabledLight: '#bdbdbd',
+        disabledDark: '#9e9e9e',
         separatorLight: 'rgba(0, 0, 0, 0.2)',
         separatorDark: 'rgba(255, 255, 255, 0.12)',
         primary: {

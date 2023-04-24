@@ -7,7 +7,7 @@ import {
   useMemo
 } from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 
 export const ButtonGroupContext = createContext({});
 
@@ -57,24 +57,20 @@ const ButtonGroup = forwardRef(function ButtonGroup(props, ref) {
   const {
     children,
     className,
-    color = 'monochrome',
+    color = 'primary',
     Component = 'div',
     disabled = false,
     disableElevation = false,
     disableFocusRipple = false,
     disableRipple = false,
     fullWidth = false,
-    orientation = 'vertical',
+    orientation = 'horizontal',
     size = 'md',
-    variant = 'contain',
+    variant = 'outline',
     ...other
   } = props;
 
-  console.log(variant);
-  console.log(orientation);
   const classes = buttonGroupVariants({ color, variant, orientation });
-
-  console.log(classes);
 
   const context = useMemo(
     () => ({
@@ -127,4 +123,4 @@ const ButtonGroup = forwardRef(function ButtonGroup(props, ref) {
   );
 });
 
-export default ButtonGroup;
+export { ButtonGroup, buttonGroupVariants };

@@ -1,10 +1,14 @@
 import React, { useMemo, useReducer, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './App.css';
-import { Separator } from './components/ui/Separator';
-import ButtonGroup from './components/ui/ButtonGroup';
-import { Button } from './components/ui/Button';
-import ButtonBase from './components/ui/ButtonBase/ButtonBase';
+import {
+  Button,
+  ButtonGroup,
+  Separator,
+  DrewToggleButton,
+  DrewToggleButtonGroup
+} from './components/ui';
+import { AlignLeft, AlignCenter, AlignRight, AlignJustify } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -20,7 +24,7 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 import { makeData } from './lib/makeData';
-import {} from '@mui/material';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 export default function App(props) {
   const rerender = useReducer(() => ({}), {})[1];
@@ -101,14 +105,34 @@ export default function App(props) {
     debugTable: true
   });
 
+  const [alignment, setAlignment] = React.useState();
+
+  const handleAlignment = (event, newAlignment) => {
+    setAlignment(newAlignment);
+  };
+
   return (
     <>
-      <ButtonGroup>
-        <Button>ONE</Button>
-        <Button>TWO</Button>
-        <Button>THREE</Button>
-        <Button>FOUR</Button>
-      </ButtonGroup>
+      <Separator className='m-4' />
+      <DrewToggleButtonGroup
+        value={alignment}
+        onChange={handleAlignment}
+        aria-label='text alignment'
+        exclusive
+      >
+        <DrewToggleButton value='left' aria-label='left aligned'>
+          <AlignLeft />
+        </DrewToggleButton>
+        <DrewToggleButton value='center' aria-label='centered'>
+          <AlignCenter />
+        </DrewToggleButton>
+        <DrewToggleButton value='right' aria-label='right aligned'>
+          <AlignRight />
+        </DrewToggleButton>
+        <DrewToggleButton value='justify' aria-label='justified'>
+          <AlignJustify />
+        </DrewToggleButton>
+      </DrewToggleButtonGroup>
     </>
   );
 }

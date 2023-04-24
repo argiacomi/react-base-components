@@ -5,10 +5,10 @@ import {
   useRef,
   useState
 } from 'react';
-import { cn } from '../../../lib/utils';
-import useForkRef from '../../utils/useForkRef';
-import useEventCallback from '../../utils/useEventCallback';
-import useIsFocusVisible from '../../utils/useIsFocusVisible';
+import { cn } from '../../../../lib/utils';
+import useForkRef from '../../../utils/useForkRef';
+import useEventCallback from '../../../utils/useEventCallback';
+import useIsFocusVisible from '../../../utils/useIsFocusVisible';
 import TouchRipple from './TouchRipple';
 
 const ButtonBase = forwardRef(function ButtonBase(props, ref) {

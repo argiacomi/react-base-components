@@ -7,7 +7,7 @@ import {
   useState
 } from 'react';
 import { TransitionGroup } from 'react-transition-group';
-import { cn } from '../../../lib/utils';
+import { cn } from '../../../../lib/utils';
 import Ripple from './Ripple';
 
 const DURATION = 325;

@@ -1,6 +1,6 @@
 import { forwardRef, useRef, useCallback, useContext, useEffect } from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 import ButtonBase from './ButtonBase/ButtonBase';
 import { ButtonGroupContext } from './ButtonGroup';
 
@@ -143,23 +143,6 @@ const Button = forwardRef((props, ref) => {
     variant,
     ...other
   } = resolvedProps;
-
-  console.log(
-    cn(
-      buttonVariants({
-        color,
-        variant,
-        size
-      }),
-      disabled
-        ? ' pointer-events-none border-none bg-disabledLight text-gray-900/90 shadow-none drop-shadow-none dark:bg-disabledDark dark:text-gray-900/70'
-        : '',
-      disableElevation ? 'shadow-none drop-shadow-none' : '',
-      fullWidth ? 'w-full' : '',
-      className,
-      classes
-    )
-  );
 
   return (
     <ButtonBase

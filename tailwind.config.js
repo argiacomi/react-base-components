@@ -103,15 +103,8 @@ export default {
           }
         },
         pulsateKeyframe: {
-          '0%': {
-            transform: 'scale(1)'
-          },
-          '50%': {
-            transform: 'scale(0.92)'
-          },
-          '100%': {
-            transform: 'scale(1)'
-          }
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(0.92)' }
         },
         'accordion-down': {
           from: { height: 0 },
@@ -125,7 +118,7 @@ export default {
       animation: {
         'ripple-enter': 'enterKeyframe 550ms ease-in-out',
         'ripple-exit': 'exitKeyframe 550ms ease-in-out',
-        'ripple-pulsate': '2500ms ease-in-out infinite 200ms pulsateKeyframe',
+        pulsate: 'pulsateKeyframe 2500ms ease-in-out infinite 200ms',
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out'
       }

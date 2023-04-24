@@ -1,11 +1,4 @@
-import {
-  createContext,
-  forwardRef,
-  useRef,
-  useCallback,
-  useEffect,
-  useMemo
-} from 'react';
+import { createContext, forwardRef, useMemo } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '../../../lib/utils';
 
@@ -53,74 +46,75 @@ const buttonGroupVariants = cva(
   }
 );
 
-const ButtonGroup = forwardRef(function ButtonGroup(props, ref) {
-  const {
-    children,
-    className,
-    color = 'primary',
-    Component = 'div',
-    disabled = false,
-    disableElevation = false,
-    disableFocusRipple = false,
-    disableRipple = false,
-    fullWidth = false,
-    orientation = 'horizontal',
-    size = 'md',
-    variant = 'outline',
-    ...other
-  } = props;
-
-  const classes = buttonGroupVariants({ color, variant, orientation });
-
-  const context = useMemo(
-    () => ({
+const ButtonGroup = forwardRef(
+  (
+    {
+      children,
       className,
-      classes,
-      color,
-      disabled,
-      disableElevation,
-      disableFocusRipple,
-      disableRipple,
-      fullWidth,
-      orientation,
-      size,
-      variant
-    }),
-    [
-      className,
-      classes,
-      color,
-      disabled,
-      disableElevation,
-      disableFocusRipple,
-      disableRipple,
-      fullWidth,
-      orientation,
-      size,
-      variant
-    ]
-  );
+      color = 'primary',
+      Component = 'div',
+      disabled = false,
+      disableElevation = false,
+      disableFocusRipple = false,
+      disableRipple = false,
+      fullWidth = false,
+      orientation = 'horizontal',
+      size = 'md',
+      variant = 'outline',
+      ...other
+    },
+    ref
+  ) => {
+    const classes = buttonGroupVariants({ color, variant, orientation });
 
-  return (
-    <Component
-      className={cn(
-        'group inline-flex rounded-md',
-        orientation === 'horizontal' ? 'flex-row' : 'flex-col',
-        variant !== 'text' ? 'shadow-md' : '',
-        disabled
-          ? 'border-none bg-disabledLight shadow-none drop-shadow-none dark:bg-disabledDark'
-          : '',
-        disableElevation ? 'shadow-none drop-shadow-none' : '',
-        fullWidth ? 'w-full' : ''
-      )}
-      ref={ref}
-      {...other}
-    >
-      <ButtonGroupContext.Provider value={context}>
-        {children}
-      </ButtonGroupContext.Provider>
-    </Component>
-  );
-});
+    const context = useMemo(
+      () => ({
+        className,
+        classes,
+        color,
+        disabled,
+        disableElevation,
+        disableFocusRipple,
+        disableRipple,
+        fullWidth,
+        orientation,
+        size,
+        variant
+      }),
+      [
+        className,
+        classes,
+        color,
+        disabled,
+        disableElevation,
+        disableFocusRipple,
+        disableRipple,
+        fullWidth,
+        orientation,
+        size,
+        variant
+      ]
+    );
+
+    const buttonGroupClasses = cn(
+      'group inline-flex rounded-md',
+      orientation === 'horizontal' ? 'flex-row' : 'flex-col',
+      variant !== 'text' ? 'shadow-md' : '',
+      disabled
+        ? 'border-none bg-disabledLight shadow-none drop-shadow-none dark:bg-disabledDark'
+        : '',
+      disableElevation ? 'shadow-none drop-shadow-none' : '',
+      fullWidth ? 'w-full' : ''
+    );
+
+    return (
+      <Component className={buttonGroupClasses} ref={ref} {...other}>
+        <ButtonGroupContext.Provider value={context}>
+          {children}
+        </ButtonGroupContext.Provider>
+      </Component>
+    );
+  }
+);
 
 export { ButtonGroup, buttonGroupVariants };

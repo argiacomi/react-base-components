@@ -1,4 +1,4 @@
-import { forwardRef, useRef, useCallback, useContext, useEffect } from 'react';
+import { forwardRef, useContext } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '../../../lib/utils';
 import ButtonBase from './ButtonBase/ButtonBase';
@@ -120,11 +120,6 @@ const buttonVariants = cva(
 
 const Button = forwardRef((props, ref) => {
   const contextProps = useContext(ButtonGroupContext);
-  const resolvedProps = {
-    ...props,
-    ...contextProps
-  };
-
   const {
     children,
     className,
@@ -134,35 +129,34 @@ const Button = forwardRef((props, ref) => {
     disabled = false,
     disableElevation = false,
     disableFocusRipple = false,
-    endIcon: endIconProp,
     focusVisibleClassName,
     fullWidth = false,
     size,
-    startIcon: startIconProp,
-    type,
     variant,
     ...other
-  } = resolvedProps;
+  } = { ...props, ...contextProps };
+
+  const buttonClasses = cn(
+    buttonVariants({ color, variant, size }),
+    classes,
+    disabled
+      ? 'dark:shadown-none pointer-events-none border-none bg-disabledLight text-gray-800 shadow-none drop-shadow-none dark:border-none dark:bg-disabledDark dark:text-gray-800 dark:drop-shadow-none'
+      : '',
+    disableElevation ? 'shadow-none drop-shadow-none' : '',
+    fullWidth ? 'w-full' : '',
+    className
+  );
 
   return (
     <ButtonBase
-      className={cn(
-        buttonVariants({
-          color,
-          variant,
-          size
-        }),
-        classes,
-        disabled
-          ? 'dark:shadown-none pointer-events-none border-none bg-disabledLight text-gray-800 shadow-none drop-shadow-none dark:border-none dark:bg-disabledDark dark:text-gray-800 dark:drop-shadow-none'
-          : '',
-        disableElevation ? 'shadow-none drop-shadow-none' : '',
-        fullWidth ? 'w-full' : '',
-        className
-      )}
+      className={buttonClasses}
       focusRipple={!disableFocusRipple}
+      focusVisibleClassName={cn(
+        variant === 'contained' ? 'shadow-lg' : '',
+        focusVisibleClassName
+      )}
       ref={ref}
-      type={type}
+      type={component}
       {...other}
     >
       {children}

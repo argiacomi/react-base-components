@@ -18,14 +18,14 @@ const TouchRippleRoot = {
 };
 const touchRippleClasses = {
   ripple: 'absolute opacity-0',
-  rippleVisible: 'absolute opacity-0 scale-100 animate-ripple-enter opacity-30',
-  ripplePulsate: 'absolute opacity-0 duration-300',
-  child: 'block h-full w-full rounded-full bg-current opacity-100',
-  childLeaving: 'animate-ripple-exit opacity-0',
-  childPulsate: 'absolute left-0 top-0 animate-ripple-pulsate'
+  rippleVisible: 'absolute opacity-30 scale-100 animate-ripple-enter',
+  ripplePulsate: 'duration-300',
+  child: 'opacity-100 block w-full h-full rounded-full bg-current',
+  childLeaving: ' opacity-0 animate-ripple-exit',
+  childPulsate: 'absolute left-0 top-0 animate-pulsate'
 };
 
-const TouchRipple = forwardRef(function TouchRipple(props, ref) {
+const TouchRipple = forwardRef((props, ref) => {
   const {
     center: centerProp = false,
     classes = {},
@@ -57,7 +57,6 @@ const TouchRipple = forwardRef(function TouchRipple(props, ref) {
   const startCommit = useCallback(
     (params) => {
       const { pulsate, rippleX, rippleY, rippleSize, cb } = params;
-
       setRipples((oldRipples) => [
         ...oldRipples,
         <Ripple
@@ -142,7 +141,7 @@ const TouchRipple = forwardRef(function TouchRipple(props, ref) {
       }
 
       if (center) {
-        rippleSize = Math.sqrt((2 * rect.width ** 2 + rect.height ** 2) / 3);
+        rippleSize = Math.sqrt((2 * rect.width ** 2 + rect.height ** 2) / 3.5);
 
         if (rippleSize % 2 === 0) {
           rippleSize += 1;
@@ -198,7 +197,6 @@ const TouchRipple = forwardRef(function TouchRipple(props, ref) {
       });
       return;
     }
-
     startTimerCommit.current = null;
 
     setRipples((oldRipples) => {

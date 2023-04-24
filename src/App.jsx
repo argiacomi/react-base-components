@@ -5,8 +5,8 @@ import {
   Button,
   ButtonGroup,
   Separator,
-  DrewToggleButton,
-  DrewToggleButtonGroup
+  ToggleButton,
+  ToggleButtonGroup
 } from './components/ui';
 import { AlignLeft, AlignCenter, AlignRight, AlignJustify } from 'lucide-react';
 import {
@@ -24,7 +24,7 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 import { makeData } from './lib/makeData';
-import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import MuiButton from './MuiButtons';
 
 export default function App(props) {
   const rerender = useReducer(() => ({}), {})[1];
@@ -113,26 +113,9 @@ export default function App(props) {
 
   return (
     <>
+      <Button>Drew</Button>
       <Separator className='m-4' />
-      <DrewToggleButtonGroup
-        value={alignment}
-        onChange={handleAlignment}
-        aria-label='text alignment'
-        exclusive
-      >
-        <DrewToggleButton value='left' aria-label='left aligned'>
-          <AlignLeft />
-        </DrewToggleButton>
-        <DrewToggleButton value='center' aria-label='centered'>
-          <AlignCenter />
-        </DrewToggleButton>
-        <DrewToggleButton value='right' aria-label='right aligned'>
-          <AlignRight />
-        </DrewToggleButton>
-        <DrewToggleButton value='justify' aria-label='justified'>
-          <AlignJustify />
-        </DrewToggleButton>
-      </DrewToggleButtonGroup>
+      <MuiButton>Giacomi</MuiButton>
     </>
   );
 }

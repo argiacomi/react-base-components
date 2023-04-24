@@ -1,25 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '../../../../lib/utils';
 
-function Ripple(props) {
-  const {
-    className,
-    classes,
-    pulsate = false,
-    rippleX,
-    rippleY,
-    rippleSize,
-    in: inProp,
-    onExited,
-    timeout
-  } = props;
+const Ripple = ({
+  className,
+  classes,
+  pulsate = false,
+  rippleX,
+  rippleY,
+  rippleSize,
+  in: inProp,
+  onExited,
+  timeout
+}) => {
   const [leaving, setLeaving] = useState(false);
+
+  useEffect(() => {
+    if (!inProp) {
+      setLeaving(true);
+    }
+
+    if (!inProp && onExited) {
+      const timeoutId = setTimeout(onExited, timeout);
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [inProp, onExited, timeout]);
 
   const rippleClassName = cn(
     className,
     classes.ripple,
     classes.rippleVisible,
-    pulsate ? classes.ripplePulsate : null
+    pulsate && classes.ripplePulsate
   );
 
   const rippleStyles = {
@@ -31,28 +43,15 @@ function Ripple(props) {
 
   const childClassName = cn(
     classes.child,
-    leaving ? classes.childLeaving : null,
-    pulsate ? classes.childPulsate : null
+    leaving && classes.childLeaving,
+    pulsate && classes.childPulsate
   );
-
-  if (!inProp && !leaving) {
-    setLeaving(true);
-  }
-  React.useEffect(() => {
-    if (!inProp && onExited != null) {
-      const timeoutId = setTimeout(onExited, timeout);
-      return () => {
-        clearTimeout(timeoutId);
-      };
-    }
-    return undefined;
-  }, [onExited, inProp, timeout]);
 
   return (
     <span className={rippleClassName} style={rippleStyles}>
       <span className={childClassName} />
     </span>
   );
-}
+};
 
 export default Ripple;

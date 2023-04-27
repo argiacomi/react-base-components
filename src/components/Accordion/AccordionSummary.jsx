@@ -5,17 +5,17 @@ import { AccordionContext } from './Accordion';
 
 const getClasses = ({ disabled, enableGutters, expanded, className }) => ({
   root: cn(
-    'flex min-h-[48px] px-4 no-underline transition-[min-height,background-color] duration-[150ms] ease-in-out delay-0 focus-visible:bg-gray-400',
+    'flex min-h-[48px] px-4 no-underline transition-[min-height,background-color] duration-150 ease-in-out delay-0 focus-visible:bg-gray-400',
     disabled && 'pointer-events-none',
     className
   ),
   content: cn(
     'm-0 flex flex-grow my-3',
-    enableGutters && 'transition-[margin] duration-[150ms] ease-in-out delay-0',
+    enableGutters && 'transition-[margin] duration-150 ease-in-out delay-0',
     enableGutters && expanded && 'my-5'
   ),
   expandIconWrapper: cn(
-    'flex text-current rotate-0 transition-[transform] duration-[150ms] ease-in-out delay-0 h-5 w-5',
+    'flex text-current rotate-0 transition-[transform] duration-150 ease-in-out delay-0 h-5 w-5',
     expanded && 'rotate-180'
   )
 });

@@ -1,6 +1,6 @@
 import { createContext, forwardRef, useMemo } from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../../lib/utils';
+import { cn } from '@utils';
 
 export const ButtonGroupContext = createContext({});
 
@@ -20,7 +20,7 @@ const buttonGroupVariants = cva(
           'mt-[-1px] first-of-type:mt-0 first-of-type:rounded-t-md last-of-type:rounded-b-md'
       },
       color: {
-        inherit: 'border-gray-700',
+        default: 'border-gray-700',
         primary: 'border-primary-600',
         secondary: 'border-secondary-600',
         success: 'border-success-600',
@@ -99,12 +99,12 @@ const ButtonGroup = forwardRef(
     const buttonGroupClasses = cn(
       'group inline-flex rounded-md',
       orientation === 'horizontal' ? 'flex-row' : 'flex-col',
-      variant !== 'text' ? 'shadow-md' : '',
-      disabled
-        ? 'border-none bg-disabledLight shadow-none drop-shadow-none dark:bg-disabledDark'
-        : '',
-      disableElevation ? 'shadow-none drop-shadow-none' : '',
-      fullWidth ? 'w-full' : ''
+      variant !== 'text' && 'shadow-md',
+      disabled &&
+        'border-none bg-disabledLight shadow-none drop-shadow-none dark:bg-disabledDark',
+      disableElevation && 'shadow-none drop-shadow-none',
+      fullWidth && 'w-full',
+      className
     );
 
     return (
@@ -116,5 +116,6 @@ const ButtonGroup = forwardRef(
     );
   }
 );
+ButtonGroup.displayName = 'ButtonGroup';
 
 export { ButtonGroup, buttonGroupVariants };

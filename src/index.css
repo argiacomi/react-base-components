@@ -9,9 +9,12 @@ html {
   background-color: var(--color-bg);
   color: var(--color-fg);
 }
+body {
+  margin: 0;
+}
 
 :root {
-  --color-bg: #121212;
+  --color-bg: #212121;
   --color-fg: #ffffff;
 }
 
@@ -23,43 +26,12 @@ html * {
 @media (prefers-color-scheme: light) {
   :root {
     --color-bg: #f2f2f2;
-    --color-fg: #121212;
+    --color-fg: #212121;
   }
 }
 
-@-webkit-keyframes animation-f6tr5a {
-  0% {
-    -webkit-transform: scale(1);
-    -moz-transform: scale(1);
-    -ms-transform: scale(1);
-    transform: scale(1);
+@layer utilities {
+  .no-overflow-anchoring {
+    overflow-anchor: none;
   }
-  50% {
-    -webkit-transform: scale(0.92);
-    -moz-transform: scale(0.92);
-    -ms-transform: scale(0.92);
-    transform: scale(0.92);
-  }
-  100% {
-    -webkit-transform: scale(1);
-    -moz-transform: scale(1);
-    -ms-transform: scale(1);
-    transform: scale(1);
-  }
-}
-
-.MuiTouchRipple-childPulsate {
-  position: absolute;
-  left: 0px;
-  top: 0;
-  -webkit-animation-name: animation-f6tr5a;
-  animation-name: animation-f6tr5a;
-  -webkit-animation-duration: 2500ms;
-  animation-duration: 2500ms;
-  -webkit-animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-  -webkit-animation-delay: 200ms;
-  animation-delay: 200ms;
 }

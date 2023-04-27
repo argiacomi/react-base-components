@@ -5,10 +5,12 @@ import {
   useRef,
   useState
 } from 'react';
-import { cn } from '../../../../lib/utils';
-import useForkRef from '../../../utils/useForkRef';
-import useEventCallback from '../../../utils/useEventCallback';
-import useIsFocusVisible from '../../../utils/useIsFocusVisible';
+import { cn } from '@utils';
+import {
+  useEventCallback,
+  useIsFocusVisible,
+  useForkRef
+} from '@component/hooks';
 import TouchRipple from './TouchRipple';
 
 const ButtonBase = forwardRef(
@@ -269,10 +271,9 @@ const ButtonBase = forwardRef(
 
     return (
       <ComponentProp
-        as={ComponentProp}
         className={cn(
           classes.root,
-          focusVisible ? focusVisibleClassName : '',
+          focusVisible && focusVisibleClassName,
           className
         )}
         onBlur={handleBlur}
@@ -306,5 +307,6 @@ const ButtonBase = forwardRef(
     );
   }
 );
+ButtonBase.displayName = 'ButtonBase';
 
 export default ButtonBase;

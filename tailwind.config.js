@@ -23,7 +23,9 @@ export default {
         paper2:
           '0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)',
         paper3:
-          '0px 3px 3px -2px rgba(0,0,0,0.2),0px 3px 4px 0px rgba(0,0,0,0.14),0px 1px 8px 0px rgba(0,0,0,0.12)'
+          '0px 3px 3px -2px rgba(0,0,0,0.2),0px 3px 4px 0px rgba(0,0,0,0.14),0px 1px 8px 0px rgba(0,0,0,0.12)',
+        paper4:
+          '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)'
       },
       colors: {
         transparent: 'transparent',
@@ -32,6 +34,7 @@ export default {
         black: '#000000',
         disabledLight: '#bdbdbd',
         disabledDark: '#9e9e9e',
+        disabledText: '#616161',
         separatorLight: 'rgba(0, 0, 0, 0.2)',
         separatorDark: 'rgba(255, 255, 255, 0.12)',
         primary: {
@@ -119,8 +122,8 @@ export default {
         'ripple-enter': 'enterKeyframe 550ms ease-in-out',
         'ripple-exit': 'exitKeyframe 550ms ease-in-out',
         pulsate: 'pulsateKeyframe 2500ms ease-in-out infinite 200ms',
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out'
+        'accordion-down': 'accordion-down 0.3s ease-out',
+        'accordion-up': 'accordion-up 0.3s ease-out'
       }
     }
   },

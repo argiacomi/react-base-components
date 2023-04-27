@@ -7,7 +7,7 @@ import {
   useState
 } from 'react';
 import { TransitionGroup } from 'react-transition-group';
-import { cn } from '../../../../lib/utils';
+import { cn } from '@utils';
 import Ripple from './Ripple';
 
 const DURATION = 325;
@@ -230,5 +230,6 @@ const TouchRipple = forwardRef((props, ref) => {
     </span>
   );
 });
+TouchRipple.displayName = 'TouchRipple';
 
 export default TouchRipple;

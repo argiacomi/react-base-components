@@ -2,120 +2,40 @@ import React, { useMemo, useReducer, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './App.css';
 import {
-  Button,
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionGroup,
+  AccordionSummary,
+  AppBar,
+  ButtonBase,
   ButtonGroup,
+  Button,
+  IconButton,
+  Paper,
   Separator,
-  ToggleButton,
-  ToggleButtonGroup
-} from './components/ui';
-import { AlignLeft, AlignCenter, AlignRight, AlignJustify } from 'lucide-react';
-import {
   Table,
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
-  TableRow
-} from './components/table';
-import {
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable
-} from '@tanstack/react-table';
-import { makeData } from './lib/makeData';
-import MuiButton from './MuiButtons';
+  TableRow,
+  ToggleButton,
+  ToggleButtonGroup,
+  Toolbar
+} from '@component';
 
 export default function App(props) {
-  const rerender = useReducer(() => ({}), {})[1];
+  const [expanded, setExpanded] = useState(false);
 
-  const [sorting, setSorting] = useState([]);
-
-  const columns = useMemo(
-    () => [
-      {
-        header: 'Name',
-        footer: (props) => props.column.id,
-        columns: [
-          {
-            accessorKey: 'firstName',
-            cell: (info) => info.getValue(),
-            footer: (props) => props.column.id
-          },
-          {
-            accessorFn: (row) => row.lastName,
-            id: 'lastName',
-            cell: (info) => info.getValue(),
-            header: () => <span>Last Name</span>,
-            footer: (props) => props.column.id
-          }
-        ]
-      },
-      {
-        header: 'Info',
-        footer: (props) => props.column.id,
-        columns: [
-          {
-            accessorKey: 'age',
-            header: () => 'Age',
-            footer: (props) => props.column.id
-          },
-          {
-            header: 'More Info',
-            columns: [
-              {
-                accessorKey: 'visits',
-                header: () => <span>Visits</span>,
-                footer: (props) => props.column.id
-              },
-              {
-                accessorKey: 'status',
-                header: 'Status',
-                footer: (props) => props.column.id
-              },
-              {
-                accessorKey: 'progress',
-                header: 'Profile Progress',
-                footer: (props) => props.column.id
-              }
-            ]
-          },
-          {
-            accessorKey: 'createdAt',
-            header: 'Created At'
-          }
-        ]
-      }
-    ],
-    []
-  );
-
-  const [data, setData] = useState(() => makeData(100000));
-  const refreshData = () => setData(() => makeData(100000));
-
-  const reactTable = useReactTable({
-    data,
-    columns,
-    state: {
-      sorting
-    },
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    debugTable: true
-  });
-
-  const [alignment, setAlignment] = React.useState();
-
-  const handleAlignment = (event, newAlignment) => {
-    setAlignment(newAlignment);
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
   };
 
   return (
     <>
-      <Button>Drew</Button>
-      <Separator className='m-4' />
-      <MuiButton>Giacomi</MuiButton>
+      <Button className='m-4'>Submit</Button>
     </>
   );
 }

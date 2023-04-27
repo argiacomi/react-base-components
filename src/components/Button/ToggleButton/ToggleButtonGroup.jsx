@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { cn } from '../../../lib/utils';
+import { cn } from '@utils';
 
 function isValueSelected(value, candidate) {
   if (candidate === undefined || value === undefined) {
@@ -59,11 +59,10 @@ const ToggleButtonGroup = forwardRef(
     const groupClasses = cn(
       'group inline-flex rounded-md shadow-md',
       orientation === 'horizontal' ? 'flex-row' : 'flex-col',
-      disabled
-        ? 'dark:text-disabledDark text-disabledLight shadow-none drop-shadow-none'
-        : '',
-      disableElevation ? 'shadow-none drop-shadow-none' : '',
-      fullWidth ? 'w-full' : '',
+      disabled &&
+        'dark:text-disabledDark text-disabledLight shadow-none drop-shadow-none',
+      disableElevation && 'shadow-none drop-shadow-none',
+      fullWidth && 'w-full',
       className
     );
 
@@ -91,5 +90,6 @@ const ToggleButtonGroup = forwardRef(
     );
   }
 );
+ToggleButtonGroup.displayName = 'ToggleButtonGroup';
 
-export { ToggleButtonGroup };
+export default ToggleButtonGroup;

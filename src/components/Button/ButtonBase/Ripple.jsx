@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { cn } from '../../../../lib/utils';
+import { cn } from '@utils';
 
 const Ripple = ({
   className,
@@ -53,5 +53,6 @@ const Ripple = ({
     </span>
   );
 };
+Ripple.displayName = 'Ripple';
 
 export default Ripple;

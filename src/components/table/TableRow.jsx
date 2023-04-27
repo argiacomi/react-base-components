@@ -1,7 +1,7 @@
 import { useContext, forwardRef } from 'react';
 import Tablelvl2Context from './Tablelvl2Context';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '@utils';
 
 const rowVariants = cva('bg-opacity-0 text-black dark:text-white', {
   variants: {
@@ -59,16 +59,21 @@ const rowVariants = cva('bg-opacity-0 text-black dark:text-white', {
       hover: true,
       className: 'hover:bg-black/30 dark:hover:bg-white/30'
     }
-  ],
-  defaultVariants: {
-    color: 'default',
-    hover: false,
-    selected: false
-  }
+  ]
 });
 
 const TableRow = forwardRef(
-  ({ className, color, Component = 'tr', hover, selected, ...other }, ref) => {
+  (
+    {
+      className,
+      color = 'default',
+      Component = 'tr',
+      hover = false,
+      selected = false,
+      ...other
+    },
+    ref
+  ) => {
     const context = useContext(Tablelvl2Context);
     const isHead = context.variant === 'head';
     const isFooter = context.variant === 'footer';

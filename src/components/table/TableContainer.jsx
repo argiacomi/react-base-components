@@ -1,21 +1,21 @@
 import React from 'react';
-import { Paper } from '../ui/Paper';
-import { cn } from '../../lib/utils';
+import { Paper } from '@component/layout/Paper';
+import { cn } from '@utils';
 
 const TableContainer = ({
-	children,
-	className,
-	Component = Paper,
-	...otherProps
+  children,
+  className,
+  Component = Paper,
+  ...otherProps
 }) => {
-	return (
-		<Component
-			className={cn('w-fit', 'overflow-x-auto', className)}
-			{...otherProps}
-		>
-			{children}
-		</Component>
-	);
+  return (
+    <Component
+      className={cn('w-fit', 'overflow-x-auto', className)}
+      {...otherProps}
+    >
+      {children}
+    </Component>
+  );
 };
 
 TableContainer.displayName = 'TableContainer';

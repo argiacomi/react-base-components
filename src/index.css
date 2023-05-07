@@ -3,7 +3,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .no-overflow-anchoring {
+    overflow-anchor: none;
+  }
+
+  .clip-all {
+    clip-path: rect(0 0 0 0);
+  }
+}
+
 html {
+  --color-bg: #212121;
+  --color-fg: #f2f2f2;
   font-family: 'Source Sans Pro', 'Schibsted Grotesk', 'Lato', 'Montserrat',
     'Poppins', sans-serif !important;
   background-color: var(--color-bg);
@@ -13,25 +25,14 @@ body {
   margin: 0;
 }
 
-:root {
-  --color-bg: #212121;
-  --color-fg: #ffffff;
-}
-
 html * {
   font-family: inherit;
   -webkit-tap-highlight-color: transparent;
 }
 
 @media (prefers-color-scheme: light) {
-  :root {
+  html {
     --color-bg: #f2f2f2;
     --color-fg: #212121;
-  }
-}
-
-@layer utilities {
-  .no-overflow-anchoring {
-    overflow-anchor: none;
   }
 }

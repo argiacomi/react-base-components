@@ -9,7 +9,8 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
       '@utils': path.resolve(__dirname, './src/lib/utils.js'),
-      '@component': path.resolve(__dirname, './src/components')
+      '@components': path.resolve(__dirname, './src/components'),
+      '@component-hooks': path.resolve(__dirname, './src/components/lib/hooks')
     }
   },
   plugins: [

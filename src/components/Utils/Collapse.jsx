@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useRef } from 'react';
 import { cn } from '@utils';
 import { Transition } from 'react-transition-group';
-import { useForkRef } from '@component/Hooks';
+import { useForkRef } from '@component-hooks';
 
 const getClasses = (orientation, state) => ({
   root: cn(

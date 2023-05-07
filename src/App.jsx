@@ -1,119 +1,61 @@
-import React, { useMemo, useReducer, useState } from 'react';
-import ReactDOM from 'react-dom/client';
-import './App.css';
-import {
-  Accordion,
-  AccordionActions,
-  AccordionDetails,
-  AccordionGroup,
-  AccordionSummary,
-  AppBar,
-  ButtonBase,
-  ButtonGroup,
-  Button,
-  IconButton,
-  Paper,
-  Separator,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableFooter,
-  TableHead,
-  TableRow,
-  ToggleButton,
-  ToggleButtonGroup,
-  Toolbar
-} from '@component';
-import { ChevronDownIcon } from 'lucide-react';
+import * as React from 'react';
+import { Paper, Button, Fade, Popper } from '@components';
 
-export default function App(props) {
-  const [expanded, setExpanded] = useState(false);
+export default function TransitionsPopper() {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
+  const [placement, setPlacement] = React.useState();
 
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
+  const handleClick = (newPlacement) => (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen((prev) => placement !== newPlacement || !prev);
+    setPlacement(newPlacement);
   };
 
   return (
-    <AccordionGroup>
-      <Accordion
-        expanded={expanded === 'panel1'}
-        onChange={handleChange('panel1')}
-      >
-        <AccordionSummary
-          expandIcon={<ChevronDownIcon />}
-          aria-controls='panel1bh-content'
-          id='panel1bh-header'
+    <div className='overflow-hidden rounded-lg border border-gray-100 text-gray-900 shadow [color-scheme:light] dark:border-none'>
+      <div className='bg-gray-75'>
+        <div className='flex h-12 items-center justify-center font-bold'></div>
+      </div>
+      <div className='relative h-[20rem] overflow-hidden bg-gray-50 p-2'>
+        <Popper
+          open={open}
+          anchorEl={anchorEl}
+          componentsProps={{ arrow: { classes: 'bg-white dark:bg-black' } }}
+          popperOptions={{ placement: placement }}
+          transition
         >
-          <span className='w-1/3 flex-shrink-0'>General settings</span>
-          <span className='text-gray-700'>I am an accordion</span>
-        </AccordionSummary>
-        <AccordionDetails>
-          <span>
-            Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
-            Aliquam eget maximus est, id dignissim quam.
-          </span>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        expanded={expanded === 'panel2'}
-        onChange={handleChange('panel2')}
-      >
-        <AccordionSummary
-          expandIcon={<ChevronDownIcon />}
-          aria-controls='panel2bh-content'
-          id='panel2bh-header'
-        >
-          <span className='w-1/3 flex-shrink-0'>Users</span>
-          <span className='text-gray-700'>You are currently not an owner</span>
-        </AccordionSummary>
-        <AccordionDetails>
-          <span>
-            Donec placerat, lectus sed mattis semper, neque lectus feugiat
-            lectus, varius pulvinar diam eros in elit. Pellentesque convallis
-            laoreet laoreet.
-          </span>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        expanded={expanded === 'panel3'}
-        onChange={handleChange('panel3')}
-      >
-        <AccordionSummary
-          expandIcon={<ChevronDownIcon />}
-          aria-controls='panel3bh-content'
-          id='panel3bh-header'
-        >
-          <span className='w-1/3 flex-shrink-0'>Advanced settings</span>
-          <span className='text-gray-700'>
-            Filtering has been entirely disabled for whole web server
-          </span>
-        </AccordionSummary>
-        <AccordionDetails>
-          <span>
-            Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer
-            sit amet egestas eros, vitae egestas augue. Duis vel est augue.
-          </span>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        expanded={expanded === 'panel4'}
-        onChange={handleChange('panel4')}
-      >
-        <AccordionSummary
-          expandIcon={<ChevronDownIcon />}
-          aria-controls='panel4bh-content'
-          id='panel4bh-header'
-        >
-          <span className='w-1/3 flex-shrink-0'>Personal data</span>
-        </AccordionSummary>
-        <AccordionDetails>
-          <span>
-            Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer
-            sit amet egestas eros, vitae egestas augue. Duis vel est augue.
-          </span>
-        </AccordionDetails>
-      </Accordion>
-    </AccordionGroup>
+          {({ TransitionProps }) => (
+            <Paper className='flex h-10 items-center'>
+              <p className='m-0 p-1'>The content of the Popper.</p>
+            </Paper>
+          )}
+        </Popper>
+        <div className='container flex justify-center'>
+          <Button onClick={handleClick('top-start')}>top-start</Button>
+          <Button onClick={handleClick('top')}>top</Button>
+          <Button onClick={handleClick('top-end')}>top-end</Button>
+        </div>
+        <div className='align-end container flex flex-col justify-between'>
+          <div className='container flex justify-evenly'>
+            <Button onClick={handleClick('left-start')}>left-start</Button>
+            <Button onClick={handleClick('right-start')}>right-start</Button>
+          </div>
+          <div className='container flex justify-evenly'>
+            <Button onClick={handleClick('left')}>left</Button>
+            <Button onClick={handleClick('right')}>right</Button>
+          </div>
+          <div className='container flex justify-evenly'>
+            <Button onClick={handleClick('left-end')}>left-end</Button>
+            <Button onClick={handleClick('right-end')}>right-end</Button>
+          </div>
+        </div>
+        <div className='container flex justify-center'>
+          <Button onClick={handleClick('bottom-start')}>bottom-start</Button>
+          <Button onClick={handleClick('bottom')}>bottom</Button>
+          <Button onClick={handleClick('bottom-end')}>bottom-end</Button>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -10,3 +10,7 @@ const twMerge = extendTailwindMerge({
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
+
+export function ownerDocument(node) {
+  return (node && node.ownerDocument) || document;
+}

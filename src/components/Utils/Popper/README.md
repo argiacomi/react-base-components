@@ -94,18 +94,18 @@ Component Usage
 - Options:
 
 ```javascript
-  'top',
-  'top-start',
-  'top-end',
-  'right',
-  'right-start',
-  'right-end',
-  'bottom',
-  'bottom-star',
-  'bottom-end',
-  'left',
-  'left-start',
-  'left-end';
+'top',
+'top-start',
+'top-end',
+'right',
+'right-start',
+'right-end',
+'bottom',
+'bottom-star',
+'bottom-end',
+'left',
+'left-start',
+'left-end';
 ```
 
 **arrow**

@@ -35,40 +35,49 @@ Component Usage
 ```
 
 ### Props
-
 **anchorEl**
-
 - The DOM element that the popper tooltip should be positioned relative to.
-  **component**
+  
+**component**
 - The root element to be rendered for the tooltip.
 - Default is `div`
-  **components**
+
+**components**
 - An object containing sub-components to be rendered.
 - Default is `{}`
-  **componentsProps**
+
+**componentsProps**
 - An object containing props for the sub-components.
 - Default is `{}`
-  **container**
+
+**container**
 - The DOM element that the popper tooltip should be appended to.
 - Default is `root`
-  **disablePortal**
+
+**disablePortal**
 - A boolean to disable the usage of a portal.
 - Default is `false`
-  **keepMounted**
+
+**keepMounted**
 - A boolean to keep the tooltip mounted in the DOM when closed.
 - Default is `false`
-  **open**
+
+**open**
 - A boolean to control whether the tooltip is visible.
 - Default is `false`
-  **popperOptions**
+
+**popperOptions**
 - An object containing options for the positioning and th behavior of the tooltip.
 - Default values as well as available options, specified below.
-  **popperRef**
+
+**popperRef**
 - A ref object to access the tooltip instance.
-  **transition**
+
+**transition**
 - A boolean to enable or disable transitions.
 - Default is `false`
-  **...other**
+
+**...other**
 - Additional props that will be spread to the root element.
 
 ### Popper Options

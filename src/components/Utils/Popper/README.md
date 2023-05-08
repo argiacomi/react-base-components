@@ -94,7 +94,7 @@ Component Usage
 - Options:
 
 ```javascript
-'top',
+  'top',
   'top-start',
   'top-end',
   'right',

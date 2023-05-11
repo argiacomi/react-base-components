@@ -15,16 +15,14 @@ import {
   size
 } from '@floating-ui/dom';
 import { Fade, Portal } from '@components';
+import { css } from '@emotion/react';
 
-function resolveAnchorEl(anchorEl) {
-  return typeof anchorEl === 'function' ? anchorEl() : anchorEl;
-}
+const resolveAnchorEl = (anchorEl) =>
+  typeof anchorEl === 'function' ? anchorEl() : anchorEl;
 
-function isHTMLElement(element) {
-  return element.nodeType !== undefined;
-}
+const isHTMLElement = (element) => element.nodeType !== undefined;
 
-function isDescendant(parent, child) {
+const isDescendant = (parent, child) => {
   let node = child;
   while (node != null) {
     if (node == parent) {
@@ -33,14 +31,17 @@ function isDescendant(parent, child) {
     node = node.parentNode;
   }
   return false;
-}
+};
+
+const getArrowElementById = (arrowId) =>
+  arrowId ? document.getElementById(arrowId) : document.getElementById('arrow');
 
 /*--------------------------- PopperArrow ---------------------------*/
 const PopperArrow = forwardRef(
   (
     {
       children,
-      classNames,
+      className: classNameProp,
       Component,
       height,
       id,
@@ -50,17 +51,25 @@ const PopperArrow = forwardRef(
     },
     ref
   ) => {
+    const className = cn(
+      'w-0 h-0 bg-transparent border-solid border-t-transparent border-r-transparent border-l-white border-b-white dark:border-l-black dark:border-b-black transition-shadow drop-shadow-md',
+      classNameProp
+    );
+
+    console.log(className);
+
     return (
       <Component
         id={id}
-        className={classNames}
+        className={className}
         {...arrowProps}
         ref={ref}
         style={{
-          position: position,
-          width: width,
-          height: height,
-          transform: 'rotate(45deg)',
+          position: `${position}`,
+          borderTopWidth: `${width * 0.5}px`,
+          borderLeftWidth: `${width * 0.5}px`,
+          borderRightWidth: `${width * 0.5}px`,
+          borderBottomWidth: `${height * 0.5}px`,
           ...arrowProps.style
         }}
       />
@@ -109,11 +118,9 @@ const PopperTooltip = forwardRef(
     useImperativeHandle(popperRefProp, () => popperRef.current, []);
 
     const [placement, setPlacement] = useState(initialPlacement);
-
     const [resolvedAnchorElement, setResolvedAnchorElement] = useState(
       resolveAnchorEl(anchorEl)
     );
-
     const [popperOptions, setPopperOptions] = useState({});
 
     useEnhancedEffect(() => {
@@ -123,13 +130,9 @@ const PopperTooltip = forwardRef(
     }, [anchorEl]);
 
     const arrowComponent = components?.arrow ?? 'div';
-    const {
-      classes: arrowClasses,
-      height: arrowHeight = 8,
-      id: arrowId = 'arrow',
-      width: arrowWidth = arrowHeight
-    } = componentsProps?.arrow ?? {};
-
+    const { height: arrowHeight = 12, id: arrowId = 'arrow' } =
+      componentsProps?.arrow ?? {};
+    const arrowWidth = arrowHeight;
     useEnhancedEffect(() => {
       setPlacement(initialPlacement);
 
@@ -249,30 +252,23 @@ const PopperTooltip = forwardRef(
               top: `${y}px`
             });
             if (showArrow) {
-              const arrowBackground = arrowClasses?.includes('bg-')
-                ? undefined
-                : window
-                    .getComputedStyle(tooltipRef.current)
-                    .getPropertyValue('background-color');
-
               const { x: arrowX, y: arrowY } = data.arrow;
               const staticSide = {
-                top: 'bottom',
-                right: 'left',
-                bottom: 'top',
-                left: 'right'
+                top: { side: 'bottom', transform: 'rotate(315deg)' },
+                right: { side: 'left', transform: 'rotate(45deg)' },
+                bottom: { side: 'top', transform: 'rotate(135deg)' },
+                left: { side: 'right', transform: 'rotate(225deg)' }
               }[placement.split('-')[0]];
 
               Object.assign(arrowElement.style, {
-                background: arrowBackground,
                 left: arrowX != null ? `${arrowX}px` : '',
                 top: arrowY != null ? `${arrowY}px` : '',
                 right: '',
-                bottom: '',
-                [staticSide]: '-4px'
+                transform: staticSide.transform,
+                [staticSide.side]: `-${arrowHeight * 0.5 - 2}px`
               });
-              setPlacement(placement);
             }
+            setPlacement(placement);
           });
         }
 
@@ -296,33 +292,28 @@ const PopperTooltip = forwardRef(
 
           Object.assign(tooltipRef.current.style, {
             left: `${x}px`,
-            top: `${y}px`
+            top: `${y}px`,
+            zIndex: 1
           });
           if (showArrow) {
-            const arrowBackground = arrowClasses?.includes('bg-')
-              ? undefined
-              : window
-                  .getComputedStyle(tooltipRef.current)
-                  .getPropertyValue('background-color');
-
             const { x: arrowX, y: arrowY } = data.arrow;
             const staticSide = {
-              top: 'bottom',
-              right: 'left',
-              bottom: 'top',
-              left: 'right'
+              top: { side: 'bottom', transform: 'rotate(315deg)' },
+              right: { side: 'left', transform: 'rotate(45deg)' },
+              bottom: { side: 'top', transform: 'rotate(90deg)' },
+              left: { side: 'right', transform: 'rotate(225deg)' }
             }[placement.split('-')[0]];
 
             Object.assign(arrowElement.style, {
-              background: arrowBackground,
               left: arrowX != null ? `${arrowX}px` : '',
               top: arrowY != null ? `${arrowY}px` : '',
               right: '',
               bottom: '',
-              [staticSide]: '-4px'
+              transform: staticSide.transform,
+              [staticSide.side]: `-${arrowHeight * 0.5}px`
             });
-            setPlacement(placement);
           }
+          setPlacement(placement);
         });
       }
 
@@ -336,7 +327,10 @@ const PopperTooltip = forwardRef(
       };
     }, [resolvedAnchorElement, popperOptions, open]);
 
-    const childProps = { placement: placement };
+    const childProps = {
+      placement: placement,
+      className: componentsProps?.className
+    };
 
     if (TransitionProps !== null) {
       childProps.TransitionProps = TransitionProps;
@@ -346,34 +340,35 @@ const PopperTooltip = forwardRef(
       role: 'tooltip',
       ref: ownRef,
       className: cn(componentsProps?.root?.className, 'root'),
-      ...other,
-      ...componentsProps?.root
+      ...other
     };
 
     const RootComponent = component ?? components?.root ?? 'div';
 
     return transition ? (
-      <Fade {...TransitionProps} timeout={150}>
-        <RootComponent {...rootProps}>
-          {typeof children === 'function' ? children(childProps) : children}
-          {showArrow && (
+      <RootComponent {...rootProps}>
+        {typeof children === 'function'
+          ? children({ ...childProps, style: { zIndex: 1 } })
+          : children}
+        {showArrow && (
+          <Fade {...TransitionProps}>
             <PopperArrow
-              classNames={arrowClasses}
+              className={componentsProps?.className}
               Component={arrowComponent}
               height={arrowHeight}
               id={arrowId}
               position={position}
               width={arrowWidth}
+              {...componentsProps?.arrow}
             />
-          )}
-        </RootComponent>
-      </Fade>
+          </Fade>
+        )}
+      </RootComponent>
     ) : (
       <RootComponent {...rootProps}>
-        {typeof children === 'function' ? children(childProps) : children}
         {showArrow && (
           <PopperArrow
-            classNames={arrowClasses}
+            className={componentsProps?.className}
             Component={arrowComponent}
             height={arrowHeight}
             id={arrowId}
@@ -381,6 +376,9 @@ const PopperTooltip = forwardRef(
             width={arrowWidth}
           />
         )}
+        {typeof children === 'function'
+          ? children({ ...childProps, style: { zIndex: 1 } })
+          : children}
       </RootComponent>
     );
   }

@@ -6,10 +6,10 @@ const paperVariants = cva('bg-white dark:bg-black transition-shadow', {
   variants: {
     elevation: {
       'elevation-0': 'shadow-none',
-      'elevation-1': 'shadow-paper1',
-      'elevation-2': 'shadow-paper2',
-      'elevation-3': 'shadow-paper3',
-      'elevation-4': 'shadow-paper4'
+      'elevation-1': 'drop-shadow-md',
+      'elevation-2': 'drop-shadow-lg',
+      'elevation-3': 'drop-shadow-xl',
+      'elevation-4': 'drop-shadow-2xl'
     }
   }
 });

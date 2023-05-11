@@ -7,11 +7,7 @@ const Popper = forwardRef(
       anchorEl,
       component,
       components,
-      componentsProps = {
-        arrow: {
-          transform: 'rotate(45deg);'
-        }
-      },
+      componentsProps,
       container,
       disablePortal,
       keepMounted,
@@ -23,22 +19,8 @@ const Popper = forwardRef(
     },
     ref
   ) => {
-    const otherProps = {
-      anchorEl,
-      container,
-      component,
-      components,
-      componentsProps,
-      disablePortal,
-      keepMounted,
-      open,
-      popperRef,
-      transition,
-      ...other
-    };
-
     const defaultPopperOptions = {
-      arrow: false,
+      arrow: true,
       autoPlace: false,
       autoUpdate: true,
       avoidCollisions: true,
@@ -57,12 +39,27 @@ const Popper = forwardRef(
       ...popperOptions
     };
 
+    const otherProps = {
+      anchorEl,
+      container,
+      component,
+      components,
+      componentsProps,
+      disablePortal,
+      keepMounted,
+      open,
+      popperRef,
+      transition,
+      ...other
+    };
+
     return (
       <BasePopper
         arrow={mergedPopperOptions?.arrow}
         autoPlace={mergedPopperOptions?.autoPlace}
         autoUpdate={mergedPopperOptions?.autoUpdate}
         avoidCollisions={mergedPopperOptions?.avoidCollisions}
+        componentsProps={componentsProps}
         flip={mergedPopperOptions?.flip}
         hide={mergedPopperOptions?.hide}
         inline={mergedPopperOptions?.inline}

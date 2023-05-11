@@ -2,16 +2,17 @@ import { forwardRef, useEffect, useRef } from 'react';
 import { cn } from '@utils';
 import { Transition } from 'react-transition-group';
 import { useForkRef } from '@component-hooks';
+import tw from 'twin.macro';
 
 const getClasses = (orientation, state) => ({
-  root: cn(
-    'h-0 overflow-hidden',
+  root: [
+    tw`h-0 overflow-hidden`,
     orientation === 'horizontal'
-      ? 'h-auto w-0 transition-[width] duration-300 ease-in-out delay-0'
-      : 'transition-[height] duration-300 ease-in-out delay-0'
-  ),
-  wrapper: cn('flex w-full', orientation === 'horizontal' && 'w-auto h-full'),
-  wrapperInner: cn('w-full', orientation === 'horizontal' && 'w-auto h-full')
+      ? tw`h-auto w-0 transition-[width] duration-300 ease-in-out delay-0`
+      : tw`transition-[height] duration-300 ease-in-out delay-0`
+  ],
+  wrapper: [tw`flex w-full`, orientation === 'horizontal' && tw`w-auto h-full`],
+  wrapperInner: [tw`w-full`, orientation === 'horizontal' && tw`w-auto h-full`]
 });
 
 const getTransitionProps = (props, options) => {
@@ -216,16 +217,17 @@ const Collapse = forwardRef(
       >
         {(state, childProps) => (
           <Component
-            className={cn(
+            collapse='drew'
+            css={[
               classes.root,
               state !== 'entered'
                 ? ''
                 : orientation === 'horizontal'
-                ? 'h-auto w-auto overflow-auto'
-                : 'h-auto overflow-auto',
+                ? tw`h-auto w-auto overflow-auto`
+                : tw`h-auto overflow-auto`,
               state === 'exited' && !inProp && collapsedSize === '0px',
               className
-            )}
+            ]}
             style={{
               [isHorizontal ? 'minWidth' : 'minHeight']: collapsedSize,
               ...style

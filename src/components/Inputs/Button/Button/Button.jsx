@@ -65,7 +65,7 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         color: 'monochrome',
-        className: 'text-monochrome'
+        className: 'text-black'
       },
       {
         variant: ['text', 'outline'],

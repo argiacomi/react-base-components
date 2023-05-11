@@ -9,11 +9,11 @@ export default {
       sans: ['Lato', 'Montserrat', 'Poppins', 'Source Sans Pro']
     },
     screens: {
-      sm: '480px',
-      md: '768px',
-      lg: '1024px',
-      xl: '1440px',
-      '2xl': '1920px',
+      xs: '480px',
+      sm: '768px',
+      md: '1024px',
+      lg: '1440px',
+      xl: '1920px',
       max: '2560px'
     },
     extend: {
@@ -25,7 +25,9 @@ export default {
         paper3:
           '0px 3px 3px -2px rgba(0,0,0,0.2),0px 3px 4px 0px rgba(0,0,0,0.14),0px 1px 8px 0px rgba(0,0,0,0.12)',
         paper4:
-          '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)'
+          '0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)',
+        popperArrow1:
+          '-1px 1px 1px 0px rgba(0,0,0,0.2),-1px 1px 2px -2px rgba(0,0,0,0.14),-1px 1px 3px -2px rgba(0,0,0,0.12)'
       },
       colors: {
         transparent: 'transparent',
@@ -117,5 +119,5 @@ export default {
       }
     }
   },
-  plugins: [require('tailwindcss-animate')]
+  plugins: []
 };

@@ -28,3 +28,4 @@ dist-ssr
 *.env
 
 /src/components/wip
+README.md

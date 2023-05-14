@@ -56,8 +56,6 @@ const PopperArrow = forwardRef(
       classNameProp
     );
 
-    console.log(className);
-
     return (
       <Component
         id={id}

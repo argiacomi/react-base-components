@@ -66,11 +66,6 @@ const Fade = React.forwardRef(
       }
     };
 
-    const handleEntering = React.useCallback(
-      normalizedTransitionCallback(onEntering),
-      [onEntering]
-    );
-
     const handleEnter = React.useCallback(
       normalizedTransitionCallback((node, isAppearing) => {
         setTransitionStyle(node, { style, timeout, easing }, 'enter', onEnter);
@@ -78,14 +73,14 @@ const Fade = React.forwardRef(
       [setTransitionStyle, onEnter]
     );
 
+    const handleEntering = React.useCallback(
+      normalizedTransitionCallback(onEntering),
+      [onEntering]
+    );
+
     const handleEntered = React.useCallback(
       normalizedTransitionCallback(onEntered),
       [onEntered]
-    );
-
-    const handleExiting = React.useCallback(
-      normalizedTransitionCallback(onExiting),
-      [onExiting]
     );
 
     const handleExit = React.useCallback(
@@ -93,6 +88,11 @@ const Fade = React.forwardRef(
         setTransitionStyle(node, { style, timeout, easing }, 'exit', onEnter);
       }),
       [setTransitionStyle, onExit]
+    );
+
+    const handleExiting = React.useCallback(
+      normalizedTransitionCallback(onExiting),
+      [onExiting]
     );
 
     const handleExited = React.useCallback(

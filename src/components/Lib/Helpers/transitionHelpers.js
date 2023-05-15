@@ -135,3 +135,18 @@ export function getTransitionProps({ timeout, easing, style = {} }, options) {
 
 // Triggers a reflow on the passed Dom node by accessing its scrollTop property.
 export const reflow = (node) => node.scrollTop;
+
+export function debounce(func, wait = 166) {
+  let timeout;
+  function debounced(...args) {
+    const later = () => {
+      func.apply(this, args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  }
+  debounced.clear = () => {
+    clearTimeout(timeout);
+  };
+  return debounced;
+}

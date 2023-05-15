@@ -97,11 +97,6 @@ const Grow = React.forwardRef(
       }
     };
 
-    const handleEntering = React.useCallback(
-      normalizedTransitionCallback(onEntering),
-      [onEntering]
-    );
-
     const handleEnter = React.useCallback(
       normalizedTransitionCallback((node, isAppearing) => {
         autoTimeout.current = setNodeStyle(
@@ -117,14 +112,14 @@ const Grow = React.forwardRef(
       [style, timeout, easing, onEnter]
     );
 
+    const handleEntering = React.useCallback(
+      normalizedTransitionCallback(onEntering),
+      [onEntering]
+    );
+
     const handleEntered = React.useCallback(
       normalizedTransitionCallback(onEntered),
       [onEntered]
-    );
-
-    const handleExiting = React.useCallback(
-      normalizedTransitionCallback(onExiting),
-      [onExiting]
     );
 
     const handleExit = React.useCallback(
@@ -140,6 +135,11 @@ const Grow = React.forwardRef(
         node.style.transform = getScale(0.75);
       }),
       [style, timeout, easing, onExit]
+    );
+
+    const handleExiting = React.useCallback(
+      normalizedTransitionCallback(onExiting),
+      [onExiting]
     );
 
     const handleExited = React.useCallback(
@@ -195,7 +195,6 @@ const Grow = React.forwardRef(
     );
   }
 );
-
 Grow.displayName = 'Grow';
 
 export default Grow;

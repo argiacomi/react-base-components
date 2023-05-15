@@ -92,14 +92,6 @@ const Collapse = forwardRef((props, ref) => {
     }
   };
 
-  const handleEntering = normalizedTransitionCallback((node, isAppearing) => {
-    handleTransition(node, 'enter');
-    if (wrapperRef.current && isHorizontal) {
-      wrapperRef.current.style.position = '';
-    }
-    onEntering?.(node, isAppearing);
-  });
-
   const handleEnter = normalizedTransitionCallback((node, isAppearing) => {
     if (wrapperRef.current && isHorizontal) {
       wrapperRef.current.style.position = 'absolute';
@@ -107,6 +99,14 @@ const Collapse = forwardRef((props, ref) => {
     node.style[size] = collapsedSize;
 
     onEnter?.(node, isAppearing);
+  });
+
+  const handleEntering = normalizedTransitionCallback((node, isAppearing) => {
+    handleTransition(node, 'enter');
+    if (wrapperRef.current && isHorizontal) {
+      wrapperRef.current.style.position = '';
+    }
+    onEntering?.(node, isAppearing);
   });
 
   const handleEntered = normalizedTransitionCallback((node, isAppearing) => {

@@ -18,7 +18,12 @@ const styles = {
   }
 };
 
-const setNodeStyle = (node, { style, timeout, easing }, mode, onTransition) => {
+const setTransitionStyle = (
+  node,
+  { style, timeout, easing },
+  mode,
+  onTransition
+) => {
   reflow(node);
 
   const transitionProps = getTransitionProps(
@@ -99,7 +104,7 @@ const Grow = React.forwardRef(
 
     const handleEnter = React.useCallback(
       normalizedTransitionCallback((node, isAppearing) => {
-        autoTimeout.current = setNodeStyle(
+        autoTimeout.current = setTransitionStyle(
           node,
           { style, timeout, easing },
           'enter',
@@ -124,7 +129,7 @@ const Grow = React.forwardRef(
 
     const handleExit = React.useCallback(
       normalizedTransitionCallback((node) => {
-        autoTimeout.current = setNodeStyle(
+        autoTimeout.current = setTransitionStyle(
           node,
           { style, timeout, easing },
           'exit',

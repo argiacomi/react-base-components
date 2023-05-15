@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Button, Paper, Slide } from '@components';
+import { Button, Paper, Zoom } from '@components';
 
 const icon = (
-  <Paper className='m-2 h-[100px] w-[100px]' elevation={4}>
+  <Paper className='m-2' elevation={4}>
     <svg className='h-[100px] w-[100px]'>
       <polygon
         className='fill-white stroke-separatorDark stroke-1'
@@ -12,24 +12,24 @@ const icon = (
   </Paper>
 );
 
-export default function SlideFromContainer() {
+export default function SimpleZoom() {
   const [checked, setChecked] = React.useState(false);
-  const containerRef = React.useRef(null);
 
   const handleChange = () => {
     setChecked((prev) => !prev);
   };
 
   return (
-    <div
-      className='flex h-[180px] w-[240px] overflow-hidden rounded-sm bg-gray-100 p-4 dark:bg-gray-900'
-      ref={containerRef}
-    >
-      <div className='w-[200px]'>
-        <Button onClick={handleChange}>Show from target</Button>
-        <Slide direction='up' in={checked} container={containerRef.current}>
+    <div className='w-[180px]'>
+      <Button onClick={handleChange}>Show from target</Button>
+      <div className='flex'>
+        <Zoom in={checked}>{icon}</Zoom>
+        <Zoom
+          in={checked}
+          style={{ transitionDelay: checked ? '500ms' : '0ms' }}
+        >
           {icon}
-        </Slide>
+        </Zoom>
       </div>
     </div>
   );

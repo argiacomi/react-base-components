@@ -28,5 +28,3 @@ dist-ssr
 *.env
 
 /src/components/wip
-README.md
-src/components/Layout/Grid/GridNew.jsx

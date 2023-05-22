@@ -1,5 +1,4 @@
 import { forwardRef, useEffect, useRef } from 'react';
-import { cn } from '@utils';
 import { Transition } from 'react-transition-group';
 import { createTransitions, reflow, getTransitionProps } from '@components/lib';
 import { useForkRef } from '@component-hooks';

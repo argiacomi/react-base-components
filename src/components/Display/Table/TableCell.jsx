@@ -19,9 +19,9 @@ const cellVariants = cva('', {
       dense: 'px-4 py-2'
     },
     size: {
-      sm: 'text-sm',
-      md: 'text-base',
-      lg: 'text-lg'
+      small: 'text-sm',
+      medium: 'text-base',
+      large: 'text-lg'
     }
   }
 });
@@ -34,7 +34,7 @@ const TableCell = forwardRef(
       component,
       padding = 'default',
       scope,
-      size = 'md',
+      size = 'medium',
       sortDirection = false,
       variant,
       ...other

@@ -6,6 +6,7 @@ import {
   useState
 } from 'react';
 import { cn } from '@utils';
+import tw, { css } from 'twin.macro';
 import {
   useEventCallback,
   useIsFocusVisible,
@@ -265,17 +266,14 @@ const ButtonBase = forwardRef(
       }, [enableTouchRipple]);
     }
 
-    const classes = {
-      root: 'relative m-0 box-border inline-flex cursor-pointer select-none items-center justify-center rounded-none border-none bg-transparent p-0 align-middle text-inherit no-underline outline-0'
+    const styles = {
+      root: tw`relative m-0 box-border inline-flex cursor-pointer select-none items-center justify-center rounded-none border-none bg-transparent p-0 align-middle text-inherit no-underline outline-0`
     };
 
     return (
       <ComponentProp
-        className={cn(
-          classes.root,
-          focusVisible && focusVisibleClassName,
-          className
-        )}
+        className={cn(focusVisible && focusVisibleClassName, className)}
+        css={styles.root}
         onBlur={handleBlur}
         onClick={onClick}
         onContextMenu={handleContextMenu}

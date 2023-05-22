@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { cn } from '@utils';
+import tw, { css } from 'twin.macro';
 
 const Ripple = ({
   className,
@@ -27,12 +27,11 @@ const Ripple = ({
     }
   }, [inProp, onExited, timeout]);
 
-  const rippleClassName = cn(
-    className,
+  const rippleRootStyles = [
     classes.ripple,
     classes.rippleVisible,
     pulsate && classes.ripplePulsate
-  );
+  ].filter(Boolean);
 
   const rippleStyles = {
     width: rippleSize,
@@ -41,15 +40,15 @@ const Ripple = ({
     left: -(rippleSize / 2) + rippleX
   };
 
-  const childClassName = cn(
+  const childStyles = [
     classes.child,
     leaving && classes.childLeaving,
     pulsate && classes.childPulsate
-  );
+  ].filter(Boolean);
 
   return (
-    <span className={rippleClassName} style={rippleStyles}>
-      <span className={childClassName} />
+    <span className={className} css={rippleRootStyles} style={rippleStyles}>
+      <span css={childStyles} />
     </span>
   );
 };

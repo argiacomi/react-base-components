@@ -1,36 +1,74 @@
 import * as React from 'react';
-import { Button, Paper, Zoom } from '@components';
+import { styled } from '@mui/material/styles';
+import { css } from '@emotion/react';
+import { ButtonBase, Box, Paper, Text, GridNew as Grid } from '@components';
+import Avatar from '@mui/material/Avatar';
+import { createBreakpoints } from '@components/lib';
 
-const icon = (
-  <Paper className='m-2' elevation={4}>
-    <svg className='h-[100px] w-[100px]'>
-      <polygon
-        className='fill-white stroke-separatorDark stroke-1'
-        points='0,100 50,00, 100,100'
-      />
-    </svg>
-  </Paper>
-);
+const Img = styled('img')({
+  margin: 'auto',
+  display: 'block',
+  maxWidth: '100%',
+  maxHeight: '100%'
+});
 
-export default function SimpleZoom() {
-  const [checked, setChecked] = React.useState(false);
-
-  const handleChange = () => {
-    setChecked((prev) => !prev);
-  };
-
+export default function ComplexGrid() {
   return (
-    <div className='w-[180px]'>
-      <Button onClick={handleChange}>Show from target</Button>
-      <div className='flex'>
-        <Zoom in={checked}>{icon}</Zoom>
-        <Zoom
-          in={checked}
-          style={{ transitionDelay: checked ? '500ms' : '0ms' }}
-        >
-          {icon}
-        </Zoom>
-      </div>
-    </div>
+    <Paper
+      css={{
+        padding: 16,
+        margin: 'auto',
+        marginTop: 32,
+        maxWidth: 500,
+        flexGrow: 1,
+        backgroundColor: '#fff'
+      }}
+    >
+      <Grid container spacing={2}>
+        <Grid>
+          <ButtonBase css={{ width: 128, height: 128 }}>
+            <Img alt='complex' src='/static/images/grid/complex.jpg' />
+          </ButtonBase>
+        </Grid>
+        <Grid xs={12} sm container>
+          <Grid xs container direction='column' spacing={2}>
+            <Grid xs>
+              <Text
+                className='text-black'
+                gutterBottom
+                variant='subtitle1'
+                component='div'
+              >
+                Standard license
+              </Text>
+              <Text className='text-black' variant='body2' gutterBottom>
+                Full resolution 1920x1080 • JPEG
+              </Text>
+              <Text
+                className='text-black'
+                variant='body2'
+                color='text.secondary'
+              >
+                ID: 1030114
+              </Text>
+            </Grid>
+            <Grid>
+              <Text
+                className='text-black'
+                css={{ cursor: 'pointer' }}
+                variant='body2'
+              >
+                Remove
+              </Text>
+            </Grid>
+          </Grid>
+          <Grid>
+            <Text className='text-black' variant='subtitle1' component='div'>
+              $19.00
+            </Text>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Paper>
   );
 }

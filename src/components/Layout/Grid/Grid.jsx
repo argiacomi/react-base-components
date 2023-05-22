@@ -1,114 +1,77 @@
 import * as React from 'react';
-import { cn } from '@utils';
 import resolveConfig from 'tailwindcss/resolveConfig';
 import tailwindConfig from '@components/../../tailwind.config.js';
 import GridContext from './GridContext';
 import { css } from '@emotion/react';
 import tw from 'twin.macro';
 
-const defaultBreakpoints = resolveConfig(tailwindConfig).theme.screens;
+const SPACING_CONSTANT = 8;
+const DEFAULT_COLUMNS = 12;
+const DEFAULT_BREAKPOINTS = resolveConfig(tailwindConfig).theme.screens;
+const [key, value] = Object.entries(DEFAULT_BREAKPOINTS)[0];
+const DEFAULT_BREAKPOINT = { [key]: value };
 
-const processStyleValue = (styleValue, breakpoints) => {
-  const config = {};
-
-  if (typeof styleValue === 'number' || typeof styleValue === 'string') {
-    const value = parseInt(styleValue);
-    for (const breakpoint in breakpoints) {
-      config[breakpoint] = value;
-    }
-  } else if (Array.isArray(styleValue)) {
-    styleValue.forEach((value, index) => {
-      const breakpoint = Object.keys(breakpoints)[index];
-      if (breakpoint) config[breakpoint] = value;
-    });
-  } else if (typeof styleValue === 'object') {
-    let previousValue;
-    for (const breakpoint in breakpoints) {
-      if (styleValue.hasOwnProperty(breakpoint)) {
-        config[breakpoint] = styleValue[breakpoint];
-        previousValue = styleValue[breakpoint];
-      } else if (previousValue) {
-        config[breakpoint] = previousValue;
-      }
-    }
+function resolveBreakpointValues(styleInput, breakpoints) {
+  if (Object.keys(breakpoints).length === 0) {
+    return { xs: styleInput };
   }
 
-  return config;
-};
+  let previous;
 
-const processDirection = (direction, breakpoints) => {
-  const config = {};
-
-  const processValue = (value, breakpoint) => {
-    if (typeof value === 'string') {
-      if (value === 'column' || value === 'column-reverse') {
-        return value === 'column' ? 'column' : 'column-reverse';
-      } else {
-        return value;
-      }
-    } else if (Array.isArray(value)) {
-      const index = Object.keys(breakpoints).indexOf(breakpoint);
-      if (index < value.length) {
-        return processValue(value[index], breakpoint);
-      } else {
-        throw new Error('Invalid direction value in array');
-      }
-    } else if (typeof value === 'object') {
-      if (value.hasOwnProperty(breakpoint)) {
-        return processValue(value[breakpoint], breakpoint);
-      } else {
-        throw new Error('Invalid direction value in object');
-      }
+  return Object.keys(breakpoints).reduce((acc, breakpoint, i) => {
+    if (Array.isArray(styleInput)) {
+      acc[breakpoint] =
+        styleInput[i] != null ? styleInput[i] : styleInput[previous];
+      previous = i;
+    } else if (typeof styleInput === 'object') {
+      acc[breakpoint] =
+        styleInput[breakpoint] != null
+          ? styleInput[breakpoint]
+          : styleInput[previous];
+      previous = breakpoint;
     } else {
-      throw new Error('Invalid direction value');
+      acc[breakpoint] = styleInput;
     }
-  };
+    return acc;
+  }, {});
+}
 
-  for (const breakpoint in breakpoints) {
-    try {
-      config[breakpoint] = processValue(direction, breakpoint);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  return config;
-};
-
-const generateStyleConfig = (styleInput, breakpoints = defaultBreakpoints) => {
+const generateStyleConfig = (styleInput, breakpoints = DEFAULT_BREAKPOINTS) => {
   const styleConfig = {};
 
   for (const styleKey in styleInput) {
-    styleConfig[styleKey] =
-      styleKey !== 'direction'
-        ? processStyleValue(styleInput[styleKey], breakpoints)
-        : processDirection(styleInput[styleKey], breakpoints);
+    styleConfig[styleKey] = resolveBreakpointValues(
+      styleInput[styleKey],
+      breakpoints
+    );
   }
 
   return styleConfig;
 };
 
-const spacingClass = (container, item, value, type) => {
+const spacingStyles = (container, item, value, type) => {
   const spacing = {};
 
   if (container && value !== 0) {
-    spacing[type === 'column' ? 'marginLeft' : 'marginTop'] = `-${value * 4}px`;
+    if (type === 'columnMargin') {
+      spacing['width'] = `calc(100% + ${value * SPACING_CONSTANT}px)`;
+      spacing['marginLeft'] = `-${value * SPACING_CONSTANT}px`;
+    } else if (type === 'rowMargin') {
+      spacing['marginTop'] = `-${value * SPACING_CONSTANT}px`;
+    }
   }
   if (item && value !== 0) {
-    spacing[type === 'column' ? 'paddingLeft' : 'paddingTop'] = `${
-      value * 4
-    }px`;
+    if (type === 'columnPadding') {
+      spacing['paddingLeft'] = `${value * SPACING_CONSTANT}px`;
+    } else if (type === 'rowPadding') {
+      spacing['paddingTop'] = `${value * SPACING_CONSTANT}px`;
+    }
   }
+
   return spacing;
 };
 
-const columnsClass = (columns, direction) => ({
-  gridTemplateColumns: direction.includes('col')
-    ? `repeat(${columns}, 1fr)`
-    : `repeat(${columns}, auto)`
-});
-
-const sizeClass = (container, item, size, columns, spacing) => {
+const sizeStyles = (container, item, size, columns, spacing) => {
   if (!size) {
     return {};
   }
@@ -134,101 +97,113 @@ const sizeClass = (container, item, size, columns, spacing) => {
       maxWidth: fullWidth
     };
   }
-
-  return {};
 };
 
 const styleClassMapping = {
   columnSpacing: (container, item, value) =>
-    spacingClass(container, item, value, 'column'),
+    spacingStyles(container, item, value, 'columnMargin'),
   rowSpacing: (container, item, value) =>
-    spacingClass(container, item, value, 'row'),
-  columns: columnsClass,
-  size: sizeClass,
-  direction: (direction) => ({ flexDirection: direction })
+    spacingStyles(container, item, value, 'rowMargin'),
+  columnPadding: (container, item, value) =>
+    spacingStyles(container, item, value, 'columnPadding'),
+  rowPadding: (container, item, value) =>
+    spacingStyles(container, item, value, 'rowPadding'),
+  columns: () => {},
+  size: sizeStyles,
+  direction: (direction) => {
+    return { flexDirection: direction };
+  }
 };
 
-const generateClasses = (container, item, styleConfig) => {
+const generateStyles = (container, item, breakpoints, styleConfig) => {
   const styleResult = {};
-  const mediaQueries = {};
 
   Object.keys(styleConfig).forEach((key) => {
     styleResult[key] = styleConfig[key];
   });
 
   for (const styleKey in styleConfig) {
-    let previousValue = null;
-    let classString = '';
-
     for (const breakpoint in styleConfig[styleKey]) {
       const currentValue = styleConfig[styleKey][breakpoint];
 
-      if (currentValue !== previousValue) {
-        if (styleKey === 'size') {
-          const columns = styleConfig.columns[breakpoint];
-          const spacing = styleConfig.columnSpacing[breakpoint];
-          styleResult[styleKey][breakpoint] = styleClassMapping[styleKey](
-            container,
-            item,
-            currentValue,
-            columns,
-            spacing
-          );
-        } else if (styleKey === 'columns') {
-          const direction = styleConfig.direction[breakpoint];
-          styleResult[styleKey][breakpoint] = styleClassMapping[styleKey](
-            currentValue,
-            direction
-          );
-        } else if (styleKey === 'columnSpacing' || styleKey === 'rowSpacing') {
-          styleResult[styleKey][breakpoint] = styleClassMapping[styleKey](
-            container,
-            item,
-            currentValue
-          );
-        } else {
-          styleResult[styleKey][breakpoint] =
-            styleClassMapping[styleKey](currentValue);
-        }
-        previousValue = currentValue;
+      if (styleKey === 'size') {
+        const columns = styleConfig.columns[breakpoint];
+        const spacing = styleConfig.columnSpacing[breakpoint];
+        styleResult[styleKey][breakpoint] = styleClassMapping[styleKey](
+          container,
+          item,
+          currentValue,
+          columns,
+          spacing
+        );
+      } else if (
+        ['columnSpacing', 'rowSpacing', 'columnPadding', 'rowPadding'].includes(
+          styleKey
+        )
+      ) {
+        styleResult[styleKey][breakpoint] = styleClassMapping[styleKey](
+          container,
+          item,
+          currentValue,
+          styleKey
+        );
       } else {
-        delete styleResult[styleKey][breakpoint];
+        styleResult[styleKey][breakpoint] =
+          styleClassMapping[styleKey](currentValue);
       }
     }
   }
 
-  for (const styleKey in styleResult) {
-    let prevoiousSize = '0px';
-    for (const breakpoint in defaultBreakpoints) {
-      const mediaQuery = `@media (min-width: ${prevoiousSize})`;
+  delete styleResult['columns'];
 
-      if (styleResult[styleKey][breakpoint]) {
+  return styleResult;
+};
+
+const generateMediaQueries = (breakpoints, styleConfig) => {
+  let mediaQueries;
+
+  mediaQueries = {};
+  for (const styleKey in styleConfig) {
+    for (const breakpoint in breakpoints) {
+      const mediaQuery = `@media (min-width: ${breakpoints[breakpoint]})`;
+      if (styleConfig[styleKey][breakpoint]) {
         if (!mediaQueries[mediaQuery]) {
           mediaQueries[mediaQuery] = {};
         }
         Object.assign(
           mediaQueries[mediaQuery],
-          styleResult[styleKey][breakpoint]
+          styleConfig[styleKey][breakpoint]
         );
       }
-      prevoiousSize = defaultBreakpoints[breakpoint];
     }
+  }
+
+  if (Object.keys(mediaQueries).length !== 1) return mediaQueries;
+
+  if (
+    Object.keys(mediaQueries)[0] ===
+    `@media (min-width: ${Object.values(DEFAULT_BREAKPOINT)})`
+  ) {
+    return Object.values(mediaQueries)[0];
   }
 
   return mediaQueries;
 };
 
-const useGridStyles = (container, item, styleInput) => {
-  const styleConfigInput = {};
-
+const useGridStyles = (container, item, styleInput, breakpoints) => {
   const styleConfig = React.useMemo(
-    () => generateStyleConfig(styleInput),
-    [styleInput]
+    () => generateStyleConfig(styleInput, breakpoints),
+    [styleInput, breakpoints]
+  );
+
+  const resolvedStyles = React.useMemo(
+    () => generateStyles(container, item, breakpoints, styleConfig),
+    [container, item, breakpoints, styleConfig]
   );
 
   const styles = React.useMemo(
-    () => generateClasses(container, item, styleConfig),
-    [container, item, styleConfig]
+    () => generateMediaQueries(breakpoints, resolvedStyles),
+    [breakpoints, resolvedStyles]
   );
 
   return styles;
@@ -238,7 +213,7 @@ const Grid = React.forwardRef(
   (
     {
       className,
-      columns: columnsProp = 12, //{ xs: 2, md: 3, lg: 4, xl: 5, max: 6 },
+      columns: columnsProp = DEFAULT_COLUMNS, //{ xs: 2, md: 3, lg: 4, xl: 5, max: 6 },
       columnSpacing: columnSpacingProp,
       component = 'div',
       container = false,
@@ -255,25 +230,56 @@ const Grid = React.forwardRef(
   ) => {
     const columnsContext = React.useContext(GridContext);
 
-    const columns = container ? columnsProp || 12 : columnsContext.columns;
+    const columns = container
+      ? columnsProp || DEFAULT_COLUMNS
+      : columnsContext.columns;
     const rowSpacing = container
       ? rowSpacingProp || spacing
       : columnsContext.rowSpacing;
     const columnSpacing = container
       ? columnSpacingProp || spacing
       : columnsContext.columnSpacing;
+    const rowPadding =
+      container && item ? columnsContext.rowSpacing : rowSpacing;
+    const columnPadding =
+      container && item ? columnsContext.columnSpacing : columnSpacing;
 
     const styleInput = {
       size,
       columns,
       columnSpacing,
       rowSpacing,
+      columnPadding,
+      rowPadding,
       direction
     };
 
-    const styles = useGridStyles(container, item, styleInput);
+    let breakpoints = DEFAULT_BREAKPOINT;
 
-    const composedClasses = cn(className);
+    for (const key in styleInput) {
+      if (typeof styleInput[key] === 'object' && styleInput[key] !== null) {
+        for (const breakpoint in styleInput[key]) {
+          if (DEFAULT_BREAKPOINTS[breakpoint]) {
+            breakpoints[breakpoint] = DEFAULT_BREAKPOINTS[breakpoint];
+          }
+        }
+      }
+    }
+
+    const gridStyles = useGridStyles(container, item, styleInput, breakpoints);
+
+    const mergedStyles = [
+      tw`box-border`,
+      container && tw`flex flex-wrap`,
+      item && tw`m-0`,
+      zeroMinWidth && tw`min-w-0`,
+      container && wrap === 'nowrap'
+        ? tw`flex-nowrap`
+        : wrap === 'wrap-reverse'
+        ? tw`flex-wrap-reverse`
+        : tw`flex-wrap`,
+      gridStyles
+    ].filter(Boolean);
 
     const contextValue = React.useMemo(
       () => ({ columns, rowSpacing, columnSpacing }),
@@ -285,19 +291,8 @@ const Grid = React.forwardRef(
     return (
       <GridContext.Provider value={contextValue}>
         <GridRoot
-          className={composedClasses}
-          css={[
-            tw`box-border`,
-            container && tw`flex flex-wrap`,
-            item && tw`m-0`,
-            zeroMinWidth && tw`min-w-0`,
-            container && wrap === 'nowrap'
-              ? tw`flex-nowrap`
-              : wrap === 'wrap-reverse'
-              ? tw`flex-wrap-reverse`
-              : tw`flex-wrap`,
-            styles
-          ]}
+          className={className}
+          css={mergedStyles}
           ref={ref}
           {...other}
         />

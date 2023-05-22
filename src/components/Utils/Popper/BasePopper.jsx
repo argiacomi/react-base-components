@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { cn, ownerDocument } from '@utils';
+import { ownerDocument } from '@utils';
 import { useEnhancedEffect, useForkRef } from '@component-hooks';
 import {
   computePosition,
@@ -15,7 +15,7 @@ import {
   size
 } from '@floating-ui/dom';
 import { Fade, Portal } from '@components';
-import { css } from '@emotion/react';
+import tw from 'twin.macro';
 
 const resolveAnchorEl = (anchorEl) =>
   typeof anchorEl === 'function' ? anchorEl() : anchorEl;
@@ -41,7 +41,7 @@ const PopperArrow = forwardRef(
   (
     {
       children,
-      className: classNameProp,
+      className,
       Component,
       height,
       id,
@@ -51,15 +51,13 @@ const PopperArrow = forwardRef(
     },
     ref
   ) => {
-    const className = cn(
-      'w-0 h-0 bg-transparent border-solid border-t-transparent border-r-transparent border-l-white border-b-white dark:border-l-black dark:border-b-black transition-shadow drop-shadow-md',
-      classNameProp
-    );
+    const baseStyles = tw`w-0 h-0 bg-transparent border-solid border-t-transparent border-r-transparent border-l-white border-b-white dark:border-l-black dark:border-b-black transition-shadow drop-shadow-md`;
 
     return (
       <Component
         id={id}
         className={className}
+        css={baseStyles}
         {...arrowProps}
         ref={ref}
         style={{

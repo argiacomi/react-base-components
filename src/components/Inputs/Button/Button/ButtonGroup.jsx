@@ -1,50 +1,31 @@
 import { createContext, forwardRef, useMemo } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@utils';
+import tw, { css } from 'twin.macro';
 
 export const ButtonGroupContext = createContext({});
 
-const buttonGroupVariants = cva(
-  'min-w-[40px] rounded-none active:scale-100 shadow-none',
-  {
-    variants: {
-      variant: {
-        contain: '',
-        text: 'drop-shadow-md',
-        outline: ''
-      },
-      orientation: {
-        horizontal:
-          'ml-[-1px] first-of-type:ml-0 first-of-type:rounded-l-md last-of-type:rounded-r-md',
-        vertical:
-          'mt-[-1px] first-of-type:mt-0 first-of-type:rounded-t-md last-of-type:rounded-b-md'
-      },
-      color: {
-        default: 'border-gray-700',
-        primary: 'border-primary-600',
-        secondary: 'border-secondary-600',
-        success: 'border-success-600',
-        warning: 'border-warning-600',
-        danger: 'border-danger-600',
-        monochrome: 'border-gray-900'
-      }
-    },
-    compoundVariants: [
-      {
-        variant: ['text', 'contain'],
-        orientation: 'horizontal',
-        className:
-          'border-y-0 border-x border-solid first-of-type:border-l-0 last-of-type:border-r-0'
-      },
-      {
-        variant: ['text', 'contain'],
-        orientation: 'vertical',
-        className:
-          'border-x-0 border-y border-solid first-of-type:border-t-0 last-of-type:border-b-0'
-      }
-    ]
+const buttonGroupVariants = {
+  root: tw`min-w-[40px] rounded-none active:scale-100 shadow-none`,
+  text: tw`drop-shadow-md`,
+  orientation: {
+    horizontal: tw`ml-[-1px] first-of-type:ml-0 first-of-type:rounded-l-md last-of-type:rounded-r-md`,
+    vertical: tw`mt-[-1px] first-of-type:mt-0 first-of-type:rounded-t-md last-of-type:rounded-b-md`
+  },
+  color: {
+    default: tw`border-gray-700`,
+    primary: tw`border-primary-600`,
+    secondary: tw`border-secondary-600`,
+    success: tw`border-success-600`,
+    warning: tw`border-warning-600`,
+    danger: tw`border-danger-600`,
+    monochrome: tw`border-gray-900`
+  },
+  compoundVariants: {
+    horizontal: tw`border-y-0 border-x border-solid first-of-type:border-l-0 last-of-type:border-r-0`,
+    vertical: tw`border-x-0 border-y border-solid first-of-type:border-t-0 last-of-type:border-b-0`
   }
-);
+};
 
 const ButtonGroup = forwardRef(
   (
@@ -65,12 +46,18 @@ const ButtonGroup = forwardRef(
     },
     ref
   ) => {
-    const classes = buttonGroupVariants({ color, variant, orientation });
+    const styles = [
+      buttonGroupVariants.root,
+      variant === 'text' && buttonGroupVariants.text,
+      buttonGroupVariants.orientation[orientation],
+      buttonGroupVariants.color[color],
+      variant !== 'outline' && buttonGroupVariants.compoundVariants[orientation]
+    ].filter(Boolean);
 
     const context = useMemo(
       () => ({
         className,
-        classes,
+        styles,
         color,
         disabled,
         disableElevation,
@@ -83,7 +70,7 @@ const ButtonGroup = forwardRef(
       }),
       [
         className,
-        classes,
+        styles,
         color,
         disabled,
         disableElevation,
@@ -96,19 +83,23 @@ const ButtonGroup = forwardRef(
       ]
     );
 
-    const buttonGroupClasses = cn(
-      'group inline-flex rounded-md',
-      orientation === 'horizontal' ? 'flex-row' : 'flex-col',
-      variant !== 'text' && 'shadow-md',
+    const buttonGroupStyles = [
+      tw`inline-flex rounded-md`,
+      orientation === 'horizontal' ? tw`flex-row` : tw`flex-col`,
+      variant !== 'text' && tw`shadow-md`,
       disabled &&
-        'border-none bg-disabledLight shadow-none drop-shadow-none dark:bg-disabledDark',
-      disableElevation && 'shadow-none drop-shadow-none',
-      fullWidth && 'w-full',
-      className
-    );
+        tw`border-none bg-disabledLight shadow-none drop-shadow-none dark:bg-disabledDark`,
+      disableElevation && tw`shadow-none drop-shadow-none`,
+      fullWidth && tw`w-full`
+    ].filter(Boolean);
 
     return (
-      <Component className={buttonGroupClasses} ref={ref} {...other}>
+      <Component
+        className={cn('group', className)}
+        css={buttonGroupStyles}
+        ref={ref}
+        {...other}
+      >
         <ButtonGroupContext.Provider value={context}>
           {children}
         </ButtonGroupContext.Provider>
@@ -118,4 +109,4 @@ const ButtonGroup = forwardRef(
 );
 ButtonGroup.displayName = 'ButtonGroup';
 
-export { ButtonGroup, buttonGroupVariants };
+export { ButtonGroup };

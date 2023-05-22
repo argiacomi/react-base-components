@@ -3,4 +3,4 @@ export * from './Button/Button';
 export * from './Button/ButtonGroup';
 export * from './ToggleButton/ToggleButton';
 export { default as ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup';
-export * from './IconButton/IconButton';
+export { default as IconButton } from './IconButton/IconButton';

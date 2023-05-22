@@ -1,23 +1,24 @@
 import { forwardRef, useContext } from 'react';
 import { cn } from '@utils';
+import tw from 'twin.macro';
 import { ButtonBase } from '@components';
 import { AccordionContext } from './Accordion';
 
-const getClasses = ({ disabled, enableGutters, expanded, className }) => ({
-  root: cn(
-    'flex min-h-[48px] px-4 no-underline transition-[min-height,background-color] duration-150 ease-in-out delay-0 focus-visible:bg-gray-400',
-    disabled && 'pointer-events-none',
-    className
-  ),
-  content: cn(
-    'm-0 flex flex-grow my-3',
-    enableGutters && 'transition-[margin] duration-150 ease-in-out delay-0',
-    enableGutters && expanded && 'my-5'
-  ),
-  expandIconWrapper: cn(
-    'flex text-current rotate-0 transition-[transform] duration-150 ease-in-out delay-0 h-5 w-5',
-    expanded && 'rotate-180'
-  )
+const getStyles = ({ disabled, enableGutters, expanded }) => ({
+  root: [
+    tw`flex min-h-[48px] px-4 no-underline transition-[min-height,background-color] duration-150 ease-in-out delay-[0ms] focus-visible:bg-gray-400`,
+    disabled && tw`pointer-events-none`
+  ].filter(Boolean),
+  content: [
+    tw`m-0 flex grow my-3`,
+    enableGutters &&
+      tw`transition-[margin] duration-150 ease-in-out delay-[0ms]`,
+    enableGutters && expanded && tw`my-5`
+  ].filter(Boolean),
+  expandIconWrapper: [
+    tw`flex text-current rotate-0 transition-[transform] duration-150 ease-in-out delay-[0ms]`,
+    expanded && tw`rotate-180`
+  ]
 });
 
 const AccordionSummary = forwardRef(
@@ -34,11 +35,10 @@ const AccordionSummary = forwardRef(
   ) => {
     const context = useContext(AccordionContext);
     const { disabled, enableGutters, expanded, toggle } = context;
-    const classes = getClasses({
+    const summaryStyles = getStyles({
       disabled,
       enableGutters,
-      expanded,
-      className
+      expanded
     });
 
     const handleChange = (event) => {
@@ -53,15 +53,16 @@ const AccordionSummary = forwardRef(
         disabled={disabled}
         component='div'
         aria-expanded={expanded}
-        className={classes.root}
+        className={className}
+        css={summaryStyles.root}
         focusVisibleClassName={focusVisibleClassName}
         onClick={handleChange}
         ref={ref}
         {...other}
       >
-        <div className={classes.content}>{children}</div>
+        <div css={summaryStyles.content}>{children}</div>
         {expandIcon && (
-          <div className={classes.expandIconWrapper}>{expandIcon}</div>
+          <div css={summaryStyles.expandIconWrapper}>{expandIcon}</div>
         )}
       </ButtonBase>
     );

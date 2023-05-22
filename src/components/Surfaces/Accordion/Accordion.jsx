@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useMemo, forwardRef } from 'react';
 import { cn } from '@utils';
+import tw from 'twin.macro';
 import { Collapse, Paper } from '@components';
 import { useControlled } from '@component-hooks';
 
@@ -50,31 +51,30 @@ const Accordion = forwardRef(
       [expanded, disabled, enableGutters, handleChange]
     );
 
-    const accordionBase = `
-      relative no-overflow-anchoring before bg-white
-      text-black dark:bg-black dark:text-white delay-0 transition-[margin] shadow-paper1
-    `;
+    const accordionBase = tw`relative [overflow-anchor:none] transition-[margin] delay-[0ms]`;
 
-    const accordionDivider = `
-      before:content-[''] before:absolute before:left-0 before:top-[-1px] before:right-0
-      before:h-[1px] before:opacity-100 before:bg-separatorLight dark:before:bg-separatorDark
-      before:transition-[opacity,background-color] before:delay-0 before:first-of-type:hidden
-    `;
+    const accordionDivider = tw`before:absolute before:left-0 before:top-[-1px] before:right-0 before:h-[1px] before:content-[""] before:opacity-100 before:bg-dividerLight dark:before:bg-dividerDark before:transition-[opacity,background-color] before:delay-[0ms] first-of-type:before:hidden`;
 
-    const paperClasses = cn(
-      accordionDivider,
+    const accordionStyles = [
       accordionBase,
-      expanded && 'm-0 before:opacity-0 first-of-type:mt-0 last-of-type:mb-0',
-      !square &&
-        'rounded-none first-of-type:rounded-t-md last-of-type:rounded-b-md',
-      enableGutters && expanded && 'my-4',
+      accordionDivider,
+      expanded &&
+        tw`first-of-type:mt-0 last-of-type:mb-0 ['& + &']:before:hidden`,
       disabled &&
-        'bg-disabledLight text-disabledText dark:bg-disabledDark dark:text-disabledText',
-      className
-    );
+        tw`bg-disabledLight text-disabledText dark:bg-disabledDark dark:text-disabledText`,
+      !square &&
+        tw`rounded-none first-of-type:rounded-t-md last-of-type:rounded-b-md`,
+      enableGutters && expanded && tw`before:opacity-0 my-4`
+    ].filter(Boolean);
 
     return (
-      <Paper className={paperClasses} ref={ref} square={square} {...other}>
+      <Paper
+        className={className}
+        css={accordionStyles}
+        ref={ref}
+        square={square}
+        {...other}
+      >
         <AccordionContext.Provider value={contextValue}>
           {summary}
         </AccordionContext.Provider>

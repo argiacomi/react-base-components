@@ -1,10 +1,8 @@
 import { forwardRef } from 'react';
-import { cn } from '@utils';
+import 'twin.macro';
 
 const AccordionDetails = forwardRef(({ className, ...other }, ref) => {
-  const accordionDetailsClasses = cn('pt-2 pb-4 px-4 ', className);
-
-  return <div className={accordionDetailsClasses} ref={ref} {...other} />;
+  return <div className={className} tw='pt-2 pb-4 px-4' ref={ref} {...other} />;
 });
 AccordionDetails.displayName = 'AccordionDetails';
 

@@ -1,7 +1,7 @@
-import React, { forwardRef, useEffect, useState } from 'react';
-import { PaginationItem } from './PaginationItem';
+import React from 'react';
+import PaginationItem from './PaginationItem';
 
-const Pagination = forwardRef(
+const Pagination = React.forwardRef(
   (
     {
       boundaryCount = 1,
@@ -18,9 +18,9 @@ const Pagination = forwardRef(
     },
     ref
   ) => {
-    const [page, setPage] = useState(controlledPage || defaultPage);
+    const [page, setPage] = React.useState(controlledPage || defaultPage);
 
-    useEffect(() => {
+    React.useEffect(() => {
       if (controlledPage !== undefined) {
         setPage(controlledPage);
       }
@@ -145,4 +145,4 @@ const Pagination = forwardRef(
 
 Pagination.displayName = 'Pagination';
 
-export { Pagination };
+export default Pagination;

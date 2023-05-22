@@ -1,34 +1,31 @@
 import * as React from 'react';
-import { cva } from 'class-variance-authority';
-import { cn } from '@utils';
+import tw, { css } from 'twin.macro';
 
-const textVariants = cva('m-0 font-normal tracking-normal', {
-  variants: {
-    variant: {
-      h1: 'font-light text-8xl leading-5 tracking-tight',
-      h2: 'font-light text-6xl leading-5',
-      h3: 'text-5xl leading-5',
-      h4: 'text-4xl leading-5',
-      h5: 'text-2xl leading-5',
-      h6: 'font-medium text-xl leading-6',
-      subtitle1: 'text-base leading-7',
-      subtitle2: 'font-medium text-sm leading-6',
-      body1: 'text-base',
-      body2: 'text-sm leading-6',
-      inherit:
-        'font-[inherit] text-[inherit] leading-[inherit] tracking-[inherit]'
-    },
-    align: {
-      center: 'text-center',
-      end: 'text-end',
-      inherit: 'text-[inherit]',
-      jusitify: 'text-justify',
-      left: 'text-left',
-      right: 'text-right',
-      start: 'text-start'
-    }
+const textVariants = {
+  root: tw`m-0 font-normal tracking-normal text-black dark:text-gray-100`,
+  variant: {
+    h1: tw`font-light text-8xl leading-5 tracking-tight`,
+    h2: tw`font-light text-6xl leading-5`,
+    h3: tw`text-5xl leading-5`,
+    h4: tw`text-4xl leading-5`,
+    h5: tw`text-2xl leading-5`,
+    h6: tw`font-medium text-xl leading-6`,
+    subtitle1: tw`text-base leading-7`,
+    subtitle2: tw`font-medium text-sm leading-6`,
+    body1: tw`text-base`,
+    body2: tw`text-sm leading-6`,
+    inherit: tw`font-[inherit] text-[inherit] leading-[inherit] tracking-[inherit]`
+  },
+  align: {
+    center: tw`text-center`,
+    end: tw`text-end`,
+    inherit: '',
+    jusitify: tw`text-justify`,
+    left: tw`text-left`,
+    right: tw`text-right`,
+    start: tw`text-start`
   }
-});
+};
 
 const defaultVariantMapping = {
   h1: 'h1',
@@ -61,19 +58,17 @@ const Text = React.forwardRef(
     const Component =
       component || (paragraph ? 'p' : defaultVariantMapping[variant]) || 'span';
 
-    const mergedClasses = cn(
-      textVariants({ variant, align }),
-      gutterBottom && 'mb-1.5',
-      noWrap && 'overflow-hidden text-ellipsis whitespace-nowrap',
-      paragraph && 'mb-4'
-    );
+    const textStyles = [
+      textVariants.root,
+      textVariants.variant[variant],
+      textVariants.align[align],
+      gutterBottom && tw`mb-1.5`,
+      noWrap && tw`overflow-hidden text-ellipsis whitespace-nowrap`,
+      paragraph && tw`mb-4`
+    ].filter(Boolean);
 
     return (
-      <Component
-        ref={ref}
-        className={cn(mergedClasses, className)}
-        {...other}
-      />
+      <Component ref={ref} className={className} css={textStyles} {...other} />
     );
   }
 );

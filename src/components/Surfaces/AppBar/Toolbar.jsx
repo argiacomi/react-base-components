@@ -1,6 +1,15 @@
 import { forwardRef } from 'react';
-import { cva } from 'class-variance-authority';
+import tw from 'twin.macro';
 import { cn } from '@utils';
+
+const toolBarVariants = {
+  root: tw`relative flex items-center min-h-[56px] landscape:min-h-[48px] px-6 lg:px-10 xl:px-20`,
+  disableGutters: tw`px-0`,
+  variant: {
+    regular: tw`md:min-h-[64px]`,
+    dense: tw`min-h-[48px]`
+  }
+};
 
 const Toolbar = forwardRef(function Toolbar(props, ref) {
   const {
@@ -11,15 +20,17 @@ const Toolbar = forwardRef(function Toolbar(props, ref) {
     ...other
   } = props;
 
-  const classes = cn(
-    'z-1 relative flex items-center mx-auto box-border h-full w-full max-w-[2520px] scroll-mx-0 items-center min-h-[48px]',
-    disableGutters ? 'px-0' : 'px-6 xl:px-10 2xl:px-20',
-    variant === 'dense' ? '' : 'md:min-h-[64px]',
-    className
-  );
+  const toolbarStyles = [
+    toolBarVariants.root,
+    disableGutters && toolBarVariants.disableGutters,
+    toolBarVariants.variant[variant]
+  ].filter(Boolean);
 
-  return <Component className={classes} ref={ref} {...other} />;
+  return (
+    <Component className={className} css={toolbarStyles} ref={ref} {...other} />
+  );
 });
+
 Toolbar.displayName = 'Toolbar';
 
 export default Toolbar;

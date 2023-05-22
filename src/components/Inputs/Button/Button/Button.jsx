@@ -1,209 +1,151 @@
 import { forwardRef, useContext } from 'react';
+import tw, { css } from 'twin.macro';
 import { cva } from 'class-variance-authority';
 import { cn } from '@utils';
 import { ButtonBase } from '@components';
 import { ButtonGroupContext } from './ButtonGroup';
 
-const buttonVariants = cva(
-  'inline-flex min-w-[64px] active:scale-95 rounded-md transition-colors items-center justify-center relative box-border font-medium w-auto bg-transparent outline-0 border-none border m-0 p-0 cursor-pointer select-none align-middle no-underline overflow-hidden',
-  {
-    variants: {
-      color: {
-        default: 'bg-gray-600 hover:bg-gray-700',
-        primary: 'bg-primary-500 hover:bg-primary-600',
-        secondary: 'bg-secondary-500 hover:bg-secondary-600',
-        success: 'bg-success-500 hover:bg-success-600',
-        warning: 'bg-warning-500 hover:bg-warning-600',
-        danger: 'bg-danger-500 hover:bg-danger-600',
-        monochrome:
-          'bg-black hover:bg-gray-900 dark:bg-white dark:hover:bg-gray-500 dark:text-black'
-      },
-      variant: {
-        contain: 'bg-opacity-100 text-white shadow-md',
-        text: 'bg-opacity-0 text-black dark:text-white drop-shadow-md',
-        outline: 'bg-opacity-0 border border-solid border-current shadow-md'
-      },
-      size: {
-        xs: 'px-3 py-1 leading-4 text-xs',
-        sm: 'px-4 py-1 leading-4 text-sm',
-        md: 'px-4 py-1 leading-6 text-base',
-        lg: 'px-5 py-1 leading-7 text-lg',
-        xl: 'px-6 py-2 leading-8 text-xl'
-      }
+const buttonVariants = {
+  root: tw`inline-flex min-w-[64px] active:scale-95 rounded-lg transition-colors items-center justify-center relative box-border font-medium w-auto bg-transparent outline-0 border-none border m-0 p-0 cursor-pointer select-none align-middle no-underline overflow-hidden`,
+  variants: {
+    color: {
+      default: tw`bg-gray-600 hover:bg-gray-700`,
+      primary: tw`bg-primary-500 hover:bg-primary-600`,
+      secondary: tw`bg-secondary-500 hover:bg-secondary-600`,
+      success: tw`bg-success-500 hover:bg-success-600`,
+      warning: tw`bg-warning-500 hover:bg-warning-600`,
+      danger: tw`bg-danger-500 hover:bg-danger-600`,
+      monochrome: tw`bg-black hover:bg-gray-900 dark:bg-white dark:hover:bg-gray-500 dark:text-black`
     },
-    compoundVariants: [
-      {
-        variant: 'outline',
-        color: 'default',
-        className: 'text-gray-700 dark:text-gray-600'
-      },
-      {
-        variant: 'outline',
-        color: 'primary',
-        className: 'text-primary-500'
-      },
-      {
-        variant: 'outline',
-        color: 'secondary',
-        className: 'text-secondary-500'
-      },
-      {
-        variant: 'outline',
-        color: 'success',
-        className: 'text-success-500'
-      },
-      {
-        variant: 'outline',
-        color: 'warning',
-        className: 'text-warning-500'
-      },
-      {
-        variant: 'outline',
-        color: 'danger',
-        className: 'text-danger-500'
-      },
-      {
-        variant: 'outline',
-        color: 'monochrome',
-        className: 'text-black'
-      },
-      {
-        variant: ['text', 'outline'],
-        color: 'default',
-        className:
-          'hover:text-gray-500 dark:hover:text-gray-500 hover:bg-gray-800/20'
-      },
-      {
-        variant: ['text', 'outline'],
-        color: 'primary',
-        className:
-          'hover:text-primary-500 dark:hover:text-primary-500 hover:bg-primary-500/20'
-      },
-      {
-        variant: ['text', 'outline'],
-        color: 'secondary',
-        className:
-          'hover:text-secondary-500 dark:hover:text-secondary-500 hover:bg-secondary-500/20'
-      },
-      {
-        variant: ['text', 'outline'],
-        color: 'success',
-        className:
-          'hover:text-success-500 dark:hover:text-success-500 hover:bg-success-500/20'
-      },
-      {
-        variant: ['text', 'outline'],
-        color: 'warning',
-        className:
-          'hover:text-warning-500 dark:hover:text-warning-500 hover:bg-warning-500/20'
-      },
-      {
-        variant: ['text', 'outline'],
-        color: 'danger',
-        className:
-          'hover:text-danger-500 dark:hover:text-danger-500 hover:bg-danger-500/20'
-      },
-      {
-        variant: ['text', 'outline'],
-        color: 'monochrome',
-        className:
-          'dark:text-white hover:text-black dark:hover:text-white hover:bg-gray-900/20'
-      }
-    ]
+    variant: {
+      contain: tw`bg-opacity-100 text-white shadow-md`,
+      text: tw`bg-opacity-0 text-black dark:text-white drop-shadow-md`,
+      outline: tw`bg-opacity-0 border border-solid border-current shadow-md`
+    },
+    size: {
+      xs: tw`px-3 py-1 leading-4 text-xs`,
+      small: tw`px-4 py-1 leading-4 text-sm`,
+      medium: tw`px-4 py-1 leading-6 text-base`,
+      large: tw`px-5 py-1 leading-7 text-lg`,
+      xl: tw`px-6 py-2 leading-8 text-xl`
+    }
+  },
+  compoundVariants: {
+    root: {
+      default: tw`hover:text-gray-500 dark:hover:text-gray-500 hover:bg-gray-800/20`,
+      primary: tw`hover:text-primary-500 dark:hover:text-primary-500 hover:bg-primary-500/20`,
+      secondary: tw`hover:text-secondary-500 dark:hover:text-secondary-500 hover:bg-secondary-500/20`,
+      success: tw`hover:text-success-500 dark:hover:text-success-500 hover:bg-success-500/20`,
+      warning: tw`hover:text-warning-500 dark:hover:text-warning-500 hover:bg-warning-500/20`,
+      danger: tw`hover:text-danger-500 dark:hover:text-danger-500 hover:bg-danger-500/20`,
+      monochrome: tw`dark:text-white hover:text-black dark:hover:text-white hover:bg-gray-900/20`
+    },
+    outline: {
+      default: tw`text-gray-700 dark:text-gray-600`,
+      primary: tw`text-primary-500`,
+      secondary: tw`text-secondary-500`,
+      success: tw`text-success-500`,
+      warning: tw`text-warning-500`,
+      danger: tw`text-danger-500`,
+      monochrome: tw`text-black`
+    }
   }
-);
+};
 
-const iconVariants = cva(
-  'inline-flex items-center justify-center font-medium my-1',
-  {
-    variants: {
-      edge: {
-        start: 'mr-[10px]',
-        end: 'ml-[10px]'
-      },
-      size: {
-        xs: 'leading-4 h-[14px] w-[14px]',
-        sm: 'leading-4 h-4 w-4',
-        md: 'leading-6 h-[18px] w-[18px]',
-        lg: 'leading-7 h-5 w-5',
-        xl: 'leading-8 h-[22px] w-[22px]'
-      }
+const iconVariants = {
+  root: tw`inline-flex items-center justify-center font-medium my-1`,
+  variants: {
+    edge: {
+      start: tw`mr-[10px]`,
+      end: tw`ml-[10px]`
     },
-    compoundVariants: [
-      {
-        edge: 'start',
-        size: ['xs', 'sm'],
-        className: 'mr-2'
-      },
-      {
-        edge: 'end',
-        size: ['xs', 'sm'],
-        className: 'ml-2'
-      },
-      {
-        edge: 'start',
-        size: ['lg', 'xl'],
-        className: 'mr-3'
-      },
-      {
-        edge: 'end',
-        size: ['lg', 'xl'],
-        className: 'ml-3'
-      }
-    ]
+    size: {
+      xs: tw`leading-4 h-[14px] w-[14px]`,
+      small: tw`leading-4 h-4 w-4`,
+      medium: tw`leading-6 h-[18px] w-[18px]`,
+      large: tw`leading-7 h-5 w-5`,
+      xl: tw`leading-8 h-[22px] w-[22px]`
+    }
+  },
+  compoundVariants: {
+    start: {
+      xs: tw`mr-2`,
+      small: tw`mr-2`,
+      large: tw`mr-3`,
+      xl: tw`mr-3`
+    },
+    end: {
+      xs: tw`ml-2`,
+      small: tw`ml-2`,
+      large: tw`ml-3`,
+      xl: tw`ml-3`
+    }
   }
-);
+};
 
 const Button = forwardRef((props, ref) => {
   const contextProps = useContext(ButtonGroupContext);
   const {
     children,
     className,
-    classes,
     color = 'primary',
-    component = 'button',
     disabled = false,
     disableElevation = false,
     disableFocusRipple = false,
     endIcon: endIconProp,
     focusVisibleClassName,
     fullWidth = false,
-    size = 'md',
+    size = 'medium',
     startIcon: startIconProp,
+    styles,
     variant = 'contain',
     ...other
   } = { ...props, ...contextProps };
 
-  const buttonClasses = cn(
-    buttonVariants({ color, variant, size }),
-    classes,
+  const buttonStyles = [
+    buttonVariants.root,
+    buttonVariants.variants.color[color],
+    buttonVariants.variants.variant[variant],
+    buttonVariants.variants.size[size],
+    variant !== 'contain' && buttonVariants.compoundVariants.root[color],
+    variant === 'outline' && buttonVariants.compoundVariants.outline[color],
+    styles,
     disabled &&
-      'dark:shadown-none pointer-events-none border-none bg-disabledLight text-disabledText shadow-none drop-shadow-none dark:border-none dark:bg-disabledDark dark:text-disabledText dark:drop-shadow-none',
-    disableElevation && 'shadow-none drop-shadow-none',
-    fullWidth && 'w-full',
-    className
-  );
+      tw`dark:shadow-none pointer-events-none border-none bg-disabledLight text-disabledText shadow-none drop-shadow-none dark:border-none dark:bg-disabledDark dark:text-disabledText dark:drop-shadow-none`,
+    disableElevation && tw`shadow-none drop-shadow-none`,
+    fullWidth && tw`w-full`
+  ].filter(Boolean);
+
+  const startIconStyles = [
+    iconVariants.root,
+    iconVariants.variants.edge.start,
+    iconVariants.variants.size[size],
+    iconVariants.compoundVariants.start[size]
+  ].filter(Boolean);
+
+  const endIconStyles = [
+    iconVariants.root,
+    iconVariants.variants.edge.end,
+    iconVariants.variants.size[size],
+    iconVariants.compoundVariants.end[size]
+  ].filter(Boolean);
 
   const startIcon = startIconProp && (
-    <span className={iconVariants({ edge: 'start', size })}>
-      {startIconProp}
-    </span>
+    <span css={startIconStyles}>{startIconProp}</span>
   );
 
-  const endIcon = endIconProp && (
-    <span className={iconVariants({ edge: 'end', size })}>{endIconProp}</span>
-  );
+  const endIcon = endIconProp && <span css={endIconStyles}>{endIconProp}</span>;
 
   return (
     <ButtonBase
-      className={buttonClasses}
+      className={className}
+      css={buttonStyles}
       focusRipple={!disableFocusRipple}
       focusVisibleClassName={cn(
         variant === 'contained' && 'shadow-lg',
         focusVisibleClassName
       )}
       ref={ref}
-      type={component}
       {...other}
     >
       {startIcon}

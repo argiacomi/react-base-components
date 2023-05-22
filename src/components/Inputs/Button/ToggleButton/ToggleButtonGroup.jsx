@@ -1,5 +1,15 @@
 import React, { forwardRef } from 'react';
 import { cn } from '@utils';
+import tw, { css } from 'twin.macro';
+
+const groupVariants = {
+  root: tw`inline-flex rounded-md shadow-md`,
+  horizontal: tw`flex-row [&>*:not(:first-of-type)]:ml-[-1px] [&>*:not(:first-of-type)]:border-l [&>*:not(:first-of-type)]:border-solid [&>*:not(:first-of-type)]:border-l-transparent [&>*:not(:first-of-type)]:rounded-l-none  [&>*:not(:last-of-type)]:rounded-r-none`,
+  vertical: tw`flex-col [&>*:not(:first-of-type)]:mt-[-1px] [&>*:not(:first-of-type)]:border-t [&>*:not(:first-of-type)]:border-solid [&>*:not(:first-of-type)]:border-t-transparent [&>*:not(:first-of-type)]:rounded-t-none  [&>*:not(:last-of-type)]:rounded-b-none`,
+  fullWidth: tw`w-full`,
+  disabled: tw`dark:text-disabledDark text-disabledLight shadow-none drop-shadow-none`,
+  disableElevation: tw`shadow-none drop-shadow-none`
+};
 
 function isValueSelected(value, candidate) {
   if (candidate === undefined || value === undefined) {
@@ -56,18 +66,21 @@ const ToggleButtonGroup = forwardRef(
       onChange(event, value === buttonValue ? null : buttonValue);
     };
 
-    const groupClasses = cn(
-      'group inline-flex rounded-md shadow-md',
-      orientation === 'horizontal' ? 'flex-row' : 'flex-col',
-      disabled &&
-        'dark:text-disabledDark text-disabledLight shadow-none drop-shadow-none',
-      disableElevation && 'shadow-none drop-shadow-none',
-      fullWidth && 'w-full',
-      className
-    );
+    const groupStyles = [
+      groupVariants.root,
+      groupVariants[orientation],
+      fullWidth && groupVariants.fullWidth,
+      disabled && groupVariants.disabled,
+      disableElevation && groupVariants.disableElevation
+    ].filter(Boolean);
 
     return (
-      <Component className={groupClasses} ref={ref} {...other}>
+      <Component
+        className={cn('group', className)}
+        css={groupStyles}
+        ref={ref}
+        {...other}
+      >
         {React.Children.map(children, (child) => {
           if (!React.isValidElement(child)) {
             return null;

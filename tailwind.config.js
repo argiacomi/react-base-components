@@ -9,12 +9,12 @@ export default {
       sans: ['Lato', 'Montserrat', 'Poppins', 'Source Sans Pro']
     },
     screens: {
-      xs: '480px',
-      sm: '768px',
-      md: '1024px',
-      lg: '1440px',
+      xs: '0px',
+      sm: '480px',
+      md: '768px',
+      lg: '1280px',
       xl: '1920px',
-      max: '2560px'
+      '2xl': '2560px'
     },
     extend: {
       boxShadow: {
@@ -37,8 +37,8 @@ export default {
         disabledLight: '#bdbdbd',
         disabledDark: '#9e9e9e',
         disabledText: '#616161',
-        separatorLight: 'rgba(0, 0, 0, 0.2)',
-        separatorDark: 'rgba(255, 255, 255, 0.12)',
+        dividerLight: 'rgba(0, 0, 0, 0.2)',
+        dividerDark: 'rgba(255, 255, 255, 0.12)',
         primary: {
           200: '#a5c8f2',
           300: '#77aceb',

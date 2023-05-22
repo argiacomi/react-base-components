@@ -7,22 +7,22 @@ import {
   useState
 } from 'react';
 import { TransitionGroup } from 'react-transition-group';
-import { cn } from '@utils';
+import tw, { css } from 'twin.macro';
 import Ripple from './Ripple';
 
 const DURATION = 325;
 export const DELAY_RIPPLE = 80;
 
 const TouchRippleRoot = {
-  root: 'pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit]'
+  root: tw`pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit]`
 };
 const touchRippleClasses = {
-  ripple: 'absolute opacity-0',
-  rippleVisible: 'absolute opacity-30 scale-100 animate-ripple-enter',
-  ripplePulsate: 'duration-300',
-  child: 'opacity-100 block w-full h-full rounded-full bg-current',
-  childLeaving: ' opacity-0 animate-ripple-exit',
-  childPulsate: 'absolute left-0 top-0 animate-pulsate'
+  ripple: tw`absolute opacity-0`,
+  rippleVisible: tw`absolute opacity-30 scale-100 animate-ripple-enter`,
+  ripplePulsate: tw`duration-300`,
+  child: tw`opacity-100 block w-full h-full rounded-full bg-current`,
+  childLeaving: tw` opacity-0 animate-ripple-exit`,
+  childPulsate: tw`absolute left-0 top-0 animate-pulsate`
 };
 
 const TouchRipple = forwardRef((props, ref) => {
@@ -62,24 +62,24 @@ const TouchRipple = forwardRef((props, ref) => {
         <Ripple
           key={nextKey.current}
           classes={{
-            ripple: cn(classes.ripple, touchRippleClasses.ripple),
-            rippleVisible: cn(
+            ripple: [classes.ripple, touchRippleClasses.ripple].filter(Boolean),
+            rippleVisible: [
               classes.rippleVisible,
               touchRippleClasses.rippleVisible
-            ),
-            ripplePulsate: cn(
+            ].filter(Boolean),
+            ripplePulsate: [
               classes.ripplePulsate,
               touchRippleClasses.ripplePulsate
-            ),
-            child: cn(classes.child, touchRippleClasses.child),
-            childLeaving: cn(
+            ].filter(Boolean),
+            child: [classes.child, touchRippleClasses.child],
+            childLeaving: [
               classes.childLeaving,
               touchRippleClasses.childLeaving
-            ),
-            childPulsate: cn(
+            ].filter(Boolean),
+            childPulsate: [
               classes.childPulsate,
               touchRippleClasses.childPulsate
-            )
+            ].filter(Boolean)
           }}
           timeout={DURATION}
           pulsate={pulsate}
@@ -220,7 +220,8 @@ const TouchRipple = forwardRef((props, ref) => {
 
   return (
     <span
-      className={cn(TouchRippleRoot.root, classes.root, className)}
+      className={className}
+      css={[TouchRippleRoot.root, classes.root].filter(Boolean)}
       ref={container}
       {...other}
     >

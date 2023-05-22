@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import { css } from '@emotion/react';
-import { ButtonBase, Box, Paper, Text, GridNew as Grid } from '@components';
+import { ButtonBase, Box, Paper, Text, Grid } from '@components';
 import Avatar from '@mui/material/Avatar';
 import { createBreakpoints } from '@components/lib';
+import styled from '@emotion/styled';
 
 const Img = styled('img')({
   margin: 'auto',

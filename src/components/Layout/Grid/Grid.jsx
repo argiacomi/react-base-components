@@ -1,305 +1,278 @@
 import * as React from 'react';
-import resolveConfig from 'tailwindcss/resolveConfig';
-import tailwindConfig from '@components/../../tailwind.config.js';
-import GridContext from './GridContext';
-import { css } from '@emotion/react';
-import tw from 'twin.macro';
+import { createBreakpoints, traverseBreakpoints } from '@components/lib';
+import OverflowContext from './GridContext';
 
 const SPACING_CONSTANT = 8;
 const DEFAULT_COLUMNS = 12;
-const DEFAULT_BREAKPOINTS = resolveConfig(tailwindConfig).theme.screens;
-const [key, value] = Object.entries(DEFAULT_BREAKPOINTS)[0];
-const DEFAULT_BREAKPOINT = { [key]: value };
 
-function resolveBreakpointValues(styleInput, breakpoints) {
-  if (Object.keys(breakpoints).length === 0) {
-    return { xs: styleInput };
-  }
+const appendLevel = (level) => (level <= 0 ? '' : `Level${level}`);
 
-  let previous;
-
-  return Object.keys(breakpoints).reduce((acc, breakpoint, i) => {
-    if (Array.isArray(styleInput)) {
-      acc[breakpoint] =
-        styleInput[i] != null ? styleInput[i] : styleInput[previous];
-      previous = i;
-    } else if (typeof styleInput === 'object') {
-      acc[breakpoint] =
-        styleInput[breakpoint] != null
-          ? styleInput[breakpoint]
-          : styleInput[previous];
-      previous = breakpoint;
-    } else {
-      acc[breakpoint] = styleInput;
-    }
-    return acc;
-  }, {});
-}
-
-const generateStyleConfig = (styleInput, breakpoints = DEFAULT_BREAKPOINTS) => {
-  const styleConfig = {};
-
-  for (const styleKey in styleInput) {
-    styleConfig[styleKey] = resolveBreakpointValues(
-      styleInput[styleKey],
-      breakpoints
-    );
-  }
-
-  return styleConfig;
+const getSpacing = (level, direction) => {
+  return `var(--Grid-${direction}Spacing${appendLevel(level)})`;
 };
 
-const spacingStyles = (container, item, value, type) => {
-  const spacing = {};
-
-  if (container && value !== 0) {
-    if (type === 'columnMargin') {
-      spacing['width'] = `calc(100% + ${value * SPACING_CONSTANT}px)`;
-      spacing['marginLeft'] = `-${value * SPACING_CONSTANT}px`;
-    } else if (type === 'rowMargin') {
-      spacing['marginTop'] = `-${value * SPACING_CONSTANT}px`;
-    }
-  }
-  if (item && value !== 0) {
-    if (type === 'columnPadding') {
-      spacing['paddingLeft'] = `${value * SPACING_CONSTANT}px`;
-    } else if (type === 'rowPadding') {
-      spacing['paddingTop'] = `${value * SPACING_CONSTANT}px`;
-    }
-  }
-
-  return spacing;
+const getColumns = (level) => {
+  return `var(--Grid-columns${appendLevel(level)})`;
 };
 
-const sizeStyles = (container, item, size, columns, spacing) => {
-  if (!size) {
+const generateColumnsStyles = (styleConfig, breakpoints) => {
+  if (!styleConfig.container) {
     return {};
   }
 
-  if (size === true) {
-    return { flexBasis: 0, flexGrow: 1, maxWidth: '100%' };
-  } else if (size === 'auto') {
-    return {
-      flexBasis: 'auto',
-      flexGrow: 0,
-      flexShrink: 0,
-      maxWidth: 'none',
-      width: 'auto'
-    };
-  } else {
-    const fullWidth =
-      container && item
-        ? `calc(${Math.round((size / columns) * 10e7) / 10e5}% + ${spacing}px)`
-        : `${Math.round((size / columns) * 10e7) / 10e5}%`;
-    return {
-      flexBasis: fullWidth,
-      flexGrow: 0,
-      maxWidth: fullWidth
-    };
-  }
-};
-
-const styleClassMapping = {
-  columnSpacing: (container, item, value) =>
-    spacingStyles(container, item, value, 'columnMargin'),
-  rowSpacing: (container, item, value) =>
-    spacingStyles(container, item, value, 'rowMargin'),
-  columnPadding: (container, item, value) =>
-    spacingStyles(container, item, value, 'columnPadding'),
-  rowPadding: (container, item, value) =>
-    spacingStyles(container, item, value, 'rowPadding'),
-  columns: () => {},
-  size: sizeStyles,
-  direction: (direction) => {
-    return { flexDirection: direction };
-  }
-};
-
-const generateStyles = (container, item, breakpoints, styleConfig) => {
-  const styleResult = {};
-
-  Object.keys(styleConfig).forEach((key) => {
-    styleResult[key] = styleConfig[key];
-  });
-
-  for (const styleKey in styleConfig) {
-    for (const breakpoint in styleConfig[styleKey]) {
-      const currentValue = styleConfig[styleKey][breakpoint];
-
-      if (styleKey === 'size') {
-        const columns = styleConfig.columns[breakpoint];
-        const spacing = styleConfig.columnSpacing[breakpoint];
-        styleResult[styleKey][breakpoint] = styleClassMapping[styleKey](
-          container,
-          item,
-          currentValue,
-          columns,
-          spacing
-        );
-      } else if (
-        ['columnSpacing', 'rowSpacing', 'columnPadding', 'rowPadding'].includes(
-          styleKey
-        )
-      ) {
-        styleResult[styleKey][breakpoint] = styleClassMapping[styleKey](
-          container,
-          item,
-          currentValue,
-          styleKey
-        );
-      } else {
-        styleResult[styleKey][breakpoint] =
-          styleClassMapping[styleKey](currentValue);
-      }
-    }
-  }
-
-  delete styleResult['columns'];
-
-  return styleResult;
-};
-
-const generateMediaQueries = (breakpoints, styleConfig) => {
-  let mediaQueries;
-
-  mediaQueries = {};
-  for (const styleKey in styleConfig) {
-    for (const breakpoint in breakpoints) {
-      const mediaQuery = `@media (min-width: ${breakpoints[breakpoint]})`;
-      if (styleConfig[styleKey][breakpoint]) {
-        if (!mediaQueries[mediaQuery]) {
-          mediaQueries[mediaQuery] = {};
+  const styles =
+    styleConfig.level > 0 && styleConfig.container
+      ? {
+          [`--Grid-columns${appendLevel(styleConfig.level)}`]: getColumns(
+            styleConfig.level - 1
+          )
         }
-        Object.assign(
-          mediaQueries[mediaQuery],
-          styleConfig[styleKey][breakpoint]
-        );
-      }
+      : { '--Grid-columns': 12 };
+
+  traverseBreakpoints(
+    breakpoints,
+    styleConfig.columns,
+    (appendStyle, value) => {
+      appendStyle(styles, {
+        [`--Grid-columns${appendLevel(styleConfig.level)}`]: value
+      });
     }
-  }
-
-  if (Object.keys(mediaQueries).length !== 1) return mediaQueries;
-
-  if (
-    Object.keys(mediaQueries)[0] ===
-    `@media (min-width: ${Object.values(DEFAULT_BREAKPOINT)})`
-  ) {
-    return Object.values(mediaQueries)[0];
-  }
-
-  return mediaQueries;
-};
-
-const useGridStyles = (container, item, styleInput, breakpoints) => {
-  const styleConfig = React.useMemo(
-    () => generateStyleConfig(styleInput, breakpoints),
-    [styleInput, breakpoints]
-  );
-
-  const resolvedStyles = React.useMemo(
-    () => generateStyles(container, item, breakpoints, styleConfig),
-    [container, item, breakpoints, styleConfig]
-  );
-
-  const styles = React.useMemo(
-    () => generateMediaQueries(breakpoints, resolvedStyles),
-    [breakpoints, resolvedStyles]
   );
 
   return styles;
 };
 
-const Grid = React.forwardRef(
-  (
-    {
-      className,
-      columns: columnsProp = DEFAULT_COLUMNS, //{ xs: 2, md: 3, lg: 4, xl: 5, max: 6 },
-      columnSpacing: columnSpacingProp,
-      component = 'div',
-      container = false,
-      direction = 'row',
-      item = false,
-      rowSpacing: rowSpacingProp,
-      spacing = 0, //{ xs: 2, sm: 3, md: '3px', lg: '4px', xl: 5, max: 6 },
-      size, //{ xs: 1, md: 1, lg: 1, xl: 1, max: 1 },
-      wrap = 'wrap',
-      zeroMinWidth = false,
-      ...other
-    },
-    ref
-  ) => {
-    const columnsContext = React.useContext(GridContext);
-
-    const columns = container
-      ? columnsProp || DEFAULT_COLUMNS
-      : columnsContext.columns;
-    const rowSpacing = container
-      ? rowSpacingProp || spacing
-      : columnsContext.rowSpacing;
-    const columnSpacing = container
-      ? columnSpacingProp || spacing
-      : columnsContext.columnSpacing;
-    const rowPadding =
-      container && item ? columnsContext.rowSpacing : rowSpacing;
-    const columnPadding =
-      container && item ? columnsContext.columnSpacing : columnSpacing;
-
-    const styleInput = {
-      size,
-      columns,
-      columnSpacing,
-      rowSpacing,
-      columnPadding,
-      rowPadding,
-      direction
-    };
-
-    let breakpoints = DEFAULT_BREAKPOINT;
-
-    for (const key in styleInput) {
-      if (typeof styleInput[key] === 'object' && styleInput[key] !== null) {
-        for (const breakpoint in styleInput[key]) {
-          if (DEFAULT_BREAKPOINTS[breakpoint]) {
-            breakpoints[breakpoint] = DEFAULT_BREAKPOINTS[breakpoint];
-          }
-        }
-      }
-    }
-
-    const gridStyles = useGridStyles(container, item, styleInput, breakpoints);
-
-    const mergedStyles = [
-      tw`box-border`,
-      container && tw`flex flex-wrap`,
-      item && tw`m-0`,
-      zeroMinWidth && tw`min-w-0`,
-      container && wrap === 'nowrap'
-        ? tw`flex-nowrap`
-        : wrap === 'wrap-reverse'
-        ? tw`flex-wrap-reverse`
-        : tw`flex-wrap`,
-      gridStyles
-    ].filter(Boolean);
-
-    const contextValue = React.useMemo(
-      () => ({ columns, rowSpacing, columnSpacing }),
-      [columns, rowSpacing, columnSpacing]
-    );
-
-    const GridRoot = component ?? 'div';
-
-    return (
-      <GridContext.Provider value={contextValue}>
-        <GridRoot
-          className={className}
-          css={mergedStyles}
-          ref={ref}
-          {...other}
-        />
-      </GridContext.Provider>
-    );
+const generateSpacingStyles = (styleConfig, breakpoints, direction) => {
+  if (!styleConfig.container) {
+    return {};
   }
-);
-Grid.displayName = 'Grid';
+
+  const styles =
+    styleConfig.level > 0 && styleConfig.container
+      ? {
+          [`--Grid-${direction}Spacing${appendLevel(styleConfig.level)}`]:
+            getSpacing(styleConfig.level - 1, `${direction}`)
+        }
+      : {};
+  traverseBreakpoints(
+    breakpoints,
+    direction === 'row' ? styleConfig.rowSpacing : styleConfig.columnSpacing,
+    (appendStyle, value) => {
+      appendStyle(styles, {
+        [`--Grid-${direction}Spacing${appendLevel(styleConfig.level)}`]:
+          typeof value === 'string' ? value : `${value * SPACING_CONSTANT}px`
+      });
+    }
+  );
+  return styles;
+};
+
+const generateSizeStyles = (styleConfig, breakpoints) => {
+  const styles = {};
+  traverseBreakpoints(
+    breakpoints,
+    styleConfig.gridSize,
+    (appendStyle, value) => {
+      let style = {};
+      if (value === true) {
+        style = {
+          flexBasis: 0,
+          flexGrow: 1,
+          maxWidth: '100%'
+        };
+      }
+      if (value === 'auto') {
+        style = {
+          flexBasis: 'auto',
+          flexGrow: 0,
+          flexShrink: 0,
+          maxWidth: 'none',
+          width: 'auto'
+        };
+      }
+      if (typeof value === 'number') {
+        style = {
+          flexGrow: 0,
+          flexBasis: 'auto',
+          width: `calc(100% * ${value} / ${getColumns(styleConfig.level - 1)}${
+            styleConfig.level > 0 && styleConfig.container
+              ? ` + ${getSpacing(styleConfig.level - 1, 'column')}`
+              : ''
+          })`
+        };
+      }
+      appendStyle(styles, style);
+    }
+  );
+  return styles;
+};
+
+const generateDirectionStyles = (styleConfig, breakpoints) => {
+  if (!styleConfig.container) {
+    return {};
+  }
+  const styles = {};
+  traverseBreakpoints(
+    breakpoints,
+    styleConfig.direction,
+    (appendStyle, value) => {
+      appendStyle(styles, { flexDirection: value });
+    }
+  );
+  return styles;
+};
+
+const generateStyles = (styleConfig, breakpoints) => {
+  return {
+    minWidth: 0,
+    boxSizing: 'border-box',
+    ...(styleConfig.container && {
+      display: 'flex',
+      flexWrap: 'wrap',
+      ...(styleConfig.wrap &&
+        styleConfig.wrap !== 'wrap' && {
+          flexWrap: styleConfig.wrap
+        }),
+      margin: `calc(${getSpacing(
+        styleConfig.level,
+        'row'
+      )} / -2) calc(${getSpacing(styleConfig.level, 'column')} / -2)`,
+      ...(styleConfig.disableEqualOverflow && {
+        margin: `calc(${getSpacing(
+          styleConfig.level,
+          'row'
+        )} * -1) 0px 0px calc(${getSpacing(styleConfig.level, 'column')} * -1)`
+      })
+    }),
+    ...((!styleConfig.container ||
+      (styleConfig.level > 0 && styleConfig.container)) && {
+      padding: `calc(${getSpacing(
+        styleConfig.level - 1,
+        'row'
+      )} / 2) calc(${getSpacing(styleConfig.level - 1, 'column')} / 2)`,
+      ...((styleConfig.disableEqualOverflow ||
+        styleConfig.parentDisableEqualOverflow) && {
+        padding: `${getSpacing(
+          styleConfig.level - 1,
+          'row'
+        )} 0px 0px ${getSpacing(styleConfig.level - 1, 'column')}`
+      })
+    })
+  };
+};
+
+const generateOffsetStyles = (styleConfig, breakpoints) => {
+  const styles = {};
+  traverseBreakpoints(
+    breakpoints,
+    styleConfig.gridOffset,
+    (appendStyle, value) => {
+      let style = {};
+      if (value === 'auto') {
+        style = {
+          marginLeft: 'auto'
+        };
+      }
+      if (typeof value === 'number') {
+        style = {
+          marginLeft:
+            value === 0
+              ? '0px'
+              : `calc(100% * ${value} / ${getColumns(styleConfig.level - 1)})`
+        };
+      }
+      appendStyle(styles, style);
+    }
+  );
+  return styles;
+};
+
+const Grid = React.forwardRef((props, ref) => {
+  const overflow = React.useContext(OverflowContext);
+  const {
+    className,
+    children,
+    columns: columnsProp = 12,
+    container = false,
+    component = 'div',
+    direction = 'row',
+    wrap = 'wrap',
+    spacing: spacingProp = 0,
+    rowSpacing: rowSpacingProp = spacingProp,
+    columnSpacing: columnSpacingProp = spacingProp,
+    disableEqualOverflow = false,
+    level = 0,
+    ...rest
+  } = props;
+
+  const breakpoints = createBreakpoints(props.breakpoints);
+
+  const gridSize = {};
+  const gridOffset = {};
+  const other = {};
+
+  Object.entries(rest).forEach(([key, val]) => {
+    if (breakpoints.values[key] !== undefined) {
+      gridSize[key] = val;
+    } else if (breakpoints.values[key.replace('Offset', '')] !== undefined) {
+      gridOffset[key.replace('Offset', '')] = val;
+    } else {
+      other[key] = val;
+    }
+  });
+
+  const levelZero = level === 0;
+  const columns = props.columns ?? (levelZero ? columnsProp : undefined);
+  const spacing = props.spacing ?? (levelZero ? spacingProp : undefined);
+  const rowSpacing =
+    props.rowSpacing ??
+    props.spacing ??
+    (levelZero ? rowSpacingProp : undefined);
+  const columnSpacing =
+    props.columnSpacing ??
+    props.spacing ??
+    (levelZero ? columnSpacingProp : undefined);
+
+  const styleConfig = {
+    container,
+    level,
+    columns,
+    columnSpacing,
+    rowSpacing,
+    direction,
+    gridSize,
+    wrap,
+    gridOffset,
+    disableEqualOverflow: disableEqualOverflow ?? overflow ?? false,
+    parentDisableEqualOverflow: overflow
+  };
+
+  const mergedStyles = [
+    generateColumnsStyles(styleConfig, breakpoints),
+    generateSpacingStyles(styleConfig, breakpoints, 'column'),
+    generateSpacingStyles(styleConfig, breakpoints, 'row'),
+    generateSizeStyles(styleConfig, breakpoints),
+    generateDirectionStyles(styleConfig, breakpoints),
+    generateStyles(styleConfig, breakpoints),
+    generateOffsetStyles(styleConfig, breakpoints)
+  ].filter(Boolean);
+
+  const childrenWithLevels = React.Children.map(children, (child) => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, {
+        level: child.props.level ?? level + 1
+      });
+    }
+    return child;
+  });
+
+  return (
+    <OverflowContext.Provider value={disableEqualOverflow ?? overflow}>
+      <div ref={ref} className={className} css={mergedStyles} {...other}>
+        {childrenWithLevels}
+      </div>
+    </OverflowContext.Provider>
+  );
+});
 
 export default Grid;

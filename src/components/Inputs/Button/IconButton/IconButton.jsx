@@ -26,7 +26,7 @@ const iconButtonVariants = {
     }
   },
   compoundVariants: tw`ml-[-3px]`,
-  disabled: tw`pointer-events-none text-disabledLight dark:text-disabledDark`
+  disabled: tw`pointer-events-none text-disabled-light dark:text-disabled-dark`
 };
 
 const IconButton = forwardRef(

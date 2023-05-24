@@ -53,7 +53,7 @@ const Accordion = forwardRef(
 
     const accordionBase = tw`relative [overflow-anchor:none] transition-[margin] delay-[0ms]`;
 
-    const accordionDivider = tw`before:absolute before:left-0 before:top-[-1px] before:right-0 before:h-[1px] before:content-[""] before:opacity-100 before:bg-dividerLight dark:before:bg-dividerDark before:transition-[opacity,background-color] before:delay-[0ms] first-of-type:before:hidden`;
+    const accordionDivider = tw`before:(absolute left-0 top-[-1px] right-0 h-[1px] content-[""] opacity-100 bg-disabled-light dark:bg-disabled-dark transition-[opacity,background-color] delay-[0ms] first-of-type:hidden)`;
 
     const accordionStyles = [
       accordionBase,
@@ -61,7 +61,7 @@ const Accordion = forwardRef(
       expanded &&
         tw`first-of-type:mt-0 last-of-type:mb-0 ['& + &']:before:hidden`,
       disabled &&
-        tw`bg-disabledLight text-disabledText dark:bg-disabledDark dark:text-disabledText`,
+        tw`bg-disabled-light text-disabled-text dark:bg-disabled-dark dark:text-disabled-text`,
       !square &&
         tw`rounded-none first-of-type:rounded-t-md last-of-type:rounded-b-md`,
       enableGutters && expanded && tw`before:opacity-0 my-4`

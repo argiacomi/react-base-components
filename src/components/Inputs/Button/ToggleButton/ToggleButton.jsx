@@ -3,7 +3,7 @@ import tw, { css } from 'twin.macro';
 import { ButtonBase } from '@components';
 
 const toggleButtonVariants = {
-  root: tw`appearance-none font-medium tracking-wide rounded-md px-3 py-2 border-[1px] border-solid border-dividerLight dark:border-dividerDark text-gray-700 hover:bg-gray-700/10 dark:text-gray-300 dark:hover:bg-gray-300/10`,
+  root: tw`appearance-none font-medium tracking-wide rounded-md px-3 py-2 border-[1px] border-solid border-disabled-light dark:border-disabled-dark text-gray-700 hover:bg-gray-700/10 dark:text-gray-300 dark:hover:bg-gray-300/10`,
   size: {
     xs: tw`p-1 text-xs`,
     small: tw`p-2 text-sm`,
@@ -58,7 +58,7 @@ const ToggleButton = forwardRef(
       toggleButtonVariants.size[size],
       selected && toggleButtonVariants.compoundVariants[color],
       disabled &&
-        tw`dark:shadow-none pointer-events-none text-disabledLight shadow-none drop-shadow-none dark:text-disabledDark dark:drop-shadow-none`,
+        tw`dark:shadow-none pointer-events-none text-disabled-light shadow-none drop-shadow-none dark:text-disabled-dark dark:drop-shadow-none`,
       disableElevation && tw`shadow-none drop-shadow-none`,
       fullWidth && tw`w-full`
     ].filter(Boolean);

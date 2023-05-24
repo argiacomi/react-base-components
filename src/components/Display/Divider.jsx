@@ -2,7 +2,7 @@ import * as React from 'react';
 import tw from 'twin.macro';
 
 const dividerStyles = {
-  root: tw`m-0 shrink-0 border-solid border-0 border-b border-dividerLight dark:border-dividerDark `,
+  root: tw`m-0 shrink-0 border-solid border-0 border-b border-disabled-light dark:border-disabled-dark `,
   absolute: tw`absolute bottom-0 left-0 w-full`,
   inset: tw`ml-[72px]`,
   middle: {
@@ -17,12 +17,12 @@ const dividerStyles = {
 
 const childStyles = {
   root: tw`flex whitespace-nowrap text-center border-0`,
-  before: tw`before:self-center before:relative before:w-full before:h-0 before:border-0 before:border-t before:border-solid before:border-dividerLight dark:before:border-dividerDark before:content-[""]`,
-  after: tw`after:self-center after:relative after:w-full after:h-0 after:border-0 after:border-t after:border-solid after:border-dividerLight dark:after:border-dividerDark after:content-[""]`,
+  before: tw`before:(self-center relative w-full h-0 border-0 border-t border-solid border-disabled-light dark:border-disabled-dark content-[""])`,
+  after: tw`after:(self-center relative w-full h-0 border-0 border-t border-solid border-disabled-light dark:border-disabled-dark content-[""])`,
   vertical: {
     root: tw`flex-col`,
-    before: tw`before:self-center before:static before:h-full before:w-0 before:border-t-0 before:border-l before:border-solid before:border-l-dividerLight dark:before:border-l-dividerDark`,
-    after: tw`after:self-center after:static after:h-full after:w-0 after:border-t-0 after:border-l after:border-solid after:border-l-dividerLight dark:after:border-l-dividerDark`
+    before: tw`before:(self-center static h-full w-0 border-t-0 border-l border-solid border-l-disabled-light dark:border-l-disabled-dark)`,
+    after: tw`after:(self-center static h-full w-0 border-t-0 border-l border-solid border-l-disabled-light dark:border-l-disabled-dark)`
   }
 };
 

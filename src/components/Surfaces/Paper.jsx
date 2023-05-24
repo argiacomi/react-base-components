@@ -16,7 +16,7 @@ const Paper = forwardRef(
     {
       className,
       Component = 'div',
-      elevation = 1,
+      elevation = 2,
       square = false,
       outline = false,
       ...otherProps
@@ -24,11 +24,11 @@ const Paper = forwardRef(
     ref
   ) => {
     const paperStyles = [
-      tw`rounded-md bg-white`,
+      tw`rounded-md`,
       !outline && elevationClass[elevation],
       square && tw`rounded-none`,
       outline &&
-        tw`border-[1px] border-solid shadow-none border-dividerLight dark:border-dividerDark`
+        tw`border-[1px] border-solid shadow-none border-disabled-light dark:border-disabled-dark`
     ].filter(Boolean);
 
     return (

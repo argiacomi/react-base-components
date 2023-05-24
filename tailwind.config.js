@@ -17,41 +17,37 @@ export default {
       '2xl': '2560px'
     },
     extend: {
-      boxShadow: {
-        paper1:
-          '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
-        paper2:
-          '0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)',
-        paper3:
-          '0px 3px 3px -2px rgba(0,0,0,0.2),0px 3px 4px 0px rgba(0,0,0,0.14),0px 1px 8px 0px rgba(0,0,0,0.12)',
-        paper4:
-          '0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)',
-        popperArrow1:
-          '-1px 1px 1px 0px rgba(0,0,0,0.2),-1px 1px 2px -2px rgba(0,0,0,0.14),-1px 1px 3px -2px rgba(0,0,0,0.12)'
-      },
       colors: {
         transparent: 'transparent',
         current: 'currentColor',
-        white: '#FFFFFF',
+        white: '#ffffff',
         black: '#000000',
-        disabledLight: '#bdbdbd',
-        disabledDark: '#9e9e9e',
-        disabledText: '#616161',
-        dividerLight: 'rgba(0, 0, 0, 0.2)',
-        dividerDark: 'rgba(255, 255, 255, 0.12)',
+        disabled: {
+          light: '#bdbdbd',
+          dark: '#9e9e9e',
+          text: '#616161'
+        },
+        divider: {
+          light: '#00000033',
+          dark: '#ffffff1f'
+        },
         primary: {
           200: '#a5c8f2',
           300: '#77aceb',
           400: '#4a91e5',
           500: '#1d75de',
-          600: '#175eb2'
+          600: '#175eb2',
+          light: '#000000de',
+          dark: '#ffffff'
         },
         secondary: {
           200: '#d5b9f1',
           300: '#c196eb',
           400: '#ac73e4',
           500: '#9750dd',
-          600: '#7940b1'
+          600: '#7940b1',
+          light: '#00000099',
+          dark: '#ffffffb3'
         },
         success: {
           200: '#a5efbf',
@@ -107,15 +103,28 @@ export default {
             opacity: 0
           }
         },
-        pulsateKeyframe: {
+        ripplePulsateKeyframe: {
           '0%, 100%': { transform: 'scale(1)' },
           '50%': { transform: 'scale(0.92)' }
+        },
+        waveKeyframe: {
+          '0%': {
+            transform: 'translateX(-100%)'
+          },
+          '50%': {
+            transform: 'translateX(100%)'
+          },
+          '100%': {
+            transform: 'translateX(100%)'
+          }
         }
       },
       animation: {
         'ripple-enter': 'enterKeyframe 550ms ease-in-out',
         'ripple-exit': 'exitKeyframe 550ms ease-in-out',
-        pulsate: 'pulsateKeyframe 2500ms ease-in-out infinite 200ms'
+        'ripple-pulse':
+          'ripplePulsateKeyframe 2500ms ease-in-out infinite 200ms',
+        'skeleton-wave': 'waveKeyframe 1.6s linear 0.5s infinite'
       }
     }
   },

@@ -7,6 +7,7 @@ import { ButtonGroupContext } from './ButtonGroup';
 
 const buttonVariants = {
   root: tw`inline-flex min-w-[64px] active:scale-95 rounded-lg transition-colors items-center justify-center relative box-border font-medium w-auto bg-transparent outline-0 border-none border m-0 p-0 cursor-pointer select-none align-middle no-underline overflow-hidden`,
+  disabled: tw`dark:shadow-none pointer-events-none border-none bg-disabled-light text-disabled-text shadow-none drop-shadow-none dark:border-none dark:bg-disabled-dark dark:text-disabled-text dark:drop-shadow-none`,
   variants: {
     color: {
       default: tw`bg-gray-600 hover:bg-gray-700`,
@@ -110,8 +111,7 @@ const Button = forwardRef((props, ref) => {
     variant !== 'contain' && buttonVariants.compoundVariants.root[color],
     variant === 'outline' && buttonVariants.compoundVariants.outline[color],
     styles,
-    disabled &&
-      tw`dark:shadow-none pointer-events-none border-none bg-disabledLight text-disabledText shadow-none drop-shadow-none dark:border-none dark:bg-disabledDark dark:text-disabledText dark:drop-shadow-none`,
+    disabled && buttonVariants.disabled,
     disableElevation && tw`shadow-none drop-shadow-none`,
     fullWidth && tw`w-full`
   ].filter(Boolean);

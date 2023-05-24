@@ -88,7 +88,7 @@ const ButtonGroup = forwardRef(
       orientation === 'horizontal' ? tw`flex-row` : tw`flex-col`,
       variant !== 'text' && tw`shadow-md`,
       disabled &&
-        tw`border-none bg-disabledLight shadow-none drop-shadow-none dark:bg-disabledDark`,
+        tw`border-none bg-disabled-light shadow-none drop-shadow-none dark:bg-disabled-dark`,
       disableElevation && tw`shadow-none drop-shadow-none`,
       fullWidth && tw`w-full`
     ].filter(Boolean);

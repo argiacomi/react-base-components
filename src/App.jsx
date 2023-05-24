@@ -1,73 +1,40 @@
 import * as React from 'react';
-import { ButtonBase, Box, Paper, Text, Grid } from '@components';
-import Avatar from '@mui/material/Avatar';
-import { createBreakpoints } from '@components/lib';
-import styled from '@emotion/styled';
+import { Switch } from '@components';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
-const Img = styled('img')({
-  margin: 'auto',
-  display: 'block',
-  maxWidth: '100%',
-  maxHeight: '100%'
-});
-
-export default function ComplexGrid() {
+export default function FormControlLabelPosition() {
   return (
-    <Paper
-      css={{
-        padding: 16,
-        margin: 'auto',
-        marginTop: 32,
-        maxWidth: 500,
-        flexGrow: 1,
-        backgroundColor: '#fff'
-      }}
-    >
-      <Grid container spacing={2}>
-        <Grid>
-          <ButtonBase css={{ width: 128, height: 128 }}>
-            <Img alt='complex' src='/static/images/grid/complex.jpg' />
-          </ButtonBase>
-        </Grid>
-        <Grid xs={12} sm container>
-          <Grid xs container direction='column' spacing={2}>
-            <Grid xs>
-              <Text
-                className='text-black'
-                gutterBottom
-                variant='subtitle1'
-                component='div'
-              >
-                Standard license
-              </Text>
-              <Text className='text-black' variant='body2' gutterBottom>
-                Full resolution 1920x1080 • JPEG
-              </Text>
-              <Text
-                className='text-black'
-                variant='body2'
-                color='text.secondary'
-              >
-                ID: 1030114
-              </Text>
-            </Grid>
-            <Grid>
-              <Text
-                className='text-black'
-                css={{ cursor: 'pointer' }}
-                variant='body2'
-              >
-                Remove
-              </Text>
-            </Grid>
-          </Grid>
-          <Grid>
-            <Text className='text-black' variant='subtitle1' component='div'>
-              $19.00
-            </Text>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Paper>
+    <FormControl component='fieldset'>
+      <FormLabel component='legend'>Label placement</FormLabel>
+      <FormGroup aria-label='position' row>
+        <FormControlLabel
+          value='top'
+          control={<Switch color='primary' />}
+          label='Top'
+          labelPlacement='top'
+        />
+        <FormControlLabel
+          value='start'
+          control={<Switch color='primary' />}
+          label='Start'
+          labelPlacement='start'
+        />
+        <FormControlLabel
+          value='bottom'
+          control={<Switch color='primary' />}
+          label='Bottom'
+          labelPlacement='bottom'
+        />
+        <FormControlLabel
+          value='end'
+          control={<Switch color='primary' />}
+          label='End'
+          labelPlacement='end'
+        />
+      </FormGroup>
+    </FormControl>
   );
 }

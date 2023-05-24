@@ -118,7 +118,6 @@ const Stack = React.forwardRef(
     );
   }
 );
-
 Stack.displayName = 'Stack';
 
 export default Stack;

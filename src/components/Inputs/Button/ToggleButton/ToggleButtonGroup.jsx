@@ -7,7 +7,7 @@ const groupVariants = {
   horizontal: tw`flex-row [&>*:not(:first-of-type)]:ml-[-1px] [&>*:not(:first-of-type)]:border-l [&>*:not(:first-of-type)]:border-solid [&>*:not(:first-of-type)]:border-l-transparent [&>*:not(:first-of-type)]:rounded-l-none  [&>*:not(:last-of-type)]:rounded-r-none`,
   vertical: tw`flex-col [&>*:not(:first-of-type)]:mt-[-1px] [&>*:not(:first-of-type)]:border-t [&>*:not(:first-of-type)]:border-solid [&>*:not(:first-of-type)]:border-t-transparent [&>*:not(:first-of-type)]:rounded-t-none  [&>*:not(:last-of-type)]:rounded-b-none`,
   fullWidth: tw`w-full`,
-  disabled: tw`dark:text-disabledDark text-disabledLight shadow-none drop-shadow-none`,
+  disabled: tw`dark:text-disabled-dark text-disabled-light shadow-none drop-shadow-none`,
   disableElevation: tw`shadow-none drop-shadow-none`
 };
 

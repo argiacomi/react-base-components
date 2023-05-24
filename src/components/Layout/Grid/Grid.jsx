@@ -274,5 +274,6 @@ const Grid = React.forwardRef((props, ref) => {
     </OverflowContext.Provider>
   );
 });
+Grid.displayName = 'Grid';
 
 export default Grid;

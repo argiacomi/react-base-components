@@ -22,7 +22,7 @@ const touchRippleClasses = {
   ripplePulsate: tw`duration-300`,
   child: tw`opacity-100 block w-full h-full rounded-full bg-current`,
   childLeaving: tw` opacity-0 animate-ripple-exit`,
-  childPulsate: tw`absolute left-0 top-0 animate-pulsate`
+  childPulsate: tw`absolute left-0 top-0 animate-ripple-pulse`
 };
 
 const TouchRipple = forwardRef((props, ref) => {

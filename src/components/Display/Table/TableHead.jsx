@@ -9,7 +9,7 @@ const TableHead = forwardRef(
         <Component
           className={cn(
             className,
-            'text-bold table-header-group text-black dark:text-white'
+            'text-bold table-header-group text-primary-light dark:text-primary-dark'
           )}
           ref={ref}
           {...other}

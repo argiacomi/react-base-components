@@ -9,14 +9,11 @@ import {
 } from '@components/lib';
 import { ownerWindow } from '@utils';
 
-// Translate the node so it can't be seen on the screen.
-// Later, we're going to translate the node back to its original location with `none`.
 const getTranslateValue = (direction, node, resolvedContainer) => {
   const rect = node.getBoundingClientRect();
   const containerRect = resolvedContainer?.getBoundingClientRect();
   const containerWindow = ownerWindow(node);
 
-  // Get the transform from the node or the computedStyle of the node
   const transform =
     node.fakeTransform ||
     containerWindow
@@ -24,7 +21,6 @@ const getTranslateValue = (direction, node, resolvedContainer) => {
       .getPropertyValue('-webkit-transform') ||
     containerWindow.getComputedStyle(node).getPropertyValue('transform');
 
-  // Extract the offsetX and offsetY if a transform string exists
   let [offsetX = 0, offsetY = 0] =
     transform && transform !== 'none'
       ? transform
@@ -161,7 +157,6 @@ const Slide = React.forwardRef((props, ref) => {
   const handleExiting = normalizedTransitionCallback(onExiting);
 
   const handleExited = normalizedTransitionCallback((node) => {
-    // No need for transitions when the component is hidden
     node.style.webkitTransition = '';
     node.style.transition = '';
 
@@ -170,7 +165,6 @@ const Slide = React.forwardRef((props, ref) => {
 
   const handleAddEndListener = (next) => {
     if (addEndListener) {
-      // Old call signature before `react-transition-group` implemented `nodeRef`
       addEndListener(childrenRef.current, next);
     }
   };
@@ -191,7 +185,6 @@ const Slide = React.forwardRef((props, ref) => {
   );
 
   React.useEffect(() => {
-    // Skip configuration where the position is screen size invariant.
     if (inProp || direction === 'down' || direction === 'right') {
       return undefined;
     }
@@ -206,8 +199,6 @@ const Slide = React.forwardRef((props, ref) => {
 
   React.useEffect(() => {
     if (!inProp) {
-      // We need to update the position of the drawer when the direction change and
-      // when it's hidden.
       updatePosition();
     }
   }, [inProp, updatePosition]);

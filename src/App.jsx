@@ -1,40 +1,17 @@
 import * as React from 'react';
-import { Switch } from '@components';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+import { Checkbox } from '@components';
 
-export default function FormControlLabelPosition() {
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
+export default function ColorCheckboxes() {
   return (
-    <FormControl component='fieldset'>
-      <FormLabel component='legend'>Label placement</FormLabel>
-      <FormGroup aria-label='position' row>
-        <FormControlLabel
-          value='top'
-          control={<Switch color='primary' />}
-          label='Top'
-          labelPlacement='top'
-        />
-        <FormControlLabel
-          value='start'
-          control={<Switch color='primary' />}
-          label='Start'
-          labelPlacement='start'
-        />
-        <FormControlLabel
-          value='bottom'
-          control={<Switch color='primary' />}
-          label='Bottom'
-          labelPlacement='bottom'
-        />
-        <FormControlLabel
-          value='end'
-          control={<Switch color='primary' />}
-          label='End'
-          labelPlacement='end'
-        />
-      </FormGroup>
-    </FormControl>
+    <div>
+      <Checkbox {...label} defaultChecked />
+      <Checkbox {...label} defaultChecked color='secondary' />
+      <Checkbox {...label} defaultChecked color='success' />
+      <Checkbox {...label} defaultChecked color='warning' />
+      <Checkbox {...label} defaultChecked color='danger' />
+      <Checkbox {...label} defaultChecked color='default' />
+    </div>
   );
 }

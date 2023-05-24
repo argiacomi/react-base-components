@@ -28,7 +28,6 @@ const SwitchBase = React.forwardRef(
       className,
       defaultChecked,
       disabled: disabledProp,
-      disableFocusRipple = false,
       edge = false,
       icon,
       id,
@@ -120,7 +119,6 @@ const SwitchBase = React.forwardRef(
         className={cn(className, 'SwitchBase-Root')}
         css={switchBaseRootStyles}
         centerRipple
-        disableRipple={disableFocusRipple}
         disabled={disabled}
         tabIndex={null}
         role={undefined}
@@ -130,11 +128,13 @@ const SwitchBase = React.forwardRef(
         {...other}
       >
         <input
-          autoFocus={autoFocus}
-          checked={checkedProp}
-          css={switchBaseInputStyles}
-          defaultChecked={defaultChecked}
           className={'SwitchBase-Input'}
+          autoFocus={autoFocus}
+          css={switchBaseInputStyles}
+          checked={checkedProp !== undefined ? checkedProp : undefined}
+          defaultChecked={
+            checkedProp === undefined ? defaultChecked : undefined
+          }
           disabled={disabled}
           id={hasLabelFor ? id : undefined}
           name={name}

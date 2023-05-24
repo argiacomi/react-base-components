@@ -48,7 +48,9 @@ const Icon = React.forwardRef(
     const durationStyle = { transitionDuration: `${durations.shorter}ms` };
     const iconStyles = [
       baseStyle,
-      fontSizeStyle[fontSize],
+      fontSizeStyle[fontSize] || {
+        fontSize: typeof fontSize === 'string' ? fontSize : `${fontSize}px`
+      },
       durationStyle
     ].filter(Boolean);
     const more = viewBox ? viewBox : {};

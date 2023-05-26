@@ -26,5 +26,3 @@ dist-ssr
 #Misc
 *.txt
 *.env
-
-/src/components/wip

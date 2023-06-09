@@ -1,9 +1,10 @@
 import { css } from 'styled-components/macro';
-import { BadgeDemo, ButtonDemo, PopperDemo } from '@components';
+import { AlertDemo, BadgeDemo, ButtonDemo, PopperDemo } from '@components';
 
 const App = () => {
   return (
     <div css={{ margin: '1rem' }}>
+      <AlertDemo />
       <BadgeDemo />
       <ButtonDemo />
       <PopperDemo />

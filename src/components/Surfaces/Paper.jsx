@@ -15,7 +15,7 @@ const PaperRoot = styled('div')(({ theme, ownerState }) => {
       filter: theme.dropShadow.none
     }),
     ...(!ownerState.outlined && {
-      filter: theme.dropShadow[ownerState.elevation] || theme.dropShadow[3],
+      filter: theme.dropShadow[ownerState.elevation],
       ...(theme.color.mode === 'dark' && {
         backgroundImage: `linear-gradient(${theme.alpha.add(
           theme.color.white,

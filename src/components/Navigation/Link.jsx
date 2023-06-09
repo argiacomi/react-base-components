@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components/macro';
 import clsx from 'clsx';
 import { useForkRef, useIsFocusVisible } from '@component/hooks';
-import { Text } from '@components';
+import { Text } from '@components/layout';
 
 const LinkRoot = styled(Text)(({ theme, ownerState }) => ({
   ...(ownerState.underline === 'always' && {

@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components/macro';
 import clsx from 'clsx';
 import { mergeProps } from '@component/utils';
-import { ButtonBase, Icon } from '@components';
+import ButtonBase from '../ButtonBase/ButtonBase';
+import { Icon } from '@components/display';
 import ButtonGroupContext from './ButtonGroupContext';
 
 const baseStyles = (theme) => ({

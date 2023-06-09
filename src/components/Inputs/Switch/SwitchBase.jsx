@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import styled from 'styled-components/macro';
 import { useControlled, useFormControl } from '@component/hooks';
-import { ButtonBase } from '@components';
+import { ButtonBase } from '@components/inputs';
 
 const SwitchBaseRoot = styled(ButtonBase)(({ theme, ownerState }) => ({
   padding: '.5rem',

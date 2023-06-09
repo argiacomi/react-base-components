@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import styled from 'styled-components/macro';
-import * as FaIcons from 'react-icons/fa';
+import * as FiIcons from 'react-icons/fi';
 import * as MdIcons from 'react-icons/md';
 
 const sizeMapping = {
@@ -12,7 +12,7 @@ const sizeMapping = {
 };
 
 const iconLibraries = {
-  Fa: FaIcons,
+  Fi: FiIcons,
   Md: MdIcons,
   find: (iconProp) => {
     for (const prefix in iconLibraries) {

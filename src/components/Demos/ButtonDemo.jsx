@@ -1,7 +1,16 @@
 import { Button } from '@components';
 
 const ButtonDemo = () => {
-  const colors = ['primary', 'secondary', 'success', 'warning', 'danger', 'default', 'inherit'];
+  const colors = [
+    'primary',
+    'secondary',
+    'success',
+    'warning',
+    'danger',
+    'monochrome',
+    'default',
+    'inherit'
+  ];
   const sizes = ['mini', 'small', 'medium', 'large', 'jumbo', 'auto'];
   const variants = ['text', 'outlined', 'filled', 'colorText'];
 

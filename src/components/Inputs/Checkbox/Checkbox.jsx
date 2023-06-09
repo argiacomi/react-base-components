@@ -1,7 +1,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import styled from 'styled-components/macro';
-import { Icon, SwitchBase } from '@components';
+import SwitchBase from '../switch/SwitchBase';
+import { Icon } from '@components/display';
 
 const CheckboxRoot = styled(SwitchBase)(({ theme, ownerState }) => ({
   color: theme.color.text.secondary,

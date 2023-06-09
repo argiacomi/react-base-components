@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import clsx from 'clsx';
-import { ButtonBase, Icon } from '@components';
+import ButtonBase from '../ButtonBase/ButtonBase';
+import { Icon } from '@components/display';
 
 const ToggleButtonRoot = styled(ButtonBase)(({ theme, ownerState }) => ({
   appearance: 'none',

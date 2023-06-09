@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled from 'styled-components/macro';
-import ButtonGroupContext from './ButtonGroupContext';
+import ButtonGroupContext, { buttonGroupClasses } from './ButtonGroupContext';
 
 const ButtonGroupRoot = styled('div')(({ theme, ownerState }) => ({
   display: 'inline-flex',
@@ -23,7 +23,7 @@ const ButtonGroupRoot = styled('div')(({ theme, ownerState }) => ({
   ...(ownerState.fullWidth && {
     width: '100%'
   }),
-  [`& .${ownerState.buttonGroupClasses.grouped}`]: {
+  [`& .${buttonGroupClasses.grouped}`]: {
     minWidth: 0,
     borderRadius: theme.rounded.base,
     '&:active': { transform: 'scale(1)' },
@@ -65,19 +65,19 @@ const ButtonGroupRoot = styled('div')(({ theme, ownerState }) => ({
           outlined: { borderRightColor: 'transparent' },
           text: {
             borderRight: `1px solid ${theme.alpha.add(theme.color.gray[500], 0.5)}`,
-            [`&.${ownerState.buttonGroupClasses.disabled}`]: {
+            [`&.${buttonGroupClasses.disabled}`]: {
               borderRight: `1px solid ${theme.color.divider}`
             }
           },
           colorText: {
             borderRight: `1px solid ${theme.alpha.add(theme.color.gray[500], 0.5)}`,
-            [`&.${ownerState.buttonGroupClasses.disabled}`]: {
+            [`&.${buttonGroupClasses.disabled}`]: {
               borderRight: `1px solid ${theme.color.divider}`
             }
           },
-          contained: {
+          filled: {
             borderRight: `1px solid ${theme.alpha.add(theme.color.gray[500], 0.5)}`,
-            [`&.${ownerState.buttonGroupClasses.disabled}`]: {
+            [`&.${buttonGroupClasses.disabled}`]: {
               borderRight: `1px solid ${theme.color.divider}`
             }
           }
@@ -86,19 +86,19 @@ const ButtonGroupRoot = styled('div')(({ theme, ownerState }) => ({
           outlined: { borderBottomColor: 'transparent' },
           text: {
             borderBottom: `1px solid ${theme.alpha.add(theme.color.gray[500], 0.5)}`,
-            [`&.${ownerState.buttonGroupClasses.disabled}`]: {
+            [`&.${buttonGroupClasses.disabled}`]: {
               borderBottom: `1px solid ${theme.color.divider}`
             }
           },
           colorText: {
             borderBottom: `1px solid ${theme.alpha.add(theme.color.gray[500], 0.5)}`,
-            [`&.${ownerState.buttonGroupClasses.disabled}`]: {
+            [`&.${buttonGroupClasses.disabled}`]: {
               borderBottom: `1px solid ${theme.color.divider}`
             }
           },
-          contained: {
+          filled: {
             borderBottom: `1px solid ${theme.alpha.add(theme.color.gray[500], 0.5)}`,
-            [`&.${ownerState.buttonGroupClasses.disabled}`]: {
+            [`&.${buttonGroupClasses.disabled}`]: {
               borderBottom: `1px solid ${theme.color.divider}`
             }
           }
@@ -115,7 +115,7 @@ const ButtonGroupRoot = styled('div')(({ theme, ownerState }) => ({
               ? theme.alpha.add(theme.color[ownerState.color][500], 0.5)
               : theme.color.divider
         }),
-      ...(ownerState.variant === 'contained' &&
+      ...(ownerState.variant === 'filled' &&
         ownerState.color !== 'default' && {
           borderColor: theme.color[ownerState.color][600]
         })
@@ -151,17 +151,8 @@ const ButtonGroup = React.forwardRef((props, ref) => {
     ...other
   } = props;
 
-  const buttonGroupClasses = React.useMemo(
-    () => ({
-      grouped: 'ButtonGroup-Button',
-      disabled: disabled && 'ButtonGroup-disabled'
-    }),
-    [disabled]
-  );
-
   const ownerState = {
     ...props,
-    buttonGroupClasses,
     color,
     colorText,
     component,
@@ -175,9 +166,17 @@ const ButtonGroup = React.forwardRef((props, ref) => {
     variant
   };
 
+  const classes = React.useMemo(
+    () => ({
+      grouped: buttonGroupClasses.grouped,
+      disabled: disabled && buttonGroupClasses.disabled
+    }),
+    [disabled]
+  );
+
   const context = React.useMemo(
     () => ({
-      className: Object.values(buttonGroupClasses),
+      className: Object.values(classes),
       color,
       colorText,
       disabled,

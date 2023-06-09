@@ -67,6 +67,9 @@ devDependencies:
   react-icons:
     specifier: ^4.9.0
     version: 4.9.0(react@18.2.0)
+  react-is:
+    specifier: ^18.2.0
+    version: 18.2.0
   react-transition-group:
     specifier: ^4.4.5
     version: 4.4.5(react-dom@18.2.0)(react@18.2.0)

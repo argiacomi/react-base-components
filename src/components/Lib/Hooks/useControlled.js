@@ -1,17 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-function useControlled({
-  controlled,
-  default: defaultProp,
-  name,
-  state = 'value'
-}) {
+export function useControlled({ controlled, default: defaultProp, name, state = 'value' }) {
   const isControlledRef = useRef(controlled !== undefined);
   const [valueState, setValue] = useState(defaultProp);
   const value = isControlledRef.current ? controlled : valueState;
 
   const logError = (message) => {
-    if (process.env.NODE_ENV !== 'production') {
+    if (!import.meta.env.PROD) {
       console.error(message);
     }
   };
@@ -45,7 +40,7 @@ function useControlled({
         ].join('\n')
       );
     }
-  }, [JSON.stringify(defaultProp)]);
+  }, [defaultProp, state, name, controlled]);
 
   const setValueIfUncontrolled = useCallback((newValue) => {
     if (!isControlledRef.current) {
@@ -55,5 +50,3 @@ function useControlled({
 
   return [value, setValueIfUncontrolled];
 }
-
-export { useControlled };

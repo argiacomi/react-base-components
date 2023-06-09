@@ -10,35 +10,23 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
       '@utils': path.resolve(__dirname, './src/lib/utils.js'),
       '@components': path.resolve(__dirname, './src/components'),
-      '@component-hooks': path.resolve(__dirname, './src/components/lib/hooks')
+      '@component/hooks': path.resolve(__dirname, './src/components/lib/hooks'),
+      '@component/utils': path.resolve(__dirname, './src/components/lib/helpers'),
+      '@styles': path.resolve(__dirname, './src/styles'),
+      '@transitions': path.resolve(__dirname, './src/components/utils/transitions')
     }
-  },
-  optimizeDeps: {
-    esbuildOptions: {
-      target: 'es2020'
-    }
-  },
-  esbuild: {
-    logOverride: { 'this-is-undefined-in-esm': 'silent' }
   },
   plugins: [
     react({
       babel: {
         plugins: [
-          'babel-plugin-macros',
           [
-            '@emotion/babel-plugin-jsx-pragmatic',
+            'babel-plugin-styled-components',
             {
-              export: 'jsx',
-              import: '__cssprop',
-              module: '@emotion/react'
+              meaninglessFileNames: ['index', 'styles']
             }
           ],
-          [
-            '@babel/plugin-transform-react-jsx',
-            { pragma: '__cssprop' },
-            'twin.macro'
-          ]
+          'babel-plugin-macros'
         ]
       },
       exclude: /\.stories\.(t|j)sx?$/
@@ -46,5 +34,8 @@ export default defineConfig({
     legacy({
       targets: ['defaults', 'not IE 11']
     })
-  ]
+  ],
+  esbuild: {
+    logLevel: 'error'
+  }
 });

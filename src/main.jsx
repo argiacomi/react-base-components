@@ -1,12 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import GlobalStyles from './styles/GlobalStyles';
+import { StyleSheetManager } from 'styled-components/macro';
+import { CssBaseline, GlobalStyles, GlobalTheme } from '@styles';
 import App from './App';
-import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <GlobalStyles />
-    <App />
+    <StyleSheetManager disableCSSOMInjection>
+      <GlobalTheme>
+        <GlobalStyles />
+        <CssBaseline />
+        <App />
+      </GlobalTheme>
+    </StyleSheetManager>
   </React.StrictMode>
 );

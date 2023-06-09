@@ -1,3 +1,3 @@
 export * from './button';
-export { default as Checkbox } from './Checkbox';
-export * from './Switch';
+export * from './switch';
+export { default as Checkbox } from './checkbox/checkbox';

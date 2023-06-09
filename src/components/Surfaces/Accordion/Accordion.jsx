@@ -1,96 +1,157 @@
-import React, { createContext, useCallback, useMemo, forwardRef } from 'react';
-import { cn } from '@utils';
-import tw from 'twin.macro';
+import React from 'react';
+import clsx from 'clsx';
+import styled from 'styled-components/macro';
 import { Collapse, Paper } from '@components';
-import { useControlled } from '@component-hooks';
+import { useControlled } from '@component/hooks';
+import AccordionContext from './AccordionContext';
 
-const AccordionContext = React.createContext({});
+const accordionClasses = {
+  expanded: 'expanded',
+  disabled: 'disabled'
+};
 
-if (process.env.NODE_ENV !== 'production') {
-  AccordionContext.displayName = 'AccordionContext';
-}
-
-const Accordion = forwardRef(
-  (
-    {
-      children: childrenProp,
-      className,
-      defaultExpanded = false,
-      disabled = false,
-      enableGutters = false,
-      expanded: expandedProp,
-      onChange,
-      square = false,
-      TransitionComponent = Collapse,
-      TransitionProps,
-      ...other
+const AccordionRoot = styled(Paper)(
+  ({ theme }) => ({
+    position: 'relative',
+    transition: theme.transition.create(['margin'], theme.transition.duration.shortest),
+    overflowAnchor: 'none',
+    '&:before': {
+      position: 'absolute',
+      left: 0,
+      top: -1,
+      right: 0,
+      height: 1,
+      content: '""',
+      opacity: 1,
+      backgroundColor: theme.color.divider,
+      transition: theme.transition.create(
+        ['opacity', 'background-color'],
+        theme.transition.duration.shortest
+      )
     },
-    ref
-  ) => {
-    const [expanded, setExpandedState] = useControlled({
-      controlled: expandedProp,
-      default: defaultExpanded,
-      name: 'Accordion',
-      state: 'expanded'
-    });
-
-    const handleChange = useCallback(
-      (event) => {
-        setExpandedState(!expanded);
-
-        if (onChange) {
-          onChange(event, !expanded);
-        }
+    '&:first-of-type': {
+      '&:before': {
+        display: 'none'
+      }
+    },
+    [`&.${accordionClasses.expanded}`]: {
+      '&:first-of-type': {
+        marginTop: 0
       },
-      [expanded, onChange, setExpandedState]
-    );
-
-    const [summary, ...children] = React.Children.toArray(childrenProp);
-    const contextValue = useMemo(
-      () => ({ expanded, disabled, enableGutters, toggle: handleChange }),
-      [expanded, disabled, enableGutters, handleChange]
-    );
-
-    const accordionBase = tw`relative [overflow-anchor:none] transition-[margin] delay-[0ms]`;
-
-    const accordionDivider = tw`before:(absolute left-0 top-[-1px] right-0 h-[1px] content-[""] opacity-100 bg-disabled-light dark:bg-disabled-dark transition-[opacity,background-color] delay-[0ms] first-of-type:hidden)`;
-
-    const accordionStyles = [
-      accordionBase,
-      accordionDivider,
-      expanded &&
-        tw`first-of-type:mt-0 last-of-type:mb-0 ['& + &']:before:hidden`,
-      disabled &&
-        tw`bg-disabled-light text-disabled-text dark:bg-disabled-dark dark:text-disabled-text`,
-      !square &&
-        tw`rounded-none first-of-type:rounded-t-md last-of-type:rounded-b-md`,
-      enableGutters && expanded && tw`before:opacity-0 my-4`
-    ].filter(Boolean);
-
-    return (
-      <Paper
-        className={className}
-        css={accordionStyles}
-        ref={ref}
-        square={square}
-        {...other}
-      >
-        <AccordionContext.Provider value={contextValue}>
-          {summary}
-        </AccordionContext.Provider>
-        <TransitionComponent in={expanded} timeout='auto' {...TransitionProps}>
-          <div
-            aria-labelledby={summary.props.id}
-            id={summary.props['aria-controls']}
-            role='region'
-          >
-            {children}
-          </div>
-        </TransitionComponent>
-      </Paper>
-    );
-  }
+      '&:last-of-type': {
+        marginBottom: 0
+      }
+    },
+    [`&.${accordionClasses.disabled}`]: {
+      color: theme.color.disabled.text,
+      backgroundColor: theme.color.disabled.body
+    }
+  }),
+  ({ theme, ownerState }) => ({
+    ...(!ownerState.square && {
+      borderRadius: 0,
+      '&:first-of-type': {
+        borderTopLeftRadius: theme.rounded.md,
+        borderTopRightRadius: theme.rounded.md
+      },
+      '&:last-of-type': {
+        borderBottomLeftRadius: theme.rounded.md,
+        borderBottomRightRadius: theme.rounded.md,
+        '@supports (-ms-ime-align: auto)': {
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0
+        }
+      }
+    }),
+    ...(ownerState.enableGutters && {
+      [`&.${accordionClasses.expanded}`]: {
+        margin: '1rem 0'
+      },
+      '&:before': {
+        opacity: 0
+      },
+      '& + &': {
+        '&:before': {
+          display: 'none'
+        }
+      }
+    })
+  })
 );
+
+const Accordion = React.forwardRef((props, ref) => {
+  const {
+    children: childrenProp,
+    className,
+    defaultExpanded = false,
+    disabled = false,
+    enableGutters = false,
+    expanded: expandedProp,
+    onChange,
+    square = false,
+    TransitionComponent = Collapse,
+    TransitionProps,
+    ...other
+  } = props;
+
+  const [expanded, setExpandedState] = useControlled({
+    controlled: expandedProp,
+    default: defaultExpanded,
+    name: 'Accordion',
+    state: 'expanded'
+  });
+
+  const handleChange = React.useCallback(
+    (event) => {
+      setExpandedState(!expanded);
+
+      if (onChange) {
+        onChange(event, !expanded);
+      }
+    },
+    [expanded, onChange, setExpandedState]
+  );
+
+  const [summary, ...children] = React.Children.toArray(childrenProp);
+  const contextValue = React.useMemo(
+    () => ({ expanded, disabled, enableGutters, toggle: handleChange }),
+    [expanded, disabled, enableGutters, handleChange]
+  );
+
+  const ownerState = {
+    ...props,
+    square,
+    disabled,
+    enableGutters,
+    expanded
+  };
+
+  const classes = [expanded && accordionClasses.expanded, disabled && accordionClasses.disabled]
+    .filter(Boolean)
+    .join(' ');
+
+  return (
+    <AccordionRoot
+      className={clsx('Accordion-Root', classes, className)}
+      ref={ref}
+      ownerState={ownerState}
+      square={square}
+      {...other}
+    >
+      <AccordionContext.Provider value={contextValue}>{summary}</AccordionContext.Provider>
+      <TransitionComponent in={expanded} timeout='auto' {...TransitionProps}>
+        <div
+          aria-labelledby={summary.props.id}
+          id={summary.props['aria-controls']}
+          role='region'
+          className={'Accordion-Region'}
+        >
+          {children}
+        </div>
+      </TransitionComponent>
+    </AccordionRoot>
+  );
+});
 Accordion.displayName = 'Accordion';
 
-export { Accordion, AccordionContext };
+export default Accordion;

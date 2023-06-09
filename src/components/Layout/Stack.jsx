@@ -1,11 +1,6 @@
 import * as React from 'react';
-import resolveConfig from 'tailwindcss/resolveConfig';
-import tailwindConfig from '@components/../../tailwind.config.js';
-import tw from 'twin.macro';
-
-const DEFAULT_BREAKPOINTS = resolveConfig(tailwindConfig).theme.screens;
-const DEFAULT_BREAKPOINT = Object.keys(DEFAULT_BREAKPOINTS)[0];
-const SPACING_CONSTANT = 8;
+import clsx from 'clsx';
+import styled from 'styled-components/macro';
 
 function joinChildren(children, divider) {
   const childrenArray = React.Children.toArray(children).filter(Boolean);
@@ -21,103 +16,76 @@ function joinChildren(children, divider) {
   }, []);
 }
 
-const getSideFromDirection = (direction) => {
-  return {
+const getSideFromDirection = (direction) =>
+  ({
     row: 'Left',
     'row-reverse': 'Right',
     column: 'Top',
     'column-reverse': 'Bottom'
-  }[direction];
-};
+  }[direction]);
 
-const computeStyles = (direction, spacing, useFlexGap) => {
-  let styleConfig = {};
+const StackRoot = styled('div')(
+  {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  ({ ownerState, theme }) => {
+    const styles = {};
 
-  // Ensure direction and spacing are both objects or strings for consistency
-  if (typeof direction !== 'object')
-    direction = { [DEFAULT_BREAKPOINT]: direction };
-  if (typeof spacing !== 'object') spacing = { [DEFAULT_BREAKPOINT]: spacing };
+    const overlappingBreakpoints = theme.breakpoints.overlap({
+      breakpoints: theme.breakpoints.values,
+      direction: ownerState.direction,
+      spacing: ownerState.spacing,
+      useFlexGap: ownerState.useFlexGap ? 1 : 0
+    });
 
-  const breakpoints = new Set([
-    ...Object.keys(direction),
-    ...Object.keys(spacing)
-  ]);
-
-  let lastDirection = 'column';
-  let lastSpacing = '0px';
-
-  for (const breakpoint of breakpoints) {
-    const mediaQuery = `@media (min-width: ${DEFAULT_BREAKPOINTS[breakpoint]})`;
-
-    if (!styleConfig[mediaQuery]) {
-      styleConfig[mediaQuery] = {};
-    }
-
-    if (direction[breakpoint]) {
-      if (lastDirection !== direction[breakpoint]) {
-        styleConfig[mediaQuery][`& > :not(style) + :not(style)`] = {
-          [`margin${getSideFromDirection(lastDirection)}`]: '0px'
-        };
-        lastDirection = direction[breakpoint];
-      }
-    }
-
-    if (spacing[breakpoint]) {
-      lastSpacing = spacing[breakpoint] * SPACING_CONSTANT;
-    }
-
-    styleConfig[mediaQuery] = {
-      ...styleConfig[mediaQuery],
-      flexDirection: lastDirection,
-      gap: useFlexGap ? `${lastSpacing}px` : undefined,
-      margin: useFlexGap ? undefined : '0px',
-      [`& > :not(style) + :not(style)`]: {
-        ...styleConfig[mediaQuery][`& > :not(style) + :not(style)`],
-        [`margin${getSideFromDirection(lastDirection)}`]: useFlexGap
-          ? undefined
-          : `${lastSpacing}px`
-      }
-    };
-  }
-
-  return styleConfig;
-};
-
-const Stack = React.forwardRef(
-  (
-    {
-      component,
-      direction = 'column',
-      spacing = 0,
-      divider,
-      children,
-      className,
-      useFlexGap = false,
-      ...other
-    },
-    ref
-  ) => {
-    const baseStyles = tw`flex flex-col`;
-
-    const styleConfig = React.useMemo(
-      () => computeStyles(direction, spacing, useFlexGap),
-      [direction, spacing, useFlexGap]
-    );
-
-    const StackRoot = component ?? 'div';
-
-    return (
-      <StackRoot
-        css={[baseStyles, styleConfig].filter(Boolean)}
-        ref={ref}
-        className={className}
-        {...other}
-      >
-        {divider ? joinChildren(children, divider) : children}
-      </StackRoot>
-    );
+    theme.breakpoints.traverse(theme.breakpoints, overlappingBreakpoints, (appendStyle, value) => {
+      appendStyle(styles, {
+        flexDirection: value.direction,
+        gap: value.useFlexGap ? theme.spacing(value.spacing) : undefined,
+        [`& > :not(style) + :not(style)`]: {
+          margin: value.useFlexGap ? undefined : '0px',
+          [`margin${getSideFromDirection(value.direction)}`]: value.useFlexGap
+            ? undefined
+            : theme.spacing(value.spacing)
+        }
+      });
+    });
+    return styles;
   }
 );
+
+const Stack = React.forwardRef((props, ref) => {
+  const {
+    component = 'div',
+    direction = 'column',
+    spacing = 0,
+    divider,
+    children,
+    className,
+    useFlexGap = false,
+    ...other
+  } = props;
+
+  const ownerState = {
+    ...props,
+    direction,
+    spacing,
+    useFlexGap
+  };
+
+  return (
+    <StackRoot
+      as={component}
+      ownerState={ownerState}
+      ref={ref}
+      className={clsx('Stack-Root', className)}
+      {...other}
+    >
+      {divider ? joinChildren(children, divider) : children}
+    </StackRoot>
+  );
+});
 Stack.displayName = 'Stack';
 
 export default Stack;

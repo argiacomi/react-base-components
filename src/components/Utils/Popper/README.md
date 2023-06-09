@@ -1,11 +1,13 @@
 ## Popper
 
-A React component that provides a customizable popper tooltip. It is built using the following sub-components:
+A React component that provides a customizable popper. It is built using the following sub-components:
 
-- Popper -> HOC wrapping:
+- Popper
 - BasePopper
-- PopperArrow
+- Portal
 - PopperTooltip
+- PopperContent
+- PopperArrow
 
 ### Usage
 
@@ -21,11 +23,12 @@ Component Usage
 <Popper
   anchorEl={anchorEl}
   component={component}
-  components={components}
-  componentsProps={componentsProps}
+  slots={slots}
+  slotProps={slotProps}
   container={container}
   popperOptions={popperOptions}
   popperRef={popperRef}
+  disableArrow
   disablePortal
   keepMounted
   open
@@ -38,27 +41,32 @@ Component Usage
 
 **anchorEl**
 
-- The DOM element that the popper tooltip should be positioned relative to.
+- The DOM element that the popper popper should be positioned relative to.
 
 **component**
 
-- The root element to be rendered for the tooltip.
+- The root element to be rendered for the popper.
 - Default is `div`
 
-**components**
+**slots**
 
 - An object containing sub-components to be rendered.
 - Default is `{}`
 
-**componentsProps**
+**slotProps**
 
 - An object containing props for the sub-components.
 - Default is `{}`
 
 **container**
 
-- The DOM element that the popper tooltip should be appended to.
+- The DOM element that the popper popper should be appended to.
 - Default is `root`
+
+**disableArrow**
+
+- A boolean to disable the addition of an arrow to the popper.
+- Default is `false`
 
 **disablePortal**
 
@@ -67,31 +75,39 @@ Component Usage
 
 **keepMounted**
 
-- A boolean to keep the tooltip mounted in the DOM when closed.
+- A boolean to keep the popper mounted in the DOM when closed.
 - Default is `false`
 
 **open**
 
-- A boolean to control whether the tooltip is visible.
+- A boolean to control whether the popper is visible.
 - Default is `false`
 
 **popperOptions**
 
-- An object containing options for the positioning and th behavior of the tooltip.
+- An object containing numerous options for the positioning and the behavior of the popper.
 - Default values as well as available options, specified below.
 
 **popperRef**
 
-- A ref object to access the tooltip instance.
+- A ref object to access the popper instance.
 
 **transition**
 
-- A boolean to enable or disable transitions.
-- Default is `false`
+- A prop to enable or disable transitions.
+- The prop can either be a Boolean or a string specifying a transition type. Default is `false`
+- Options:
 
-**...other**
+```javascript
+  true,
+  false,
+  'Fade',
+  'Grow',
+  'Slide',
+  'Zoom',
+```
 
-- Additional props that will be spread to the root element.
+-
 
 ### Popper Options
 
@@ -102,7 +118,7 @@ Component Usage
 
 **placement**
 
-- The preferred placement of the tooltip.
+- The preferred placement of the popper.
 - Default is `bottom-center`
 - Options:
 
@@ -123,20 +139,19 @@ Component Usage
 
 **arrow**
 
-- Can be a boolean to show or hide the tooltip arrow.
-- Default is `true`
+- An object specifying arrow options.
 - Options:
 
 ```javascript
 {
-  element: undefined (default) // arrow element to be positioned
-  padding?: 0 (default) // padding between arrow and edges of popper
+  id: 'arrow' (default) // id of arrow element to be positioned
+  width: 16 (default) // the number of pixels for each side of the arrow
 }
 ```
 
 **autoPlace**
 
-- Can be a boolean to enable or disable automatic placement or an Object with options passed to its helper function.
+- Can be a boolean to enable or disable automatic placement of the popper or an Object with options passed to its helper function.
 - Default is `false`
 - Options:
 
@@ -237,7 +252,7 @@ Component Usage
 
 **offset**
 
-- The offset of the tooltip from the anchor element.
+- The offset of the popper from the anchor element.
 - Default is `5`
 
 ```javascript

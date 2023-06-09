@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { setRef } from '@components/lib';
+import { setRef } from '@component/utils';
 
-const useForkRef = (...refs) => {
+export function useForkRef(...refs) {
   return useMemo(() => {
     if (refs.every((ref) => ref == null)) {
       return null;
@@ -12,7 +12,5 @@ const useForkRef = (...refs) => {
         setRef(ref, instance);
       });
     };
-  }, refs);
-};
-
-export { useForkRef };
+  }, [refs]);
+}

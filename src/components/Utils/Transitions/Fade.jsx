@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Transition } from 'react-transition-group';
-import { createTransitions, reflow, getTransitionProps } from '@components/lib';
-import { useForkRef } from '@component-hooks';
+import { reflow, getTransitionProps } from '@component/utils';
+import { useForkRef } from '@component/hooks';
+import { useTheme } from 'styled-components/macro';
 
 const styles = {
   entering: {
@@ -12,126 +13,108 @@ const styles = {
   }
 };
 
-const setTransitionStyle = (
+const handleTransition = (
   node,
-  { style, timeout, easing },
+  style,
+  timeout,
+  easing,
   mode,
-  onTransition
+  theme,
+  transition,
+  isAppearing = undefined
 ) => {
   reflow(node);
-  const transitionProps = getTransitionProps(
-    { style, timeout, easing },
-    { mode }
-  );
-  node.style.webkitTransition = createTransitions('opacity', transitionProps);
-  node.style.transition = createTransitions('opacity', transitionProps);
 
-  if (onTransition) {
-    onTransition(node);
+  const transitionProps = getTransitionProps({ style, timeout, easing }, { mode: mode });
+
+  node.style.webkitTransition = theme.transition.create('opacity', transitionProps);
+  node.style.transition = theme.transition.create('opacity', transitionProps);
+
+  if (transition) {
+    transition(node, isAppearing);
   }
 };
 
-const Fade = React.forwardRef(
-  (
-    {
-      addEndListener,
-      appear = true,
-      children,
-      easing,
-      in: inProp,
-      onEnter,
-      onEntered,
-      onEntering,
-      onExit,
-      onExited,
-      onExiting,
-      style,
-      timeout = {
-        enter: 225,
-        exit: 195
-      },
-      TransitionComponent = Transition,
-      ...other
-    },
-    ref
-  ) => {
-    const enableStrictModeCompat = true;
-    const nodeRef = React.useRef(null);
-    const handleRef = useForkRef(nodeRef, children.ref, ref);
+const Fade = React.forwardRef((props, ref) => {
+  const theme = useTheme();
+  const defaultTimeout = {
+    enter: theme.transition.duration.enteringScreen,
+    exit: theme.transition.duration.leavingScreen
+  };
 
-    const normalizedTransitionCallback = (callback) => (maybeIsAppearing) => {
-      if (callback) {
-        const node = nodeRef.current;
-        callback(node, maybeIsAppearing);
-      }
-    };
+  const {
+    addEndListener,
+    appear = true,
+    children,
+    easing,
+    in: inProp,
+    onEnter,
+    onEntered,
+    onEntering,
+    onExit,
+    onExited,
+    onExiting,
+    style,
+    timeout = defaultTimeout,
+    TransitionComponent = Transition,
+    ...other
+  } = props;
 
-    const handleEnter = React.useCallback(
-      normalizedTransitionCallback((node, isAppearing) => {
-        setTransitionStyle(node, { style, timeout, easing }, 'enter', onEnter);
-      }),
-      [setTransitionStyle, onEnter]
-    );
+  const enableStrictModeCompat = true;
+  const nodeRef = React.useRef(null);
+  const handleRef = useForkRef(nodeRef, children.ref, ref);
 
-    const handleEntering = React.useCallback(
-      normalizedTransitionCallback(onEntering),
-      [onEntering]
-    );
+  const normalizedTransitionCallback = (callback) => (maybeIsAppearing) => {
+    if (callback) {
+      callback(nodeRef.current, maybeIsAppearing);
+    }
+  };
 
-    const handleEntered = React.useCallback(
-      normalizedTransitionCallback(onEntered),
-      [onEntered]
-    );
+  const handleEnter = normalizedTransitionCallback((node, isAppearing) => {
+    handleTransition(node, style, timeout, easing, 'enter', theme, onEnter, isAppearing);
+  });
 
-    const handleExit = React.useCallback(
-      normalizedTransitionCallback((node) => {
-        setTransitionStyle(node, { style, timeout, easing }, 'exit', onEnter);
-      }),
-      [setTransitionStyle, onExit]
-    );
+  const handleEntering = normalizedTransitionCallback(onEntering);
+  const handleEntered = normalizedTransitionCallback(onEntered);
 
-    const handleExiting = React.useCallback(
-      normalizedTransitionCallback(onExiting),
-      [onExiting]
-    );
+  const handleExit = normalizedTransitionCallback((node) => {
+    handleTransition(node, style, timeout, easing, 'exit', theme, onExit);
+  });
 
-    const handleExited = React.useCallback(
-      normalizedTransitionCallback(onExited),
-      [onExited]
-    );
+  const handleExiting = normalizedTransitionCallback(onExiting);
+  const handleExited = normalizedTransitionCallback(onExited);
 
-    return (
-      <TransitionComponent
-        appear={appear}
-        in={inProp}
-        nodeRef={enableStrictModeCompat ? nodeRef : undefined}
-        onEnter={handleEnter}
-        onEntered={handleEntered}
-        onEntering={handleEntering}
-        onExit={handleExit}
-        onExited={handleExited}
-        onExiting={handleExiting}
-        addEndListener={addEndListener}
-        timeout={timeout}
-        {...other}
-      >
-        {(state, childProps) => {
-          return React.cloneElement(children, {
-            style: {
-              opacity: 0,
-              visibility: state === 'exited' && !inProp ? 'hidden' : undefined,
-              ...styles[state],
-              ...style,
-              ...children.props.style
-            },
-            ref: handleRef,
-            ...childProps
-          });
-        }}
-      </TransitionComponent>
-    );
-  }
-);
+  return (
+    <TransitionComponent
+      appear={appear}
+      in={inProp}
+      nodeRef={enableStrictModeCompat ? nodeRef : undefined}
+      onEnter={handleEnter}
+      onEntering={handleEntering}
+      onEntered={handleEntered}
+      onExit={handleExit}
+      onExiting={handleExiting}
+      onExited={handleExited}
+      addEndListener={addEndListener}
+      timeout={timeout}
+      {...other}
+    >
+      {(state, childProps) => {
+        return React.cloneElement(children, {
+          style: {
+            opacity: 0,
+            visibility: state === 'exited' && !inProp ? 'hidden' : undefined,
+            ...styles[state],
+            ...style,
+            ...children.props.style
+          },
+          ref: handleRef,
+          ...childProps
+        });
+      }}
+    </TransitionComponent>
+  );
+});
 
 Fade.displayName = 'Fade';
 

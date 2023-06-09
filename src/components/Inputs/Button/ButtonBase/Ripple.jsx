@@ -1,37 +1,12 @@
-import { useEffect, useState } from 'react';
-import tw, { css } from 'twin.macro';
+import * as React from 'react';
+import clsx from 'clsx';
+import { useEnhancedEffect } from '@component/hooks';
 
-const Ripple = ({
-  className,
-  classes,
-  pulsate = false,
-  rippleX,
-  rippleY,
-  rippleSize,
-  in: inProp,
-  onExited,
-  timeout
-}) => {
-  const [leaving, setLeaving] = useState(false);
+const Ripple = (props) => {
+  const { className, classes, rippleX, rippleY, rippleSize, in: inProp, onExited, timeout } = props;
+  const [leaving, setLeaving] = React.useState(false);
 
-  useEffect(() => {
-    if (!inProp) {
-      setLeaving(true);
-    }
-
-    if (!inProp && onExited) {
-      const timeoutId = setTimeout(onExited, timeout);
-      return () => {
-        clearTimeout(timeoutId);
-      };
-    }
-  }, [inProp, onExited, timeout]);
-
-  const rippleRootStyles = [
-    classes.ripple,
-    classes.rippleVisible,
-    pulsate && classes.ripplePulsate
-  ].filter(Boolean);
+  const rippleClassName = clsx(className, classes.ripple, classes.rippleVisible);
 
   const rippleStyles = {
     width: rippleSize,
@@ -40,15 +15,26 @@ const Ripple = ({
     left: -(rippleSize / 2) + rippleX
   };
 
-  const childStyles = [
-    classes.child,
-    leaving && classes.childLeaving,
-    pulsate && classes.childPulsate
-  ].filter(Boolean);
+  const childClassName = clsx(classes.child, {
+    [classes.childLeaving]: leaving
+  });
+
+  if (!inProp && !leaving) {
+    setLeaving(true);
+  }
+  useEnhancedEffect(() => {
+    if (!inProp && onExited != null) {
+      const timeoutId = setTimeout(onExited, timeout);
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+    return undefined;
+  }, [onExited, inProp, timeout]);
 
   return (
-    <span className={className} css={rippleRootStyles} style={rippleStyles}>
-      <span css={childStyles} />
+    <span className={rippleClassName} style={rippleStyles}>
+      <span className={childClassName} />
     </span>
   );
 };

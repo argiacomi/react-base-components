@@ -17,6 +17,7 @@ The Grid component comes with several features:
 ## Props
 
 The Grid component takes the following props:
+
 - `className`: The CSS class to apply to the grid component.
 - `columns`: Defines the number of columns in the grid. The default is `12`.
 - `container`: If set to true, this indicates the Grid is a container that wraps items.

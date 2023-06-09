@@ -1,33 +1,63 @@
 import { forwardRef } from 'react';
-import tw from 'twin.macro';
-import { cn } from '@utils';
+import clsx from 'clsx';
+import styled from 'styled-components/macro';
+import { Paper } from '@components';
 
-const toolBarVariants = {
-  root: tw`relative flex items-center min-h-[56px] landscape:min-h-[48px] px-6 lg:px-10 xl:px-20`,
-  disableGutters: tw`px-0`,
-  variant: {
-    regular: tw`md:min-h-[64px]`,
-    dense: tw`min-h-[48px]`
-  }
-};
+const ToolbarRoot = styled(Paper)(
+  ({ theme, ownerState }) => ({
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    ...(!ownerState.disableGutters && {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      [theme.breakpoints.up('sm')]: {
+        paddingLeft: theme.spacing(3),
+        paddingRight: theme.spacing(3)
+      }
+    }),
+    ...(ownerState.variant === 'dense' && {
+      minHeight: 48
+    })
+  }),
+  ({ theme, ownerState }) =>
+    ownerState.variant === 'regular' && {
+      minHeight: theme.spacing(8),
+      [theme.breakpoints.up('xs')]: {
+        '@media (orientation: landscape)': {
+          minHeight: theme.spacing(6)
+        }
+      },
+      [theme.breakpoints.up('sm')]: {
+        minHeight: theme.spacing(8)
+      }
+    }
+);
 
 const Toolbar = forwardRef(function Toolbar(props, ref) {
   const {
     className,
-    Component = 'div',
+    component = 'div',
     disableGutters = false,
     variant = 'regular',
     ...other
   } = props;
 
-  const toolbarStyles = [
-    toolBarVariants.root,
-    disableGutters && toolBarVariants.disableGutters,
-    toolBarVariants.variant[variant]
-  ].filter(Boolean);
+  const ownerState = {
+    ...props,
+    component,
+    disableGutters,
+    variant
+  };
 
   return (
-    <Component className={className} css={toolbarStyles} ref={ref} {...other} />
+    <ToolbarRoot
+      as={component}
+      className={clsx('Toolbar-Root', className)}
+      ownerState={ownerState}
+      ref={ref}
+      {...other}
+    />
   );
 });
 

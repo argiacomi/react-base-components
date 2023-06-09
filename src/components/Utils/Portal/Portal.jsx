@@ -1,17 +1,23 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { createPortal } from 'react-dom';
-import { useEnhancedEffect, useForkRef } from '@component-hooks';
-import {
-  disableFocusInside,
-  enableFocusInside,
-  getNextTabbable,
-  getPreviousTabbable,
-  isOutsideEvent,
-  setRef
-} from '@components/lib';
-import { FocusGuard, HIDDEN_STYLES } from './FocusGuard';
+import { useEnhancedEffect } from '@component/hooks';
+import { setRef } from '@component/utils';
+import { PortalContext, usePortalContext } from './PortalContext';
 
-const PortalContext = React.createContext(null);
+export const HIDDEN_STYLES = {
+  border: 0,
+  clip: 'rect(0 0 0 0)',
+  height: '1px',
+  margin: '-1px',
+  overflow: 'hidden',
+  padding: 0,
+  position: 'fixed',
+  whiteSpace: 'nowrap',
+  width: '1px',
+  top: 0,
+  left: 0
+};
 
 function getElement(element) {
   return typeof element === 'function'
@@ -21,15 +27,15 @@ function getElement(element) {
     : element;
 }
 
-function usePortalNode({ container, id, disablePortal = false }) {
+function usePortalNode({ container: root, id, ref, disablePortal = false }) {
   const [portalNode, setPortalNode] = React.useState(null);
 
   const uniqueId = React.useId();
   const portalContext = usePortalContext();
 
   const data = React.useMemo(
-    () => ({ container, id, disablePortal, portalContext, uniqueId }),
-    [container, id, disablePortal, portalContext, uniqueId]
+    () => ({ id, root, disablePortal, portalContext, uniqueId }),
+    [id, root, disablePortal, portalContext, uniqueId]
   );
 
   const dataRef = React.useRef();
@@ -46,15 +52,9 @@ function usePortalNode({ container, id, disablePortal = false }) {
 
       dataRef.current = data;
 
-      const {
-        container: containerProp,
-        id,
-        disablePortal,
-        portalContext,
-        uniqueId
-      } = data;
+      const { id, container: root, portalContext, uniqueId } = data;
 
-      const resolvedContainer = getElement(containerProp) ?? getElement('root');
+      const resolvedContainer = getElement(root) ?? getElement('root');
 
       const existingIdRoot = id ? document.getElementById(id) : null;
       const attr = 'data-portal';
@@ -66,14 +66,18 @@ function usePortalNode({ container, id, disablePortal = false }) {
         existingIdRoot.appendChild(subRoot);
         setPortalNode(subRoot);
       } else {
-        let containerElement =
-          resolvedContainer || portalContext?.portalNode || document.body;
+        let container = resolvedContainer || portalContext?.portalNode;
+        const ElementConstructor = container?.ownerDocument?.defaultView?.Element || window.Element;
+        if (container && !(container instanceof ElementConstructor)) {
+          container = container.current;
+        }
+        container = container || document.body;
 
         let idWrapper = null;
         if (id) {
           idWrapper = document.createElement('div');
           idWrapper.id = id;
-          containerElement.appendChild(idWrapper);
+          container.appendChild(idWrapper);
         }
 
         const subRoot = document.createElement('div');
@@ -81,60 +85,59 @@ function usePortalNode({ container, id, disablePortal = false }) {
         subRoot.id = uniqueId;
         subRoot.setAttribute(attr, '');
 
-        containerElement = idWrapper || containerElement;
-        containerElement.appendChild(subRoot);
+        container = idWrapper || container;
+        container.appendChild(subRoot);
 
         setPortalNode(subRoot);
       }
     }
-  }, [container, data, disablePortal]);
+  }, [data]);
 
   useEnhancedEffect(() => {
     if (portalNode && !disablePortal) {
-      setRef(dataRef, portalNode);
+      setRef(ref, portalNode);
       return () => {
-        setRef(dataRef, null);
+        setRef(ref, null);
       };
     }
 
     return undefined;
-  }, [dataRef, portalNode, disablePortal]);
+  }, [ref, portalNode, disablePortal]);
 
   return portalNode;
 }
 
-const Portal = React.forwardRef(
-  (
-    { children, container, id, disablePortal = false, preserveTabOrder = true },
-    ref
-  ) => {
-    const portalNode = usePortalNode({ id, container, disablePortal });
+const Portal = React.forwardRef((props, ref) => {
+  const { className, children, container = null, id, disablePortal = false } = props;
 
-    return (
-      <PortalContext.Provider
-        value={React.useMemo(
-          () => ({
-            portalNode
-          }),
-          [portalNode]
-        )}
-      >
-        {disablePortal ? (
-          <React.Fragment>{children}</React.Fragment>
-        ) : (
-          <React.Fragment>
-            {portalNode && (
-              <span aria-owns={portalNode.id} className={HIDDEN_STYLES} />
-            )}
-            {portalNode && createPortal(children, portalNode)}
-          </React.Fragment>
-        )}
-      </PortalContext.Provider>
-    );
-  }
-);
+  const portalNode = usePortalNode({ container, id, ref, disablePortal });
+
+  return (
+    <PortalContext.Provider
+      value={React.useMemo(
+        () => ({
+          portalNode
+        }),
+        [portalNode]
+      )}
+    >
+      {disablePortal ? (
+        <React.Fragment>{children}</React.Fragment>
+      ) : (
+        <React.Fragment>
+          {portalNode && (
+            <span
+              className={clsx('Portal-Node', className)}
+              aria-owns={portalNode.id}
+              style={HIDDEN_STYLES}
+            />
+          )}
+          {portalNode && createPortal(children, portalNode)}
+        </React.Fragment>
+      )}
+    </PortalContext.Provider>
+  );
+});
 Portal.displayName = 'Portal';
 
-const usePortalContext = () => React.useContext(PortalContext);
-
-export { Portal, usePortalContext };
+export default Portal;

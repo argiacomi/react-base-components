@@ -1,95 +1,154 @@
 import * as React from 'react';
-import tw from 'twin.macro';
+import clsx from 'clsx';
+import styled from 'styled-components/macro';
 
-const dividerStyles = {
-  root: tw`m-0 shrink-0 border-solid border-0 border-b border-disabled-light dark:border-disabled-dark `,
-  absolute: tw`absolute bottom-0 left-0 w-full`,
-  inset: tw`ml-[72px]`,
-  middle: {
-    horizontal: tw`ml-4 mr-4`,
-    vertical: tw`mt-2 mb-2`
-  },
-  vertical: tw`h-full border-b-0 border-r`,
-  right: tw`before:w-[90%] after:w-[10%]`,
-  left: tw`before:w-[10%] after:w-[90%]`,
-  flexItem: tw`self-stretch h-auto`
-};
-
-const childStyles = {
-  root: tw`flex whitespace-nowrap text-center border-0`,
-  before: tw`before:(self-center relative w-full h-0 border-0 border-t border-solid border-disabled-light dark:border-disabled-dark content-[""])`,
-  after: tw`after:(self-center relative w-full h-0 border-0 border-t border-solid border-disabled-light dark:border-disabled-dark content-[""])`,
-  vertical: {
-    root: tw`flex-col`,
-    before: tw`before:(self-center static h-full w-0 border-t-0 border-l border-solid border-l-disabled-light dark:border-l-disabled-dark)`,
-    after: tw`after:(self-center static h-full w-0 border-t-0 border-l border-solid border-l-disabled-light dark:border-l-disabled-dark)`
-  }
-};
-
-const wrapperStyles = {
-  root: tw`inline-block pl-2 pr-2`,
-  vertical: tw`pt-2 pb-2`
-};
-
-const Divider = React.forwardRef(
-  (
-    {
-      absolute = false,
-      children,
-      className,
-      component,
-      flexItem = false,
-      orientation = 'horizontal',
-      textAlign = 'center',
-      variant = 'fullWidth',
-      ...other
-    },
-    ref
-  ) => {
-    const DividerRoot = children ? 'div' : 'hr';
-    const DividerWrapper = 'span';
-
-    const role = DividerRoot !== 'hr' ? 'separator' : undefined;
-
-    const classes = {
-      root: [
-        dividerStyles.root,
-        absolute && dividerStyles.absolute,
-        dividerStyles[variant],
-        variant !== 'fullWidth' && dividerStyles[variant][orientation],
-        orientation === 'vertical' && dividerStyles[orientation],
-        flexItem && dividerStyles.flexItem,
-        children && childStyles.root,
-        children && childStyles.before,
-        children && childStyles.after,
-        children && orientation === 'vertical' && childStyles[orientation].root,
-        children &&
-          orientation === 'vertical' &&
-          childStyles[orientation].before,
-        children &&
-          orientation === 'vertical' &&
-          childStyles[orientation].after,
-        orientation !== 'vertical' && dividerStyles[textAlign]
-      ].filter(Boolean),
-      wrapper: [wrapperStyles.root, wrapperStyles[orientation]].filter(Boolean)
-    };
-
-    return (
-      <DividerRoot
-        as={component}
-        className={className}
-        css={classes.root}
-        role={role}
-        ref={ref}
-        {...other}
-      >
-        {children ? (
-          <DividerWrapper css={classes.wrapper}>{children}</DividerWrapper>
-        ) : null}
-      </DividerRoot>
-    );
-  }
+const DividerRoot = styled('div')(
+  ({ theme, ownerState }) => ({
+    margin: 0,
+    flexShrink: 0,
+    borderWidth: 0,
+    borderStyle: 'solid',
+    borderColor: theme.color.divider,
+    borderBottomWidth: 'thin',
+    ...(ownerState.absolute && {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      width: '100%'
+    }),
+    ...(ownerState.variant === 'inset' && {
+      marginLeft: '4.5rem'
+    }),
+    ...(ownerState.variant === 'middle' &&
+      ownerState.orientation === 'horizontal' && {
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2)
+      }),
+    ...(ownerState.variant === 'middle' &&
+      ownerState.orientation === 'vertical' && {
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1)
+      }),
+    ...(ownerState.orientation === 'vertical' && {
+      height: '100%',
+      borderBottomWidth: 0,
+      borderRightWidth: 'thin'
+    }),
+    ...(ownerState.flexItem && {
+      alignSelf: 'stretch',
+      height: 'auto'
+    })
+  }),
+  ({ ownerState }) => ({
+    ...(ownerState.children && {
+      display: 'flex',
+      whiteSpace: 'nowrap',
+      textAlign: 'center',
+      border: 0,
+      '&::before, &::after': {
+        content: '""',
+        alignSelf: 'center'
+      }
+    })
+  }),
+  ({ theme, ownerState }) => ({
+    ...(ownerState.children &&
+      ownerState.orientation !== 'vertical' && {
+        '&::before, &::after': {
+          position: 'relative',
+          width: '100%',
+          height: 0,
+          borderTop: `thin solid ${theme.color.divider}`
+        }
+      })
+  }),
+  ({ theme, ownerState }) => ({
+    ...(ownerState.children &&
+      ownerState.orientation === 'vertical' && {
+        flexDirection: 'column',
+        '&::before, &::after': {
+          position: 'static',
+          width: 0,
+          height: '100%',
+          borderLeft: `thin solid ${theme.color.divider}`
+        }
+      })
+  }),
+  ({ ownerState }) => ({
+    ...(ownerState.orientation !== 'vertical' &&
+      {
+        right: {
+          '&::before': {
+            width: '90%'
+          },
+          '&::after': {
+            width: '10%'
+          }
+        },
+        left: {
+          '&::before': {
+            width: '10%'
+          },
+          '&::after': {
+            width: '90%'
+          }
+        }
+      }[ownerState.textAlign])
+  })
 );
+
+const DividerWrapper = styled('span')(({ theme, ownerState }) => ({
+  display: 'inline-block',
+  paddingLeft: theme.spacing(1.2),
+  paddingRight: theme.spacing(1.2),
+  ...(ownerState.orientation === 'vertical' && {
+    paddingTop: theme.spacing(1.2),
+    paddingBottom: theme.spacing(1.2)
+  })
+}));
+
+const Divider = React.forwardRef((props, ref) => {
+  const {
+    absolute = false,
+    children,
+    className,
+    component = children ? 'div' : 'hr',
+    flexItem = false,
+    orientation = 'horizontal',
+    role = component !== 'hr' ? 'separator' : undefined,
+    textAlign = 'center',
+    variant = 'fullWidth',
+    ...other
+  } = props;
+
+  const ownerState = {
+    ...props,
+    absolute,
+    component,
+    flexItem,
+    orientation,
+    role,
+    textAlign,
+    variant
+  };
+
+  return (
+    <DividerRoot
+      as={component}
+      className={clsx('Divider-Root', className)}
+      ownerState={ownerState}
+      role={role}
+      ref={ref}
+      {...other}
+    >
+      {children ? (
+        <DividerWrapper className='Divider-Wrapper' ownerState={ownerState}>
+          {children}
+        </DividerWrapper>
+      ) : null}
+    </DividerRoot>
+  );
+});
 Divider.displayName = 'Divider';
 
 export default Divider;

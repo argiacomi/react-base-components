@@ -1,43 +1,42 @@
-import React, {
-  cloneElement,
-  forwardRef,
-  isValidElement,
-  useMemo
-} from 'react';
-import { cn } from '@utils';
+import React from 'react';
+import clsx from 'clsx';
 
-const AccordionGroup = forwardRef(
-  (
-    {
-      children,
-      className,
-      Component = 'div',
-      defaultExpanded = false,
-      disabled = false,
-      enableGutters = false,
-      square = false,
-      ...other
-    },
-    ref
-  ) => {
-    return (
-      <Component className={className} ref={ref} {...other}>
-        {React.Children.map(children, (child) => {
-          if (!isValidElement(child)) {
-            return null;
-          }
-          return cloneElement(child, {
-            className: cn(child.props.className),
-            defaultExpanded: defaultExpanded,
-            disabled: disabled,
-            enableGutters: enableGutters,
-            square: square
-          });
-        })}
-      </Component>
-    );
-  }
-);
+const AccordionGroup = React.forwardRef((props, ref) => {
+  const {
+    children,
+    className,
+    component,
+    defaultExpanded = false,
+    disabled = false,
+    enableGutters = false,
+    square = false,
+    ...other
+  } = props;
+
+  const AccordionGroupRoot = component || 'div';
+
+  return (
+    <AccordionGroupRoot
+      as={component}
+      className={clsx('Accordion-Group', className)}
+      ref={ref}
+      {...other}
+    >
+      {React.Children.map(children, (child) => {
+        if (!React.isValidElement(child)) {
+          return null;
+        }
+        return React.cloneElement(child, {
+          className: clsx(child.props.className),
+          defaultExpanded: defaultExpanded,
+          disabled: disabled,
+          enableGutters: enableGutters,
+          square: square
+        });
+      })}
+    </AccordionGroupRoot>
+  );
+});
 AccordionGroup.displayName = 'AccordionGroup';
 
 export default AccordionGroup;

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Transition } from 'react-transition-group';
-import { createTransitions, reflow, getTransitionProps } from '@components/lib';
-import { useForkRef } from '@component-hooks';
+import { reflow, getTransitionProps } from '@component/utils';
+import { useForkRef } from '@component/hooks';
+import { useTheme } from 'styled-components/macro';
 
 const styles = {
   entering: {
@@ -14,26 +15,30 @@ const styles = {
 
 const setTransitionStyle = (
   node,
-  { style, timeout, easing },
+  style,
+  timeout,
+  easing,
   mode,
-  onTransition
+  theme,
+  transition,
+  isAppearing = undefined
 ) => {
   reflow(node);
 
-  const transitionProps = getTransitionProps(
-    { style, timeout, easing },
-    { mode }
-  );
-  node.style.webkitTransition = createTransitions('transform', transitionProps);
-  node.style.transition = createTransitions('transform', transitionProps);
+  const transitionProps = getTransitionProps({ style, timeout, easing }, { mode });
+  node.style.webkitTransition = theme.transition.create('transform', transitionProps);
+  node.style.transition = theme.transition.create('transform', transitionProps);
 
-  onTransition?.(node, isAppearing);
+  if (transition) {
+    transition(node, isAppearing);
+  }
 };
 
 const Zoom = React.forwardRef((props, ref) => {
+  const theme = useTheme();
   const defaultTimeout = {
-    enter: 225,
-    exit: 195
+    enter: theme.transition.duration.enteringScreen,
+    exit: theme.transition.duration.enteringScreen
   };
 
   const {
@@ -50,7 +55,6 @@ const Zoom = React.forwardRef((props, ref) => {
     onExiting,
     style,
     timeout = defaultTimeout,
-    // eslint-disable-next-line react/prop-types
     TransitionComponent = Transition,
     ...other
   } = props;
@@ -60,13 +64,12 @@ const Zoom = React.forwardRef((props, ref) => {
 
   const normalizedTransitionCallback = (callback) => (maybeIsAppearing) => {
     if (callback) {
-      const node = nodeRef.current;
-      callback(node, maybeIsAppearing);
+      callback(nodeRef.current, maybeIsAppearing);
     }
   };
 
   const handleEnter = normalizedTransitionCallback((node, isAppearing) => {
-    setTransitionStyle(node, { style, timeout, easing }, 'enter', onEnter);
+    setTransitionStyle(node, style, timeout, easing, 'enter', theme, onEnter, isAppearing);
   });
 
   const handleEntering = normalizedTransitionCallback(onEntering);
@@ -74,7 +77,7 @@ const Zoom = React.forwardRef((props, ref) => {
   const handleEntered = normalizedTransitionCallback(onEntered);
 
   const handleExit = normalizedTransitionCallback((node) => {
-    setTransitionStyle(node, { style, timeout, easing }, 'exit', onExit);
+    setTransitionStyle(node, style, timeout, easing, 'exit', theme, onExit);
   });
 
   const handleExiting = normalizedTransitionCallback(onExiting);
@@ -93,11 +96,11 @@ const Zoom = React.forwardRef((props, ref) => {
       in={inProp}
       nodeRef={nodeRef}
       onEnter={handleEnter}
-      onEntered={handleEntered}
       onEntering={handleEntering}
+      onEntered={handleEntered}
       onExit={handleExit}
-      onExited={handleExited}
       onExiting={handleExiting}
+      onExited={handleExited}
       addEndListener={handleAddEndListener}
       timeout={timeout}
       {...other}

@@ -1,2 +1,2 @@
-export { default as BasePopper } from './BasePopper';
-export { default as Popper } from './Popper';
+export * from './BasePopper';
+export * from './Popper';

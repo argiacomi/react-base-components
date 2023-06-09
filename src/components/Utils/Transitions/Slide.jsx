@@ -1,13 +1,8 @@
 import * as React from 'react';
 import { Transition } from 'react-transition-group';
-import { useForkRef } from '@component-hooks';
-import {
-  createTransitions,
-  reflow,
-  getTransitionProps,
-  debounce
-} from '@components/lib';
-import { ownerWindow } from '@utils';
+import { useForkRef } from '@component/hooks';
+import { reflow, getTransitionProps, debounce, ownerWindow } from '@component/utils';
+import { useTheme } from 'styled-components/macro';
 
 const getTranslateValue = (direction, node, resolvedContainer) => {
   const rect = node.getBoundingClientRect();
@@ -16,9 +11,7 @@ const getTranslateValue = (direction, node, resolvedContainer) => {
 
   const transform =
     node.fakeTransform ||
-    containerWindow
-      .getComputedStyle(node)
-      .getPropertyValue('-webkit-transform') ||
+    containerWindow.getComputedStyle(node).getPropertyValue('-webkit-transform') ||
     containerWindow.getComputedStyle(node).getPropertyValue('transform');
 
   let [offsetX = 0, offsetY = 0] =
@@ -45,17 +38,13 @@ const getTranslateValue = (direction, node, resolvedContainer) => {
         : `translateY(${containerWindow.innerHeight + offsetY - rect.top}px)`;
     case 'down':
       return containerRect
-        ? `translateY(-${
-            rect.top - containerRect.top + rect.height - offsetY
-          }px)`
+        ? `translateY(-${rect.top - containerRect.top + rect.height - offsetY}px)`
         : `translateY(-${rect.top + rect.height - offsetY}px)`;
   }
 };
 
 const resolveContainer = (containerPropProp) => {
-  return typeof containerPropProp === 'function'
-    ? containerPropProp()
-    : containerPropProp;
+  return typeof containerPropProp === 'function' ? containerPropProp() : containerPropProp;
 };
 
 const setTranslateValue = (direction, node, containerProp) => {
@@ -68,23 +57,17 @@ const setTranslateValue = (direction, node, containerProp) => {
   }
 };
 
-const setTransitionProperties = (node, transitionProps, prop) => {
-  node.style.webkitTransition = createTransitions(
-    `-webkit-${prop}`,
-    transitionProps
-  );
-  node.style.transition = createTransitions(prop, transitionProps);
-};
-
 const Slide = React.forwardRef((props, ref) => {
+  const theme = useTheme();
+
   const defaultEasing = {
-    enter: 'cubic-bezier(0.0, 0, 0.2, 1)',
-    exit: 'cubic-bezier(0.4, 0, 0.6, 1)'
+    enter: theme.transition.easing.easeInOut,
+    exit: theme.transition.easing.sharp
   };
 
   const defaultTimeout = {
-    enter: 225,
-    exit: 195
+    enter: theme.transition.duration.enteringScreen,
+    exit: theme.transition.duration.leavingScreen
   };
 
   const {
@@ -129,11 +112,11 @@ const Slide = React.forwardRef((props, ref) => {
       }
     );
 
-    node.style.webkitTransition = createTransitions('-webkit-transform', {
+    node.style.webkitTransition = theme.transition.create('-webkit-transform', {
       ...transitionProps
     });
 
-    node.style.transition = createTransitions('transform', {
+    node.style.transition = theme.transition.create('transform', {
       ...transitionProps
     });
 
@@ -149,7 +132,8 @@ const Slide = React.forwardRef((props, ref) => {
       { timeout, style, easing: easingProp },
       { mode: 'exit' }
     );
-    setTransitionProperties(node, transitionProps, 'transform');
+    node.style.webkitTransition = theme.transition.create(`-webkit-transform`, transitionProps);
+    node.style.transition = theme.transition.create('transform', transitionProps);
     setTranslateValue(direction, node, containerProp);
     onExit?.(node);
   });
@@ -169,20 +153,11 @@ const Slide = React.forwardRef((props, ref) => {
     }
   };
 
-  const updatePosition = React.useCallback(() => {
+  const handleResize = debounce(() => {
     if (childrenRef.current) {
       setTranslateValue(direction, childrenRef.current, containerProp);
     }
-  }, [direction, containerProp]);
-
-  const handleResize = React.useCallback(
-    debounce(() => {
-      if (childrenRef.current) {
-        setTranslateValue(direction, childrenRef.current, containerProp);
-      }
-    }),
-    [direction, containerProp]
-  );
+  });
 
   React.useEffect(() => {
     if (inProp || direction === 'down' || direction === 'right') {
@@ -198,20 +173,20 @@ const Slide = React.forwardRef((props, ref) => {
   }, [direction, inProp, containerProp, handleResize]);
 
   React.useEffect(() => {
-    if (!inProp) {
-      updatePosition();
+    if (!inProp && childrenRef.current) {
+      setTranslateValue(direction, childrenRef.current, containerProp);
     }
-  }, [inProp, updatePosition]);
+  }, [inProp, direction, containerProp]);
 
   return (
     <TransitionComponent
       nodeRef={childrenRef}
       onEnter={handleEnter}
-      onEntered={handleEntered}
       onEntering={handleEntering}
+      onEntered={handleEntered}
       onExit={handleExit}
-      onExited={handleExited}
       onExiting={handleExiting}
+      onExited={handleExited}
       addEndListener={handleAddEndListener}
       appear={appear}
       in={inProp}

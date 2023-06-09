@@ -1,76 +1,116 @@
-import { forwardRef } from 'react';
-import { ButtonBase } from '@components';
-import tw, { css } from 'twin.macro';
+import React from 'react';
+import styled from 'styled-components/macro';
+import clsx from 'clsx';
+import { ButtonBase, Icon } from '@components';
 
-const iconButtonVariants = {
-  root: tw`text-center flex-[0_0_auto] rounded-full overflow-visible transition-colors box-content`,
-  variants: {
-    edge: {
-      start: tw`ml-[-12px]`,
-      end: tw`mr-[-12px]`
-    },
-    color: {
-      inherit: tw`text-inherit fill-inherit hover:bg-black/5`,
-      primary: tw`text-primary-500 fill-primary-500 hover:bg-primary-500/20`,
-      secondary: tw`text-secondary-500 fill-secondary-500 hover:bg-secondary-500/20`,
-      success: tw`text-success-500 fill-success-500 hover:bg-success-500/20`,
-      warning: tw`text-warning-500 fill-warning-500 hover:bg-warning-500/20`,
-      danger: tw`text-danger-500 fill-danger-500 hover:bg-danger-500/20`
-    },
-    size: {
-      xs: tw`p-1 h-6 w-6`,
-      small: tw`p-[6px] h-6 w-6`,
-      medium: tw`p-2 h-6 w-6`,
-      large: tw`p-3 h-6 w-6`,
-      xl: tw`p-[14px] h-6 w-6`
-    }
-  },
-  compoundVariants: tw`ml-[-3px]`,
-  disabled: tw`pointer-events-none text-disabled-light dark:text-disabled-dark`
-};
+const IconButtonRoot = styled(ButtonBase)(({ theme, ownerState }) => ({
+  textAlign: 'center',
+  flex: '0 0 auto',
+  ...theme.text.size['2xl'],
+  height: `${1.5 * ownerState.icons}rem`,
+  width: `${1.5 * ownerState.icons}rem`,
+  borderRadius: theme.rounded.full,
+  overflow: 'visible',
+  transition: theme.transition.create('background-color', {
+    duration: theme.transition.duration.shortest
+  }),
+  boxSizing: 'content-box',
+  ...{
+    start: { marginLeft: '-.75rem' },
+    end: { marginRight: '-.75rem' }
+  }[ownerState.edge],
+  ...(ownerState.color === 'inherit' && {
+    color: 'inherit'
+  }),
+  ...(ownerState.color !== 'inherit' && {
+    ...(ownerState.color === 'default' && {
+      color: theme.color.text.secondary,
+      fill: 'inherit',
+      '&:hover': {
+        backgroundColor: theme.alpha.add(theme.color.black, 0.05)
+      }
+    }),
+    ...(ownerState.color !== 'default' && {
+      color: theme.color[ownerState.color][500],
+      fill: theme.color[ownerState.color][500],
+      '&:hover': {
+        backgroundColor: theme.alpha.add(theme.color[ownerState.color][500], 0.2)
+      }
+    })
+  }),
+  padding: {
+    xs: '0.25rem',
+    small: '0.375rem',
+    medium: '0.5rem',
+    large: '0.75rem',
+    xl: '.875rem'
+  }[ownerState.size],
+  ...(ownerState.edge === 'start' &&
+    (ownerState.size === 'xs' || ownerState.size === 'sm') && { marginLeft: '-.25rem' }),
+  ...(ownerState.disabled && {
+    color: theme.color.disabled.text,
+    fill: theme.color.disabled.text,
+    pointerEvents: 'none'
+  })
+}));
 
-const IconButton = forwardRef(
-  (
-    {
-      edge = false,
-      children,
-      className,
-      color = 'inherit',
-      disabled = false,
-      disableFocusRipple = false,
-      disableRipple = false,
-      size = 'medium',
-      ...other
-    },
-    ref
-  ) => {
-    const iconButtonStyles = [
-      iconButtonVariants.root,
-      iconButtonVariants.variants.edge[edge],
-      iconButtonVariants.variants.color[color],
-      iconButtonVariants.variants.size[size],
-      edge === 'start' &&
-        (size === 'xs' || size === 'sm') &&
-        iconButtonVariants.compoundVariants,
-      disabled && iconButtonVariants.disabled
-    ].filter(Boolean);
+const IconButton = React.forwardRef((props, ref) => {
+  const {
+    edge = false,
+    children,
+    className,
+    color = 'inherit',
+    disabled = false,
+    disableFocusRipple = false,
+    size = 'medium',
+    ...other
+  } = props;
 
-    return (
-      <ButtonBase
-        className={className}
-        css={iconButtonStyles}
-        centerRipple
-        disabled={disabled}
-        focusRipple={!disableFocusRipple}
-        disableRipple={disableRipple}
-        ref={ref}
-        {...other}
-      >
-        {children}
-      </ButtonBase>
-    );
-  }
-);
+  const iconArray = Array.isArray(props.icon) ? props.icon : [props.icon];
+  const icons = iconArray.length;
+
+  const ownerState = {
+    ...props,
+    edge,
+    color,
+    disabled,
+    disableFocusRipple,
+    icons,
+    size
+  };
+
+  return (
+    <IconButtonRoot
+      className={clsx('IconButton-Root', className)}
+      centerRipple
+      focusRipple={!disableFocusRipple}
+      disabled={disabled}
+      ref={ref}
+      ownerState={ownerState}
+      {...other}
+    >
+      {props.icon
+        ? iconArray.map((icon, index) => (
+            <Icon
+              key={index}
+              icon={icon}
+              size={
+                {
+                  mini: '1.125rem',
+                  small: '1.25rem',
+                  medium: '1.375rem',
+                  large: '1.5rem',
+                  jumbo: '1.675rem',
+                  auto: 'auto'
+                }[ownerState.size]
+              }
+              css={{ transition: 'none' }}
+            />
+          ))
+        : children}
+    </IconButtonRoot>
+  );
+});
 
 IconButton.displayName = 'IconButton';
 

@@ -1,8 +1,9 @@
 import * as React from 'react';
+import clsx from 'clsx';
 
 const Box = React.forwardRef(({ className, component, ...other }, ref) => {
-  const Component = component || 'div';
-  return <Component ref={ref} className={className} {...other} />;
+  const BoxRoot = component || 'div';
+  return <BoxRoot ref={ref} className={clsx('Box-root', className)} {...other} />;
 });
 Box.displayName = 'Box';
 

@@ -1,94 +1,135 @@
 import * as React from 'react';
-import { useForkRef, useIsFocusVisible } from '@component-hooks';
+import styled from 'styled-components/macro';
+import clsx from 'clsx';
+import { useForkRef, useIsFocusVisible } from '@component/hooks';
 import { Text } from '@components';
-import tw from 'twin.macro';
 
-const linkStyleVariants = {
-  underline: {
-    none: tw`no-underline`,
-    hover: tw`no-underline hover:underline`,
-    always: tw`underline hover:decoration-inherit`
-  },
-  color: {
-    inherit: tw`text-inherit decoration-inherit`,
-    text: tw`text-primary-light dark:text-primary-dark`,
-    primary: tw`decoration-primary-500`,
-    secondary: tw`decoration-secondary-500`,
-    success: tw`decoration-success-500`,
-    warning: tw`decoration-warning-500`,
-    danger: tw`decoration-danger-500`
-  },
-  button: tw`relative bg-transparent outline-0 border-none m-0 rounded-none p-0 cursor-pointer select-none align-middle appearance-none border-0 focus-visible:outline-[auto]`
-};
+const LinkRoot = styled(Text)(({ theme, ownerState }) => ({
+  ...(ownerState.underline === 'always' && {
+    textDecorationLine: 'underline',
+    '&:hover': {
+      textDecorationColor: 'inherit'
+    }
+  }),
+  ...(ownerState.underline === 'hover' && {
+    textDecorationLine: 'none',
+    '&:hover': {
+      textDecorationLine: 'underline'
+    }
+  }),
+  ...(ownerState.underline === 'none' && {
+    textDecorationLine: 'none'
+  }),
 
-const Link = React.forwardRef(
-  (
-    {
-      className,
-      color = 'primary',
-      component = 'a',
-      onBlur,
-      onFocus,
-      underline = 'always',
-      variant = 'inherit',
-      ...other
+  ...(ownerState.color === 'inherit' && {
+    color: 'inherit',
+    textDecorationColor: 'inherit'
+  }),
+  ...(ownerState.color === 'text' && {
+    color: theme.color.text.primary,
+    textDecorationColor: 'inherit'
+  }),
+  ...(ownerState.color !== 'inherit' && {
+    ...(ownerState.color !== 'text' && {
+      color: theme.color[ownerState.color][500]
+    })
+  }),
+  ...(ownerState.component === 'button' && {
+    position: 'relative',
+    WebkitTapHighlightColor: 'transparent',
+    backgroundColor: 'transparent',
+    outline: 0,
+    border: 0,
+    margin: 0,
+    borderRadius: 0,
+    padding: 0,
+    cursor: 'pointer',
+    userSelect: 'none',
+    verticalAlign: 'middle',
+    MozAppearance: 'none',
+    WebkitAppearance: 'none',
+    '&::-moz-focus-inner': {
+      borderStyle: 'none'
     },
-    ref
-  ) => {
-    const {
-      isFocusVisibleRef,
-      onBlur: handleBlurVisible,
-      onFocus: handleFocusVisible,
-      ref: focusVisibleRef
-    } = useIsFocusVisible();
+    '&:focus-visible': {
+      outline: 'auto'
+    }
+  }),
+  ...(ownerState.focusVisible && {
+    ['&.focusVisible']: {
+      outline: 'auto'
+    }
+  })
+}));
 
-    const [focusVisible, setFocusVisible] = React.useState(false);
-    const handlerRef = useForkRef(ref, focusVisibleRef);
+const Link = React.forwardRef((props, ref) => {
+  const {
+    className,
+    color = 'primary',
+    component = 'a',
+    onBlur,
+    onFocus,
+    underline = 'always',
+    variant = 'inherit',
+    ...other
+  } = props;
 
-    const handleBlur = (event) => {
-      handleBlurVisible(event);
-      if (isFocusVisibleRef.current === false) {
-        setFocusVisible(false);
-      }
-      if (onBlur) {
-        onBlur(event);
-      }
-    };
+  const {
+    isFocusVisibleRef,
+    onBlur: handleBlurVisible,
+    onFocus: handleFocusVisible,
+    ref: focusVisibleRef
+  } = useIsFocusVisible();
 
-    const handleFocus = (event) => {
-      handleFocusVisible(event);
-      if (isFocusVisibleRef.current === true) {
-        setFocusVisible(true);
-      }
-      if (onFocus) {
-        onFocus(event);
-      }
-    };
+  const ownerState = {
+    ...props,
+    color,
+    component,
+    focusVisible,
+    underline,
+    variant
+  };
 
-    const linkStyles = [
-      linkStyleVariants.underline[underline],
-      linkStyleVariants.color[color],
-      component === 'button' ? linkStyleVariants.button : null,
-      variant
-    ];
+  const [focusVisible, setFocusVisible] = React.useState(false);
+  const handlerRef = useForkRef(ref, focusVisibleRef);
 
-    return (
-      <Text
-        color={color}
-        className={className}
-        css={linkStyles}
-        component={component}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
-        target='_blank'
-        rel='noopener'
-        ref={handlerRef}
-        variant={variant}
-        {...other}
-      />
-    );
-  }
-);
+  const handleBlur = (event) => {
+    handleBlurVisible(event);
+    if (isFocusVisibleRef.current === false) {
+      setFocusVisible(false);
+    }
+    if (onBlur) {
+      onBlur(event);
+    }
+  };
+
+  const handleFocus = (event) => {
+    handleFocusVisible(event);
+    if (isFocusVisibleRef.current === true) {
+      setFocusVisible(true);
+    }
+    if (onFocus) {
+      onFocus(event);
+    }
+  };
+
+  return (
+    <LinkRoot
+      color={color}
+      className={clsx('Link-Root', className)}
+      ownerState={ownerState}
+      component={component}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
+      target='_blank'
+      rel='noopener'
+      ref={handlerRef}
+      variant={variant}
+      {...other}
+    />
+  );
+});
+
 Link.displayName = 'Link';
 
 export default Link;

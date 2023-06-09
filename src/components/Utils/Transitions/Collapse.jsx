@@ -1,36 +1,57 @@
-import { forwardRef, useEffect, useRef } from 'react';
+import React from 'react';
+import clsx from 'clsx';
 import { Transition } from 'react-transition-group';
-import { createTransitions, reflow, getTransitionProps } from '@components/lib';
-import { useForkRef } from '@component-hooks';
-import tw from 'twin.macro';
+import { getTransitionProps, getAutoHeightDuration } from '@component/utils';
+import { useForkRef } from '@component/hooks';
+import styled from 'styled-components/macro';
 
-const getClasses = (orientation, state) => ({
-  root: [
-    tw`h-0 overflow-hidden duration-300 ease-in-out delay-0`,
-    orientation === 'horizontal'
-      ? tw`h-auto w-0 transition-[width]`
-      : tw`transition-[height]`
-  ],
-  wrapper: [tw`flex w-full`, orientation === 'horizontal' && tw`w-auto h-full`],
-  wrapperInner: [tw`w-full`, orientation === 'horizontal' && tw`w-auto h-full`]
-});
+const CollapseRoot = styled('div')(({ theme, ownerState }) => ({
+  height: 0,
+  overflow: 'hidden',
+  transition: theme.transition.create('height'),
+  ...(ownerState.orientation === 'horizontal' && {
+    height: 'auto',
+    width: 0,
+    transition: theme.transition.create('width')
+  }),
+  ...(ownerState.state === 'entered' && {
+    height: 'auto',
+    overflow: 'visible',
+    ...(ownerState.orientation === 'horizontal' && {
+      width: 'auto'
+    })
+  }),
+  ...(ownerState.state === 'exited' &&
+    !ownerState.in &&
+    ownerState.collapsedSize === '0px' && {
+      visibility: 'hidden'
+    })
+}));
 
-const calculateTransitionDuration = (timeout, wrapperSize) => {
-  if (timeout !== 'auto' || !wrapperSize) {
-    return 0;
-  }
-  return Math.round(
-    (4 + 15 * (wrapperSize / 36) ** 0.25 + wrapperSize / 36 / 5) * 10
-  );
-};
+const CollapseWrapper = styled('div')(({ ownerState }) => ({
+  display: 'flex',
+  width: '100%',
+  ...(ownerState.orientation === 'horizontal' && {
+    width: 'auto',
+    height: '100%'
+  })
+}));
 
-const Collapse = forwardRef((props, ref) => {
+const CollapseWrapperInner = styled('div')(({ ownerState }) => ({
+  width: '100%',
+  ...(ownerState.orientation === 'horizontal' && {
+    width: 'auto',
+    height: '100%'
+  })
+}));
+
+const Collapse = React.forwardRef((props, ref) => {
   const {
     addEndListener,
     children,
     className,
     collapsedSize: collapsedSizeProp = '0px',
-    Component = 'div',
+    component = 'div',
     easing,
     in: inProp,
     onEnter,
@@ -46,17 +67,21 @@ const Collapse = forwardRef((props, ref) => {
     ...other
   } = props;
 
-  const timer = useRef();
-  const wrapperRef = useRef(null);
-  const autoTransitionDuration = useRef();
+  const ownerState = {
+    ...props,
+    orientation,
+    collapsedSize: collapsedSizeProp
+  };
+
+  const timer = React.useRef();
+  const wrapperRef = React.useRef(null);
+  const autoTransitionDuration = React.useRef();
   const collapsedSize =
-    typeof collapsedSizeProp === 'number'
-      ? `${collapsedSizeProp}px`
-      : collapsedSizeProp;
+    typeof collapsedSizeProp === 'number' ? `${collapsedSizeProp}px` : collapsedSizeProp;
   const isHorizontal = orientation === 'horizontal';
   const size = isHorizontal ? 'width' : 'height';
 
-  const nodeRef = useRef(null);
+  const nodeRef = React.useRef(null);
   const handleRef = useForkRef(ref, nodeRef);
 
   const normalizedTransitionCallback = (callback) => (maybeIsAppearing) => {
@@ -67,16 +92,16 @@ const Collapse = forwardRef((props, ref) => {
   };
 
   const getWrapperSize = () =>
-    wrapperRef.current
-      ? wrapperRef.current[isHorizontal ? 'clientWidth' : 'clientHeight']
-      : 0;
+    wrapperRef.current ? wrapperRef.current[isHorizontal ? 'clientWidth' : 'clientHeight'] : 0;
 
   const handleTransition = (node, mode) => {
     const wrapperSize = getWrapperSize();
-    const { duration: transitionDuration, easing: transitionTimingFunction } =
-      getTransitionProps({ style, timeout, easing }, { mode });
+    const { duration: transitionDuration, easing: transitionTimingFunction } = getTransitionProps(
+      { style, timeout, easing },
+      { mode }
+    );
 
-    const duration2 = calculateTransitionDuration(timeout, wrapperSize);
+    const duration2 = getAutoHeightDuration(timeout, wrapperSize);
     node.style.transitionDuration =
       timeout === 'auto'
         ? `${duration2}ms`
@@ -132,51 +157,58 @@ const Collapse = forwardRef((props, ref) => {
     addEndListener?.(nodeRef.current, next);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     return () => {
       clearTimeout(timer.current);
     };
   }, []);
 
-  const classes = getClasses(orientation);
-
   return (
     <TransitionComponent
       in={inProp}
       onEnter={handleEnter}
-      onEntered={handleEntered}
       onEntering={handleEntering}
+      onEntered={handleEntered}
       onExit={handleExit}
-      onExited={handleExited}
       onExiting={handleExiting}
+      onExited={handleExited}
       addEndListener={handleAddEndListener}
       nodeRef={nodeRef}
       timeout={timeout === 'auto' ? null : timeout}
       {...other}
     >
       {(state, childProps) => (
-        <Component
-          css={[
-            classes.root,
-            state !== 'entered'
-              ? ''
-              : orientation === 'horizontal'
-              ? tw`h-auto w-auto overflow-auto`
-              : tw`h-auto overflow-auto`,
-            state === 'exited' && !inProp && collapsedSize === '0px',
+        <CollapseRoot
+          as={component}
+          className={clsx(
+            'Collapse-Root',
+            {
+              entered: state === 'entered',
+              hidden: state === 'exited' && !inProp && collapsedSize === '0px'
+            },
             className
-          ]}
+          )}
           style={{
             [isHorizontal ? 'minWidth' : 'minHeight']: collapsedSize,
             ...style
           }}
+          ownerState={{ ...ownerState, state }}
           ref={handleRef}
           {...childProps}
         >
-          <div className={classes.wrapper} ref={wrapperRef}>
-            <div className={classes.wrapperInner}>{children}</div>
-          </div>
-        </Component>
+          <CollapseWrapper
+            ownerState={{ ...ownerState, state }}
+            className={'Collapse-Wrapper'}
+            ref={wrapperRef}
+          >
+            <CollapseWrapperInner
+              ownerState={{ ...ownerState, state }}
+              className={'Collapse-WrapperInner'}
+            >
+              {children}
+            </CollapseWrapperInner>
+          </CollapseWrapper>
+        </CollapseRoot>
       )}
     </TransitionComponent>
   );

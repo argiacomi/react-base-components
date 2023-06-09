@@ -1,51 +1,91 @@
 import { forwardRef } from 'react';
-import tw from 'twin.macro';
-import { cn } from '@utils';
+import clsx from 'clsx';
+import styled from 'styled-components/macro';
 import { Paper } from '@components';
 
-const appBarVariants = {
-  root: tw`flex flex-col w-full box-border shrink-0 transition-colors`,
-  color: {
-    default: tw`bg-gray-500 dark:text-gray-100`,
-    inherit: tw`text-inherit`,
-    primary: tw`bg-primary-500 text-white`,
-    secondary: tw`bg-secondary-500 text-white`,
-    success: tw`bg-success-500 text-white`,
-    warning: tw`bg-warning-500 text-white`,
-    danger: tw`bg-danger-500 text-white`,
-    transparent: tw`bg-transparent text-inherit`,
-    monochrome: tw`border border-solid bg-white text-black border-black dark:bg-black dark:text-white dark:border-white`
-  },
-  position: {
-    absolute: tw`absolute z-[100] top-0 left-auto right-0`,
-    fixed: tw`fixed z-[100] top-0 left-auto right-0`,
-    relative: tw`relative`,
-    static: tw`static`,
-    sticky: tw`sticky z-[100] top-0 left-auto right-0`
-  }
-};
+const AppBarRoot = styled(Paper)(({ theme, ownerState }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  boxSizing: 'border-box',
+  flexShrink: 0,
+  ...{
+    fixed: {
+      position: 'fixed',
+      zIndex: '100 ',
+      top: 0,
+      left: 'auto',
+      right: 0,
+      '@media print': {
+        position: 'absolute'
+      }
+    },
+    absolute: {
+      position: 'absolute',
+      zIndex: '100 ',
+      top: 0,
+      right: 0,
+      left: 'auto'
+    },
+    sticky: {
+      position: 'sticky',
+      zIndex: '100 ',
+      top: 0,
+      right: 0,
+      left: 'auto'
+    },
+    relative: {
+      position: 'relative'
+    },
+    static: {
+      position: 'static'
+    }
+  }[ownerState.position],
+  color: theme.color.text.primary,
+  backgroundColor: theme.color[ownerState.color]
+    ? theme.color[ownerState.color][500]
+    : theme.color.gray[500],
+  ...(ownerState.color === 'inherit' && {
+    color: 'inherit',
+    backgroundColor: 'inherit'
+  }),
+  ...(ownerState.color === 'transparent' && {
+    color: 'inherit',
+    backgroundColor: 'transparent'
+  }),
+  ...(ownerState.color === 'monochrome' && {
+    border: `1px solid ${theme.color.mode === 'dark' ? theme.color.white : theme.color.black}`
+  })
+}));
 
-const AppBar = forwardRef(
-  ({ className, color = 'primary', position = 'fixed', ...other }, ref) => {
-    const appBarStyles = [
-      appBarVariants.root,
-      appBarVariants.color[color],
-      appBarVariants.position[position]
-    ].filter(Boolean);
+const AppBar = forwardRef((props, ref) => {
+  const { className, color = 'primary', position = 'fixed', ...other } = props;
 
-    return (
-      <Paper
-        square
-        Component='header'
-        elevation={['default', 'inherit', 'monochrome'].includes(color) ? 0 : 4}
-        className={className}
-        css={appBarStyles}
-        ref={ref}
-        {...other}
-      />
-    );
-  }
-);
+  // Paper props
+  const {
+    component = 'header',
+    elevation = ['default', 'inherit', 'monochrome'].includes(color) ? 0 : 4,
+    square = true
+  } = props;
+
+  const ownerState = {
+    ...props,
+    component,
+    elevation,
+    square,
+    color,
+    position
+  };
+
+  return (
+    <AppBarRoot
+      className={clsx('AppBar-Root', className)}
+      ownerState={ownerState}
+      ref={ref}
+      {...other}
+    />
+  );
+});
 AppBar.displayName = 'AppBar';
 
 export default AppBar;

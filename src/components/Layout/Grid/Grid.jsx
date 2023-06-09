@@ -1,171 +1,161 @@
 import * as React from 'react';
-import { createBreakpoints, traverseBreakpoints } from '@components/lib';
+import clsx from 'clsx';
+import styled, { useTheme } from 'styled-components/macro';
 import OverflowContext from './GridContext';
 
-const SPACING_CONSTANT = 8;
+/*
+All variables must be lower case + kebab-case + single hyphen when declared vs double hyphen when used
+to account for how styled-components handles CSS Variables
+*/
 const DEFAULT_COLUMNS = 12;
 
-const appendLevel = (level) => (level <= 0 ? '' : `Level${level}`);
+const appendLevel = (level) => (level <= 0 ? '' : `evel${level}`);
 
 const getSpacing = (level, direction) => {
-  return `var(--Grid-${direction}Spacing${appendLevel(level)})`;
+  return `var(--grid-${direction}-spacing${appendLevel(level)})`;
 };
 
 const getColumns = (level) => {
-  return `var(--Grid-columns${appendLevel(level)})`;
+  return `var(--grid-columns${appendLevel(level)})`;
 };
 
-const generateColumnsStyles = (styleConfig, breakpoints) => {
-  if (!styleConfig.container) {
+const generateColumnsStyles = (ownerState, theme) => {
+  if (!ownerState.container) {
     return {};
   }
 
   const styles =
-    styleConfig.level > 0 && styleConfig.container
+    ownerState.level > 0 && ownerState.container
       ? {
-          [`--Grid-columns${appendLevel(styleConfig.level)}`]: getColumns(
-            styleConfig.level - 1
+          [`-Grid-columns${appendLevel(ownerState.level)}`]: `${getColumns(ownerState.level - 1)} `
+        }
+      : { '-Grid-columns': `${DEFAULT_COLUMNS} ` };
+
+  theme.breakpoints.traverse(ownerState.breakpoints, ownerState.columns, (appendStyle, value) => {
+    appendStyle(styles, {
+      [`-Grid-columns${appendLevel(ownerState.level)}`]: `${value} `
+    });
+  });
+  return styles;
+};
+
+const generateSpacingStyles = (ownerState, theme, direction) => {
+  if (!ownerState.container) {
+    return {};
+  }
+
+  const styles =
+    ownerState.level > 0 && ownerState.container
+      ? {
+          [`-Grid-${direction}Spacing${appendLevel(ownerState.level)}`]: getSpacing(
+            ownerState.level - 1,
+            `${direction}`
           )
         }
-      : { '--Grid-columns': 12 };
-
-  traverseBreakpoints(
-    breakpoints,
-    styleConfig.columns,
-    (appendStyle, value) => {
-      appendStyle(styles, {
-        [`--Grid-columns${appendLevel(styleConfig.level)}`]: value
-      });
-    }
-  );
-
-  return styles;
-};
-
-const generateSpacingStyles = (styleConfig, breakpoints, direction) => {
-  if (!styleConfig.container) {
-    return {};
-  }
-
-  const styles =
-    styleConfig.level > 0 && styleConfig.container
-      ? {
-          [`--Grid-${direction}Spacing${appendLevel(styleConfig.level)}`]:
-            getSpacing(styleConfig.level - 1, `${direction}`)
-        }
       : {};
-  traverseBreakpoints(
-    breakpoints,
-    direction === 'row' ? styleConfig.rowSpacing : styleConfig.columnSpacing,
+  theme.breakpoints.traverse(
+    ownerState.breakpoints,
+    direction === 'row' ? ownerState.rowSpacing : ownerState.columnSpacing,
     (appendStyle, value) => {
       appendStyle(styles, {
-        [`--Grid-${direction}Spacing${appendLevel(styleConfig.level)}`]:
-          typeof value === 'string' ? value : `${value * SPACING_CONSTANT}px`
+        [`-Grid-${direction}Spacing${appendLevel(ownerState.level)}`]:
+          typeof value === 'string' ? value : `${theme.spacing(value)}`
       });
     }
   );
+
   return styles;
 };
 
-const generateSizeStyles = (styleConfig, breakpoints) => {
+const generateSizeStyles = (ownerState, theme) => {
   const styles = {};
-  traverseBreakpoints(
-    breakpoints,
-    styleConfig.gridSize,
-    (appendStyle, value) => {
-      let style = {};
-      if (value === true) {
-        style = {
-          flexBasis: 0,
-          flexGrow: 1,
-          maxWidth: '100%'
-        };
-      }
-      if (value === 'auto') {
-        style = {
-          flexBasis: 'auto',
-          flexGrow: 0,
-          flexShrink: 0,
-          maxWidth: 'none',
-          width: 'auto'
-        };
-      }
-      if (typeof value === 'number') {
-        style = {
-          flexGrow: 0,
-          flexBasis: 'auto',
-          width: `calc(100% * ${value} / ${getColumns(styleConfig.level - 1)}${
-            styleConfig.level > 0 && styleConfig.container
-              ? ` + ${getSpacing(styleConfig.level - 1, 'column')}`
-              : ''
-          })`
-        };
-      }
-      appendStyle(styles, style);
+  theme.breakpoints.traverse(ownerState.breakpoints, ownerState.gridSize, (appendStyle, value) => {
+    let style = {};
+    if (value === true) {
+      style = {
+        flexBasis: 0,
+        flexGrow: 1,
+        maxWidth: '100%'
+      };
     }
-  );
+    if (value === 'auto') {
+      style = {
+        flexBasis: 'auto',
+        flexGrow: 0,
+        flexShrink: 0,
+        maxWidth: 'none',
+        width: 'auto'
+      };
+    }
+    if (typeof value === 'number') {
+      style = {
+        flexGrow: 0,
+        flexBasis: 'auto',
+        width: `calc(100% * ${value} / ${getColumns(ownerState.level - 1)}${
+          ownerState.level > 0 && ownerState.container
+            ? ` + ${getSpacing(ownerState.level - 1, 'column')}`
+            : ''
+        })`
+      };
+    }
+    appendStyle(styles, style);
+  });
   return styles;
 };
 
-const generateDirectionStyles = (styleConfig, breakpoints) => {
-  if (!styleConfig.container) {
+const generateDirectionStyles = (ownerState, theme) => {
+  if (!ownerState.container) {
     return {};
   }
   const styles = {};
-  traverseBreakpoints(
-    breakpoints,
-    styleConfig.direction,
-    (appendStyle, value) => {
-      appendStyle(styles, { flexDirection: value });
-    }
-  );
+  theme.breakpoints.traverse(ownerState.breakpoints, ownerState.direction, (appendStyle, value) => {
+    appendStyle(styles, { flexDirection: value });
+  });
   return styles;
 };
 
-const generateStyles = (styleConfig, breakpoints) => {
+const generateGridStyles = (ownerState) => {
   return {
     minWidth: 0,
     boxSizing: 'border-box',
-    ...(styleConfig.container && {
+    ...(ownerState.container && {
       display: 'flex',
       flexWrap: 'wrap',
-      ...(styleConfig.wrap &&
-        styleConfig.wrap !== 'wrap' && {
-          flexWrap: styleConfig.wrap
+      ...(ownerState.wrap &&
+        ownerState.wrap !== 'wrap' && {
+          flexWrap: ownerState.wrap
         }),
-      margin: `calc(${getSpacing(
-        styleConfig.level,
-        'row'
-      )} / -2) calc(${getSpacing(styleConfig.level, 'column')} / -2)`,
-      ...(styleConfig.disableEqualOverflow && {
-        margin: `calc(${getSpacing(
-          styleConfig.level,
-          'row'
-        )} * -1) 0px 0px calc(${getSpacing(styleConfig.level, 'column')} * -1)`
+      margin: `calc(${getSpacing(ownerState.level, 'row')} / -2) calc(${getSpacing(
+        ownerState.level,
+        'column'
+      )} / -2)`,
+      ...(ownerState.disableEqualOverflow && {
+        margin: `calc(${getSpacing(ownerState.level, 'row')} * -1) 0px 0px calc(${getSpacing(
+          ownerState.level,
+          'column'
+        )} * -1)`
       })
     }),
-    ...((!styleConfig.container ||
-      (styleConfig.level > 0 && styleConfig.container)) && {
-      padding: `calc(${getSpacing(
-        styleConfig.level - 1,
-        'row'
-      )} / 2) calc(${getSpacing(styleConfig.level - 1, 'column')} / 2)`,
-      ...((styleConfig.disableEqualOverflow ||
-        styleConfig.parentDisableEqualOverflow) && {
-        padding: `${getSpacing(
-          styleConfig.level - 1,
-          'row'
-        )} 0px 0px ${getSpacing(styleConfig.level - 1, 'column')}`
+    ...((!ownerState.container || (ownerState.level > 0 && ownerState.container)) && {
+      padding: `calc(${getSpacing(ownerState.level - 1, 'row')} / 2) calc(${getSpacing(
+        ownerState.level - 1,
+        'column'
+      )} / 2)`,
+      ...((ownerState.disableEqualOverflow || ownerState.parentDisableEqualOverflow) && {
+        padding: `${getSpacing(ownerState.level - 1, 'row')} 0px 0px ${getSpacing(
+          ownerState.level - 1,
+          'column'
+        )}`
       })
     })
   };
 };
 
-const generateOffsetStyles = (styleConfig, breakpoints) => {
+const generateOffsetStyles = (ownerState, theme) => {
   const styles = {};
-  traverseBreakpoints(
-    breakpoints,
-    styleConfig.gridOffset,
+  theme.breakpoints.traverse(
+    ownerState.breakpoints,
+    ownerState.gridOffset,
     (appendStyle, value) => {
       let style = {};
       if (value === 'auto') {
@@ -176,9 +166,7 @@ const generateOffsetStyles = (styleConfig, breakpoints) => {
       if (typeof value === 'number') {
         style = {
           marginLeft:
-            value === 0
-              ? '0px'
-              : `calc(100% * ${value} / ${getColumns(styleConfig.level - 1)})`
+            value === 0 ? '0px' : `calc(100% * ${value} / ${getColumns(ownerState.level - 1)})`
         };
       }
       appendStyle(styles, style);
@@ -186,6 +174,16 @@ const generateOffsetStyles = (styleConfig, breakpoints) => {
   );
   return styles;
 };
+
+const GridRoot = styled('div')(
+  ({ ownerState, theme }) => generateColumnsStyles(ownerState, theme),
+  ({ ownerState, theme }) => generateSpacingStyles(ownerState, theme, 'column'),
+  ({ ownerState, theme }) => generateSpacingStyles(ownerState, theme, 'row'),
+  ({ ownerState, theme }) => generateSizeStyles(ownerState, theme),
+  ({ ownerState, theme }) => generateDirectionStyles(ownerState, theme),
+  ({ ownerState }) => generateGridStyles(ownerState),
+  ({ ownerState, theme }) => generateOffsetStyles(ownerState, theme)
+);
 
 const Grid = React.forwardRef((props, ref) => {
   const overflow = React.useContext(OverflowContext);
@@ -205,7 +203,8 @@ const Grid = React.forwardRef((props, ref) => {
     ...rest
   } = props;
 
-  const breakpoints = createBreakpoints(props.breakpoints);
+  const theme = useTheme();
+  const breakpoints = theme.breakpoints.create(props.breakpoints || theme.breakpoints);
 
   const gridSize = {};
   const gridOffset = {};
@@ -224,38 +223,26 @@ const Grid = React.forwardRef((props, ref) => {
   const levelZero = level === 0;
   const columns = props.columns ?? (levelZero ? columnsProp : undefined);
   const spacing = props.spacing ?? (levelZero ? spacingProp : undefined);
-  const rowSpacing =
-    props.rowSpacing ??
-    props.spacing ??
-    (levelZero ? rowSpacingProp : undefined);
+  const rowSpacing = props.rowSpacing ?? props.spacing ?? (levelZero ? rowSpacingProp : undefined);
   const columnSpacing =
-    props.columnSpacing ??
-    props.spacing ??
-    (levelZero ? columnSpacingProp : undefined);
+    props.columnSpacing ?? props.spacing ?? (levelZero ? columnSpacingProp : undefined);
 
-  const styleConfig = {
+  const ownerState = {
+    ...props,
+    breakpoints,
     container,
     level,
     columns,
-    columnSpacing,
-    rowSpacing,
     direction,
-    gridSize,
     wrap,
+    spacing,
+    rowSpacing,
+    columnSpacing,
+    gridSize,
     gridOffset,
     disableEqualOverflow: disableEqualOverflow ?? overflow ?? false,
     parentDisableEqualOverflow: overflow
   };
-
-  const mergedStyles = [
-    generateColumnsStyles(styleConfig, breakpoints),
-    generateSpacingStyles(styleConfig, breakpoints, 'column'),
-    generateSpacingStyles(styleConfig, breakpoints, 'row'),
-    generateSizeStyles(styleConfig, breakpoints),
-    generateDirectionStyles(styleConfig, breakpoints),
-    generateStyles(styleConfig, breakpoints),
-    generateOffsetStyles(styleConfig, breakpoints)
-  ].filter(Boolean);
 
   const childrenWithLevels = React.Children.map(children, (child) => {
     if (React.isValidElement(child)) {
@@ -268,9 +255,15 @@ const Grid = React.forwardRef((props, ref) => {
 
   return (
     <OverflowContext.Provider value={disableEqualOverflow ?? overflow}>
-      <div ref={ref} className={className} css={mergedStyles} {...other}>
+      <GridRoot
+        as={component}
+        ref={ref}
+        className={clsx('Grid-Root', className)}
+        ownerState={ownerState}
+        {...other}
+      >
         {childrenWithLevels}
-      </div>
+      </GridRoot>
     </OverflowContext.Provider>
   );
 });

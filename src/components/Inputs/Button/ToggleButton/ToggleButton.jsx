@@ -1,86 +1,127 @@
-import { forwardRef } from 'react';
-import tw, { css } from 'twin.macro';
-import { ButtonBase } from '@components';
+import React from 'react';
+import styled from 'styled-components/macro';
+import clsx from 'clsx';
+import { ButtonBase, Icon } from '@components';
 
-const toggleButtonVariants = {
-  root: tw`appearance-none font-medium tracking-wide rounded-md px-3 py-2 border-[1px] border-solid border-disabled-light dark:border-disabled-dark text-gray-700 hover:bg-gray-700/10 dark:text-gray-300 dark:hover:bg-gray-300/10`,
-  size: {
-    xs: tw`p-1 text-xs`,
-    small: tw`p-2 text-sm`,
-    medium: tw`p-3 text-base`,
-    large: tw`p-4 text-lg`,
-    xl: tw`p-5 text-xl`
+const ToggleButtonRoot = styled(ButtonBase)(({ theme, ownerState }) => ({
+  appearance: 'none',
+  fontWeight: theme.text.weight.medium,
+  letterSpacing: '0.025em',
+  borderRadius: theme.rounded.base,
+  border: `1px solid ${theme.color.divider}`,
+  colord: theme.color.text.primary,
+  ...{
+    mini: { padding: '0.25rem', ...theme.text.size.xs },
+    small: { padding: '0.5rem', ...theme.text.size.sm },
+    medium: { padding: '0.75rem', ...theme.text.size.base },
+    large: { padding: '1rem', ...theme.text.size.lg },
+    jumbo: { padding: '1.25rem', ...theme.text.size.xl }
+  }[ownerState.size],
+  [`&.${ownerState.toggleButtonClasses.selected}`]: {
+    ...(ownerState.color === 'default' && {
+      backgroundColor: theme.alpha.add(theme.color.monochrome[200], 0.2),
+      '&:hover': {
+        backgroundColor: theme.alpha.add(theme.color.monochrome[200], 0.3)
+      }
+    }),
+    ...(ownerState.color !== 'default' && {
+      color: theme.color[ownerState.color][500],
+      backgroundColor:
+        theme.coloe.mode === 'dark'
+          ? theme.alpha.add(theme.color[ownerState.color][500], 0.3)
+          : theme.alpha.add(theme.color[ownerState.color][500], 0.2),
+      '&:hover': {
+        backgroundColor:
+          theme.coloe.mode === 'dark'
+            ? theme.alpha.add(theme.color[ownerState.color][500], 0.25)
+            : theme.alpha.add(theme.color[ownerState.color][500], 0.4)
+      }
+    })
   },
-  compoundVariants: {
-    default: tw`bg-gray-700/20 hover:bg-gray-700/30 dark:bg-gray-300/20 dark:hover:bg-gray-300/30`,
-    primary: tw`text-primary-500 bg-primary-500/20 hover:bg-primary-500/25 dark:bg-primary-500/30 dark:hover:bg-primary-500/40`,
-    secondary: tw`text-secondary-500 bg-secondary-500/20 hover:bg-secondary-500/25 dark:bg-secondary-500/30 dark:hover:bg-secondary-500/40`,
-    success: tw`text-success-500 bg-success-500/20 hover:bg-success-500/25 dark:bg-success-500/30 dark:hover:bg-success-500/40`,
-    warning: tw`text-warning-500 bg-warning-500/20 hover:bg-warning-500/25 dark:bg-warning-500/30 dark:hover:bg-warning-500/40`,
-    danger: tw`text-danger-500 bg-danger-500/20 hover:bg-danger-500/25 dark:bg-danger-500/30 dark:hover:bg-danger-500/40`
-  }
-};
+  ...(ownerState.disabled && {
+    boxShadow: 'none',
+    filter: 'none',
+    pointerEvents: 'none',
+    color: ownerState.selected ? theme.color.disabled.text : theme.color.disabled.body
+  }),
+  ...(ownerState.disableElevation && {
+    boxShadow: 'none',
+    filter: 'none'
+  }),
+  ...(ownerState.fullWidth && {
+    width: '100%'
+  })
+}));
 
-const ToggleButton = forwardRef(
-  (
-    {
-      children,
-      className,
-      color = 'default',
-      disabled = false,
-      disableElevation = false,
-      disableFocusRipple = false,
-      fullWidth = false,
-      onChange,
-      onClick,
-      selected = 'false',
-      size = 'medium',
-      value,
-      ...other
-    },
-    ref
-  ) => {
-    const handleChange = (event) => {
-      if (onClick) {
-        onClick(event, value);
-        if (event.defaultPrevented) {
-          return;
-        }
+const ToggleButton = React.forwardRef((props, ref) => {
+  const {
+    children,
+    className,
+    classes = {},
+    color = 'standard',
+    disabled = false,
+    disableFocusRipple = false,
+    fullWidth = false,
+    onChange,
+    onClick,
+    selected,
+    size = 'medium',
+    value,
+    ...other
+  } = props;
+
+  const toggleButtonClasses = {
+    grouped: classes.grouped,
+    selected: selected && classes.selected,
+    disabled: classes.disabled
+  };
+
+  const ownerState = {
+    ...props,
+    color,
+    disabled,
+    disableFocusRipple,
+    fullWidth,
+    size,
+    toggleButtonClasses
+  };
+
+  const handleChange = (event) => {
+    if (onClick) {
+      onClick(event, value);
+      if (event.defaultPrevented) {
+        return;
       }
+    }
 
-      if (onChange) {
-        onChange(event, value);
-      }
-    };
+    if (onChange) {
+      onChange(event, value);
+    }
+  };
 
-    const buttonStyles = [
-      toggleButtonVariants.root,
-      toggleButtonVariants.size[size],
-      selected && toggleButtonVariants.compoundVariants[color],
-      disabled &&
-        tw`dark:shadow-none pointer-events-none text-disabled-light shadow-none drop-shadow-none dark:text-disabled-dark dark:drop-shadow-none`,
-      disableElevation && tw`shadow-none drop-shadow-none`,
-      fullWidth && tw`w-full`
-    ].filter(Boolean);
+  const iconArray = Array.isArray(props.icon) ? props.icon : [props.icon];
 
-    return (
-      <ButtonBase
-        className={className}
-        css={buttonStyles}
-        focusRipple={!disableFocusRipple}
-        ref={ref}
-        onClick={handleChange}
-        onChange={onChange}
-        value={value}
-        aria-pressed={selected}
-        {...other}
-      >
-        {children}
-      </ButtonBase>
-    );
-  }
-);
+  return (
+    <ToggleButtonRoot
+      className={clsx('ToggleButton-Root', Object.values(toggleButtonClasses), className)}
+      disabled={disabled}
+      focusRipple={!disableFocusRipple}
+      ref={ref}
+      onClick={handleChange}
+      onChange={onChange}
+      value={value}
+      ownerState={ownerState}
+      aria-pressed={selected}
+      {...other}
+    >
+      {iconArray.map((icon, index) => (
+        <Icon key={index} icon={icon} css={{ transition: 'none' }} />
+      ))}
+      {children}
+    </ToggleButtonRoot>
+  );
+});
 
 ToggleButton.displayName = 'ToggleButton';
 
-export { ToggleButton };
+export default ToggleButton;

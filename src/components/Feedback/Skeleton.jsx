@@ -1,25 +1,73 @@
 import * as React from 'react';
-import tw from 'twin.macro';
+import clsx from 'clsx';
+import styled, { css } from 'styled-components/macro';
 
-const skeletonVariantStyles = {
-  root: tw`block bg-primary-light/[0.11] dark:bg-primary-dark/10 h-5`,
-  variant: {
-    text: tw`my-0 h-auto origin-[0_55%] scale-[1_.60] [&:empty:before]:content-["\\00a0"]`,
-    circular: tw`rounded-full`,
-    rounded: tw`rounded-[inherit]`
-  },
-  children: {
-    root: tw`['& > *']:invisible`,
-    width: tw`max-w-[fit-content]`,
-    height: tw`h-auto`
-  },
-  animation: {
-    pulse: tw`animate-pulse`,
-    wave: tw`relative overflow-hidden [&::after]:(animate-skeleton-wave bg-gradient-to-r from-transparent via-primary-light/10 to-transparent content-[""] absolute translate-x-[-100%] bottom-0 left-0 right-0 top-0)`
-  }
-};
-
-const DefaultComponent = 'span';
+const SkeletonRoot = styled('span')(
+  ({ theme, ownerState }) => ({
+    display: 'block',
+    backgroundColor: theme.color.background,
+    height: '1.2rem',
+    ...(ownerState.variant === 'text' && {
+      marginTop: 0,
+      marginBottom: 0,
+      height: 'auto',
+      transformOrigin: '0 55%',
+      transform: 'scale(1, 0.60)',
+      '&:empty:before': {
+        content: '"\\00a0"'
+      }
+    }),
+    ...(ownerState.variant === 'circular' && {
+      borderRadius: theme.rounded.full
+    }),
+    ...(ownerState.variant === 'rounded' && {
+      borderRadius: 'inherit'
+    }),
+    ...(ownerState.hasChildren && {
+      '& > *': {
+        visibility: 'hidden'
+      }
+    }),
+    ...(ownerState.hasChildren &&
+      !ownerState.width && {
+        maxWidth: 'fit-content'
+      }),
+    ...(ownerState.hasChildren &&
+      !ownerState.height && {
+        height: 'auto'
+      })
+  }),
+  ({ theme, ownerState }) =>
+    ownerState.animation === 'pulse' &&
+    css`
+      animation: ${theme.keyframe.pulseKeyframe} 2s ${theme.transition.easing.easeInOut} 0.5s
+        infinite;
+    `,
+  ({ ownerState, theme }) =>
+    ownerState.animation === 'wave' &&
+    css`
+      position: relative;
+      overflow: hidden;
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
+      &::after {
+        animation: ${theme.keyframe.waveKeyframe} 1.6s ${theme.transition.easing.linear} 0.5s
+          infinite;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          ${theme.alpha.add(
+            theme.color.mode === 'light' ? theme.color.black : theme.color.white,
+            0.05
+          )},
+          transparent
+        );
+        content: '';
+        position: absolute;
+        transform: translateX(-100%); /* Avoid flash during server-side hydration */
+        inset: 0;
+      }
+    `
+);
 
 const Skeleton = React.forwardRef(
   (
@@ -27,7 +75,7 @@ const Skeleton = React.forwardRef(
       animation = 'pulse',
       children,
       className,
-      component = DefaultComponent,
+      component = 'span',
       height,
       style,
       variant = 'text',
@@ -36,20 +84,24 @@ const Skeleton = React.forwardRef(
     },
     ref
   ) => {
-    const skeletonStyles = [
-      skeletonVariantStyles.root,
-      skeletonVariantStyles.variant?.[variant],
-      Boolean(children) && skeletonVariantStyles.children.root,
-      Boolean(children) && !width && skeletonVariantStyles.children.width,
-      Boolean(children) && !height && skeletonVariantStyles.children.height,
-      skeletonVariantStyles.animation?.[animation]
-    ].filter(Boolean);
+    const ownerState = {
+      animation,
+      className,
+      component,
+      height,
+      style,
+      variant,
+      width,
+      ...other,
+      hasChildren: Boolean(children)
+    };
 
     return (
-      <component
+      <SkeletonRoot
+        as={component}
+        className={clsx('Skeleton-Root', className)}
+        ownerState={ownerState}
         ref={ref}
-        className={className}
-        css={skeletonStyles}
         {...other}
         style={{
           width,

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useEnhancedEffect } from '@component-hooks';
+import { useEnhancedEffect } from '@component/hooks';
 
-function useSize(element) {
+export function useSize(element) {
   const [size, setSize] = React.useState(undefined);
 
   useEnhancedEffect(() => {
@@ -23,9 +23,7 @@ function useSize(element) {
 
         if ('borderBoxSize' in entry) {
           const borderSizeEntry = entry['borderBoxSize'];
-          const borderSize = Array.isArray(borderSizeEntry)
-            ? borderSizeEntry[0]
-            : borderSizeEntry;
+          const borderSize = Array.isArray(borderSizeEntry) ? borderSizeEntry[0] : borderSizeEntry;
           width = borderSize['inlineSize'];
           height = borderSize['blockSize'];
         } else {
@@ -46,5 +44,3 @@ function useSize(element) {
 
   return size;
 }
-
-export { useSize };

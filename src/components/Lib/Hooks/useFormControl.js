@@ -1,27 +1,25 @@
 import * as React from 'react';
 
-const FormControlContext = React.createContext(undefined);
+export const FormControlContext = React.createContext(undefined);
 
-if (process.env.NODE_ENV !== 'production') {
+if (!import.meta.env.PROD) {
   FormControlContext.displayName = 'FormControlContext';
 }
 
-function useFormControl() {
+export function useFormControl() {
   return React.useContext(FormControlContext);
 }
 
-function formControlState({ props, states, muiFormControl }) {
+export function formControlState({ props, states, formControl }) {
   return states.reduce((acc, state) => {
     acc[state] = props[state];
 
-    if (muiFormControl) {
+    if (formControl) {
       if (typeof props[state] === 'undefined') {
-        acc[state] = muiFormControl[state];
+        acc[state] = formControl[state];
       }
     }
 
     return acc;
   }, {});
 }
-
-export { formControlState, FormControlContext, useFormControl };

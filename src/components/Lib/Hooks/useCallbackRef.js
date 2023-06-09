@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-function useCallbackRef(callback) {
+export function useCallbackRef(callback) {
   const callbackRef = React.useRef(callback);
 
   React.useEffect(() => {
@@ -14,5 +14,3 @@ function useCallbackRef(callback) {
     []
   );
 }
-
-export { useCallbackRef };

@@ -1,24 +1,36 @@
-import { forwardRef } from 'react';
-import tw from 'twin.macro';
+import React from 'react';
+import clsx from 'clsx';
+import styled from 'styled-components/macro';
 
-const AccordionActions = forwardRef(
-  ({ className, disableSpacing = false, ...other }, ref) => {
-    const actionStyles = [
-      tw`flex items-center p-2 justify-end`,
-      !disableSpacing && tw`ml-4 first-of-type:ml-0`
-    ].filter(Boolean);
+const AccordionActionsRoot = styled('div')(({ theme, ownerState }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(1),
+  justifyContent: 'flex-end',
+  ...(!ownerState.disableSpacing && {
+    '& > :not(:first-of-type)': {
+      marginLeft: theme.spacing(1)
+    }
+  })
+}));
 
-    return (
-      <div
-        className={className}
-        css={actionStyles}
-        ref={ref}
-        ownerState={ownerState}
-        {...other}
-      />
-    );
-  }
-);
+const AccordionActions = React.forwardRef((props, ref) => {
+  const { className, disableSpacing = false, ...other } = props;
+
+  const ownerState = {
+    ...props,
+    disableSpacing
+  };
+
+  return (
+    <AccordionActionsRoot
+      className={clsx('AccordionActions-Root', className)}
+      ref={ref}
+      ownerState={ownerState}
+      {...other}
+    />
+  );
+});
 AccordionActions.displayName = 'AccordionActions';
 
 export default AccordionActions;

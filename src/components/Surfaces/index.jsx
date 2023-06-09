@@ -1,3 +1,3 @@
-export * from './accordion';
-export * from './appBar';
 export { default as Paper } from './Paper';
+export * from './Accordion';
+export * from './AppBar';

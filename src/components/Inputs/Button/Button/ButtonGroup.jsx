@@ -1,112 +1,220 @@
-import { createContext, forwardRef, useMemo } from 'react';
-import { cva } from 'class-variance-authority';
-import { cn } from '@utils';
-import tw, { css } from 'twin.macro';
+import React from 'react';
+import clsx from 'clsx';
+import styled from 'styled-components/macro';
+import ButtonGroupContext from './ButtonGroupContext';
 
-export const ButtonGroupContext = createContext({});
-
-const buttonGroupVariants = {
-  root: tw`min-w-[40px] rounded-none active:scale-100 shadow-none`,
-  text: tw`drop-shadow-md`,
-  orientation: {
-    horizontal: tw`ml-[-1px] first-of-type:ml-0 first-of-type:rounded-l-md last-of-type:rounded-r-md`,
-    vertical: tw`mt-[-1px] first-of-type:mt-0 first-of-type:rounded-t-md last-of-type:rounded-b-md`
-  },
-  color: {
-    default: tw`border-gray-700`,
-    primary: tw`border-primary-600`,
-    secondary: tw`border-secondary-600`,
-    success: tw`border-success-600`,
-    warning: tw`border-warning-600`,
-    danger: tw`border-danger-600`,
-    monochrome: tw`border-gray-900`
-  },
-  compoundVariants: {
-    horizontal: tw`border-y-0 border-x border-solid first-of-type:border-l-0 last-of-type:border-r-0`,
-    vertical: tw`border-x-0 border-y border-solid first-of-type:border-t-0 last-of-type:border-b-0`
-  }
-};
-
-const ButtonGroup = forwardRef(
-  (
-    {
-      children,
-      className,
-      color = 'primary',
-      Component = 'div',
-      disabled = false,
-      disableElevation = false,
-      disableFocusRipple = false,
-      disableRipple = false,
-      fullWidth = false,
-      orientation = 'horizontal',
-      size = 'md',
-      variant = 'outline',
-      ...other
+const ButtonGroupRoot = styled('div')(({ theme, ownerState }) => ({
+  display: 'inline-flex',
+  borderRadius: theme.rounded.base,
+  flexDirection: ownerState.orientation === 'vertical' ? 'column' : 'row',
+  ...(ownerState.variant === 'outlined'
+    ? { boxShadow: theme.boxShadow[4] }
+    : { filter: theme.dropShadow[4] }),
+  ...(ownerState.disabled && {
+    borderStyle: 'none',
+    backgroundColor: theme.color.disabled.body,
+    boxShadow: 'none',
+    filter: 'none'
+  }),
+  ...(ownerState.disableElevation && {
+    boxShadow: 'none',
+    filter: 'none'
+  }),
+  ...(ownerState.fullWidth && {
+    width: '100%'
+  }),
+  [`& .${ownerState.buttonGroupClasses.grouped}`]: {
+    minWidth: 0,
+    borderRadius: theme.rounded.base,
+    '&:active': { transform: 'scale(1)' },
+    boxShadow: 'none',
+    filter: ['text', 'colorText'].includes(ownerState.variant) ? theme.dropShadow[4] : 'none',
+    '&:not(:first-of-type)': {
+      ...{
+        horizontal: {
+          borderTopLeftRadius: 0,
+          borderBottomLeftRadius: 0
+        },
+        vertical: {
+          borderTopRightRadius: 0,
+          borderTopLeftRadius: 0
+        }
+      }[ownerState.orientation],
+      ...{
+        horizontal: {
+          outlined: { marginLeft: -1 }
+        },
+        vertical: {
+          outlined: { marginTop: -1 }
+        }
+      }[ownerState.orientation][ownerState.variant]
     },
-    ref
-  ) => {
-    const styles = [
-      buttonGroupVariants.root,
-      variant === 'text' && buttonGroupVariants.text,
-      buttonGroupVariants.orientation[orientation],
-      buttonGroupVariants.color[color],
-      variant !== 'outline' && buttonGroupVariants.compoundVariants[orientation]
-    ].filter(Boolean);
-
-    const context = useMemo(
-      () => ({
-        className,
-        styles,
-        color,
-        disabled,
-        disableElevation,
-        disableFocusRipple,
-        disableRipple,
-        fullWidth,
-        orientation,
-        size,
-        variant
-      }),
-      [
-        className,
-        styles,
-        color,
-        disabled,
-        disableElevation,
-        disableFocusRipple,
-        disableRipple,
-        fullWidth,
-        orientation,
-        size,
-        variant
-      ]
-    );
-
-    const buttonGroupStyles = [
-      tw`inline-flex rounded-md`,
-      orientation === 'horizontal' ? tw`flex-row` : tw`flex-col`,
-      variant !== 'text' && tw`shadow-md`,
-      disabled &&
-        tw`border-none bg-disabled-light shadow-none drop-shadow-none dark:bg-disabled-dark`,
-      disableElevation && tw`shadow-none drop-shadow-none`,
-      fullWidth && tw`w-full`
-    ].filter(Boolean);
-
-    return (
-      <Component
-        className={cn('group', className)}
-        css={buttonGroupStyles}
-        ref={ref}
-        {...other}
-      >
-        <ButtonGroupContext.Provider value={context}>
-          {children}
-        </ButtonGroupContext.Provider>
-      </Component>
-    );
+    '&:not(:last-of-type)': {
+      ...{
+        horizontal: {
+          borderTopRightRadius: 0,
+          borderBottomRightRadius: 0
+        },
+        vertical: {
+          borderBottomRightRadius: 0,
+          borderBottomLeftRadius: 0
+        }
+      }[ownerState.orientation],
+      ...{
+        horizontal: {
+          outlined: { borderRightColor: 'transparent' },
+          text: {
+            borderRight: `1px solid ${theme.alpha.add(theme.color.gray[500], 0.5)}`,
+            [`&.${ownerState.buttonGroupClasses.disabled}`]: {
+              borderRight: `1px solid ${theme.color.divider}`
+            }
+          },
+          colorText: {
+            borderRight: `1px solid ${theme.alpha.add(theme.color.gray[500], 0.5)}`,
+            [`&.${ownerState.buttonGroupClasses.disabled}`]: {
+              borderRight: `1px solid ${theme.color.divider}`
+            }
+          },
+          contained: {
+            borderRight: `1px solid ${theme.alpha.add(theme.color.gray[500], 0.5)}`,
+            [`&.${ownerState.buttonGroupClasses.disabled}`]: {
+              borderRight: `1px solid ${theme.color.divider}`
+            }
+          }
+        },
+        vertical: {
+          outlined: { borderBottomColor: 'transparent' },
+          text: {
+            borderBottom: `1px solid ${theme.alpha.add(theme.color.gray[500], 0.5)}`,
+            [`&.${ownerState.buttonGroupClasses.disabled}`]: {
+              borderBottom: `1px solid ${theme.color.divider}`
+            }
+          },
+          colorText: {
+            borderBottom: `1px solid ${theme.alpha.add(theme.color.gray[500], 0.5)}`,
+            [`&.${ownerState.buttonGroupClasses.disabled}`]: {
+              borderBottom: `1px solid ${theme.color.divider}`
+            }
+          },
+          contained: {
+            borderBottom: `1px solid ${theme.alpha.add(theme.color.gray[500], 0.5)}`,
+            [`&.${ownerState.buttonGroupClasses.disabled}`]: {
+              borderBottom: `1px solid ${theme.color.divider}`
+            }
+          }
+        }
+      }[ownerState.orientation][ownerState.variant],
+      ...(ownerState.variant === 'colorText' &&
+        ownerState.color !== 'default' && {
+          borderColor: theme.alpha.add(theme.color[ownerState.color][500], 0.5)
+        }),
+      ...(ownerState.variant === 'text' &&
+        ownerState.color !== 'default' && {
+          borderColor:
+            ownerState.color === 'monochrome'
+              ? theme.alpha.add(theme.color[ownerState.color][500], 0.5)
+              : theme.color.divider
+        }),
+      ...(ownerState.variant === 'contained' &&
+        ownerState.color !== 'default' && {
+          borderColor: theme.color[ownerState.color][600]
+        })
+    },
+    '&:hover': {
+      ...{
+        horizontal: {
+          outlined: { borderRightColor: 'currentColor' }
+        },
+        vertical: {
+          outlined: { borderBottomColor: 'currentColor' }
+        }
+      }[ownerState.orientation][ownerState.variant]
+    }
   }
-);
+}));
+
+const ButtonGroup = React.forwardRef((props, ref) => {
+  const {
+    children,
+    className,
+    color = 'primary',
+    colorText = false,
+    component = 'div',
+    disabled = false,
+    disableElevation = false,
+    disableFocusRipple = false,
+    disableRipple = false,
+    fullWidth = false,
+    orientation = 'horizontal',
+    size = 'medium',
+    variant = 'outlined',
+    ...other
+  } = props;
+
+  const buttonGroupClasses = React.useMemo(
+    () => ({
+      grouped: 'ButtonGroup-Button',
+      disabled: disabled && 'ButtonGroup-disabled'
+    }),
+    [disabled]
+  );
+
+  const ownerState = {
+    ...props,
+    buttonGroupClasses,
+    color,
+    colorText,
+    component,
+    disabled,
+    disableElevation,
+    disableFocusRipple,
+    disableRipple,
+    fullWidth,
+    orientation,
+    size,
+    variant
+  };
+
+  const context = React.useMemo(
+    () => ({
+      className: Object.values(buttonGroupClasses),
+      color,
+      colorText,
+      disabled,
+      disableElevation,
+      disableFocusRipple,
+      disableRipple,
+      fullWidth,
+      size,
+      variant
+    }),
+    [
+      color,
+      colorText,
+      disabled,
+      disableElevation,
+      disableFocusRipple,
+      disableRipple,
+      fullWidth,
+      size,
+      variant,
+      buttonGroupClasses
+    ]
+  );
+
+  return (
+    <ButtonGroupRoot
+      as={component}
+      role='group'
+      className={clsx('ButtonGroup-Root', className)}
+      ref={ref}
+      ownerState={ownerState}
+      {...other}
+    >
+      <ButtonGroupContext.Provider value={context}>{children}</ButtonGroupContext.Provider>
+    </ButtonGroupRoot>
+  );
+});
 ButtonGroup.displayName = 'ButtonGroup';
 
-export { ButtonGroup };
+export default ButtonGroup;

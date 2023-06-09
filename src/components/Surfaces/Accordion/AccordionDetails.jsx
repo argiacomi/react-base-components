@@ -1,8 +1,21 @@
-import { forwardRef } from 'react';
-import 'twin.macro';
+import React from 'react';
+import clsx from 'clsx';
+import styled from 'styled-components/macro';
 
-const AccordionDetails = forwardRef(({ className, ...other }, ref) => {
-  return <div className={className} tw='pt-2 pb-4 px-4' ref={ref} {...other} />;
+const AccordionDetailsRoot = styled('div')(({ theme }) => ({
+  padding: `${theme.spacing(1)} ${theme.spacing(2)} ${theme.spacing(2)}`
+}));
+
+const AccordionDetails = React.forwardRef((props, ref) => {
+  const { className, ...other } = props;
+
+  return (
+    <AccordionDetailsRoot
+      className={clsx('AccordionDetails-Root', className)}
+      ref={ref}
+      {...other}
+    />
+  );
 });
 AccordionDetails.displayName = 'AccordionDetails';
 

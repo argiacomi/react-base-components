@@ -1,107 +1,138 @@
 import * as React from 'react';
-import { cn } from '@utils';
-import tw from 'twin.macro';
+import styled from 'styled-components/macro';
+import clsx from 'clsx';
 import SwitchBase from './SwitchBase';
 
-const switchRootVariants = {
-  root: tw`m-2 p-0 inline-flex w-[38px] h-[20px] overflow-hidden box-border relative shrink-0 z-0 align-middle`,
-  small: tw`w-[34px] h-[18px]`,
-  edge: {
-    start: tw`-ml-[8px]`,
-    end: tw`-mr-[8px]`
+const switchClasses = {
+  input: 'Switch-Input',
+  checked: 'Switch-Checked',
+  disabled: 'Switch-Disabled',
+  root: 'Switch-Root',
+  switchBase: 'Switch-SwitchBase',
+  thumb: 'Switch-Thumb',
+  track: 'Switch-Track'
+};
+
+const SwitchRoot = styled('span')(({ ownerState }) => ({
+  display: 'inline-flex',
+  width: '2.375rem',
+  height: '1.25rem',
+  margin: '0.5rem',
+  padding: 0,
+  overflow: 'hidden',
+  boxSizing: 'border-box',
+  position: 'relative',
+  flexShrink: 0,
+  zIndex: 0,
+  verticalAlign: 'middle',
+  ...(ownerState.edge &&
+    (ownerState.edge === 'start' ? { marginLeft: '-0.5rem' } : { marginRight: '-0.5rem' })),
+  ...(ownerState.small && {
+    width: '2.125rem',
+    height: '1.125rem',
+    [`& .${ownerState.switchClasses.thumb}`]: {
+      width: '.875rem',
+      height: '.875rem'
+    }
+  })
+}));
+
+const SwitchSwitchBase = styled(SwitchBase)(({ theme, ownerState }) => ({
+  position: 'absolute',
+  padding: 0,
+  margin: '.125rem',
+  top: 0,
+  left: 0,
+  zIndex: 1,
+  color: theme.color.mode === 'dark' ? theme.color.monochrome[500] : theme.color.white, //may need to change this
+  transition: theme.transition.create(['left', 'transform'], {
+    duration: theme.transition.duration.standard,
+    delay: '0ms'
+  }),
+  '&:hover': {
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    '@media (hover: none)': {
+      backgroundColor: 'transparent'
+    }
+  },
+  [`&.${ownerState.switchClasses.checked}`]: {
+    transform: 'translate(calc(100% + .125rem))'
+  },
+  [`&.${ownerState.switchClasses.disabled}`]: {
+    backgroundColor: theme.color.disabled
+  },
+  [`&.${ownerState.switchClasses.disabled} + .${ownerState.switchClasses.track}`]: {
+    opacity: theme.color.mode === 'dark' ? 0.5 : 0.3
+  },
+  [`&.${ownerState.switchClasses.checked} + .${ownerState.switchClasses.track}`]: {
+    ...(ownerState.color === 'success' || ownerState.color === 'warning'
+      ? { backgroundColor: theme.alpha.add(theme.color[ownerState.color][500], 0.9) }
+      : { backgroundColor: theme.color[ownerState.color][500] })
+  },
+  [`& .${ownerState.switchClasses.input}`]: {
+    left: '-50%',
+    width: '250%'
   }
-};
+}));
 
-const switchTrackVariants = {
-  root: tw`h-full w-full rounded-full -z-10 duration-300 transition-[opacity,background-color] delay-[0ms] bg-black/[.35] dark:bg-white/[.3]`,
-  disabled: tw`opacity-30 dark:opacity-50`,
-  color: {
-    primary: tw`bg-primary-500 dark:bg-primary-500`,
-    secondary: tw`bg-secondary-500 dark:bg-secondary-500`,
-    success: tw`bg-success-500/90 dark:bg-success-500/90`,
-    warning: tw`bg-warning-500/80 dark:bg-warning-500/90`,
-    danger: tw`bg-danger-500 dark:bg-danger-500`
-  }
-};
+const SwitchTrack = styled('span')(({ theme }) => ({
+  height: '100%',
+  width: '100%',
+  borderRadius: theme.rounded.full,
+  zIndex: -1,
+  transition: theme.transition.create(['opacity', 'background-color'], {
+    duration: theme.transition.duration.standard,
+    delay: '0ms'
+  }),
+  backgroundColor:
+    theme.color.mode === 'dark'
+      ? theme.alpha.add(theme.color.white, 0.55)
+      : theme.alpha.add(theme.color.black, 0.25)
+}));
 
-const switchThumbVariants = {
-  root: tw`drop-shadow-2xl bg-current w-[16px] h-[16px] rounded-[50%]`,
-  small: tw`w-[14px] h-[14px]`
-};
+const SwitchThumb = styled('span', {
+  name: 'Switch',
+  slot: 'Thumb'
+})(({ theme }) => ({
+  filter: theme.dropShadow['2xl'],
+  backgroundColor: 'currentColor',
+  width: '1rem',
+  height: '1rem',
+  borderRadius: theme.rounded.full
+}));
 
-const switchBaseVariants = {
-  root: tw`p-0 m-[2px] absolute top-0 left-0 z-10 text-primary-dark dark:text-gray-300 duration-300 transition-[left,transform] delay-[0ms] hover:(bg-black/5 /*bg-[#0000008a]/5*/ cant-hover:bg-transparent)`,
-  checked: tw`translate-x-[calc(100% + 2px)]`,
-  disabled: tw`bg-disabled-light dark:bg-disabled-dark dark:text-disabled-dark`
-};
-const switchInputStyles = tw`w-[250%] -left-[50%]`;
+const Switch = React.forwardRef((props, ref) => {
+  const { className, color = 'success', edge = false, small = false, ...other } = props;
 
-const Switch = React.forwardRef(
-  (
-    {
-      className,
-      color = 'success',
-      checked,
-      defaultChecked,
-      disabled = false,
-      edge = false,
-      small,
-      ...other
-    },
-    ref
-  ) => {
-    const [isChecked, setIsChecked] = React.useState(defaultChecked ?? checked);
+  const ownerState = {
+    ...props,
+    color,
+    edge,
+    small,
+    switchClasses
+  };
 
-    const switchRootStyles = [
-      switchRootVariants.root,
-      edge && switchRootVariants.edge[edge],
-      small && switchRootVariants.small
-    ].filter(Boolean);
+  const icon = <SwitchThumb className={switchClasses.thumb} ownerState={ownerState} />;
 
-    const switchBaseStyles = [
-      switchBaseVariants.root,
-      isChecked && switchBaseVariants.checked,
-      disabled && switchBaseVariants.disabled
-    ].filter(Boolean);
-
-    const switchTrackStyles = [
-      switchTrackVariants.root,
-      isChecked && switchTrackVariants.color[color],
-      disabled && switchTrackVariants.disabled
-    ].filter(Boolean);
-
-    const switchThumbStyles = [
-      switchThumbVariants.root,
-      small && switchThumbVariants.small,
-      disabled && switchThumbVariants.disabled
-    ].filter(Boolean);
-
-    const icon = <span className={'Switch-Thumb'} css={switchThumbStyles} />;
-
-    return (
-      <span
-        className={cn('Switch-Root', className)}
-        css={switchRootStyles}
+  return (
+    <SwitchRoot className={clsx(switchClasses.root, className)} ownerState={ownerState}>
+      <SwitchSwitchBase
+        type='checkbox'
+        icon={icon}
+        checkedIcon={icon}
+        ref={ref}
+        ownerState={ownerState}
         {...other}
-      >
-        <SwitchBase
-          type='checkbox'
-          checked={checked}
-          className='Styled-SwitchBase'
-          icon={icon}
-          checkedIcon={icon}
-          inputStyles={switchInputStyles}
-          css={switchBaseStyles}
-          disabled={disabled}
-          defaultChecked={defaultChecked}
-          ref={ref}
-          setChecked={setIsChecked}
-          {...other}
-        />
-        <span className={'Switch-Track'} css={switchTrackStyles} />
-      </span>
-    );
-  }
-);
+        classes={{
+          ...switchClasses,
+          root: 'Switch-SwitchBase'
+        }}
+      />
+      <SwitchTrack className={switchClasses.track} ownerState={ownerState} />
+    </SwitchRoot>
+  );
+});
+
+Switch.displayName = 'Switch';
 
 export default Switch;

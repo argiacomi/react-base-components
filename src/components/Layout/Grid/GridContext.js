@@ -2,7 +2,7 @@ import { createContext } from 'react';
 
 const GridContext = createContext();
 
-if (process.env.NODE_ENV !== 'production') {
+if (!import.meta.env.PROD) {
   GridContext.displayName = 'GridContext';
 }
 

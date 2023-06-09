@@ -5,5 +5,7 @@ export * from './useEventCallback';
 export * from './useForkRef';
 export * from './useFormControl';
 export * from './useIsFocusVisible';
+export * from './useMedia';
 export * from './usePreviousProps';
 export * from './useSize';
+export * from './useSlotProps';

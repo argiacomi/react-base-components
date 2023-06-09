@@ -1,95 +1,183 @@
-import { forwardRef, useContext } from 'react';
-import tw, { css } from 'twin.macro';
-import { cva } from 'class-variance-authority';
-import { cn } from '@utils';
-import { ButtonBase } from '@components';
-import { ButtonGroupContext } from './ButtonGroup';
+import React from 'react';
+import styled from 'styled-components/macro';
+import clsx from 'clsx';
+import { mergeProps } from '@component/utils';
+import { ButtonBase, Icon } from '@components';
+import ButtonGroupContext from './ButtonGroupContext';
 
-const buttonVariants = {
-  root: tw`inline-flex min-w-[64px] active:scale-95 rounded-lg transition-colors items-center justify-center relative box-border font-medium w-auto bg-transparent outline-0 border-none border m-0 p-0 cursor-pointer select-none align-middle no-underline overflow-hidden`,
-  disabled: tw`dark:shadow-none pointer-events-none border-none bg-disabled-light text-disabled-text shadow-none drop-shadow-none dark:border-none dark:bg-disabled-dark dark:text-disabled-text dark:drop-shadow-none`,
-  variants: {
-    color: {
-      default: tw`bg-gray-600 hover:bg-gray-700`,
-      primary: tw`bg-primary-500 hover:bg-primary-600`,
-      secondary: tw`bg-secondary-500 hover:bg-secondary-600`,
-      success: tw`bg-success-500 hover:bg-success-600`,
-      warning: tw`bg-warning-500 hover:bg-warning-600`,
-      danger: tw`bg-danger-500 hover:bg-danger-600`,
-      monochrome: tw`bg-black hover:bg-gray-900 dark:bg-white dark:hover:bg-gray-500 dark:text-black`
-    },
-    variant: {
-      contain: tw`bg-opacity-100 text-white shadow-md`,
-      text: tw`bg-opacity-0 text-black dark:text-white drop-shadow-md`,
-      outline: tw`bg-opacity-0 border border-solid border-current shadow-md`
-    },
-    size: {
-      xs: tw`px-3 py-1 leading-4 text-xs`,
-      small: tw`px-4 py-1 leading-4 text-sm`,
-      medium: tw`px-4 py-1 leading-6 text-base`,
-      large: tw`px-5 py-1 leading-7 text-lg`,
-      xl: tw`px-6 py-2 leading-8 text-xl`
-    }
-  },
-  compoundVariants: {
-    root: {
-      default: tw`hover:text-gray-500 dark:hover:text-gray-500 hover:bg-gray-800/20`,
-      primary: tw`hover:text-primary-500 dark:hover:text-primary-500 hover:bg-primary-500/20`,
-      secondary: tw`hover:text-secondary-500 dark:hover:text-secondary-500 hover:bg-secondary-500/20`,
-      success: tw`hover:text-success-500 dark:hover:text-success-500 hover:bg-success-500/20`,
-      warning: tw`hover:text-warning-500 dark:hover:text-warning-500 hover:bg-warning-500/20`,
-      danger: tw`hover:text-danger-500 dark:hover:text-danger-500 hover:bg-danger-500/20`,
-      monochrome: tw`dark:text-white hover:text-black dark:hover:text-white hover:bg-gray-900/20`
-    },
-    outline: {
-      default: tw`text-gray-700 dark:text-gray-600`,
-      primary: tw`text-primary-500`,
-      secondary: tw`text-secondary-500`,
-      success: tw`text-success-500`,
-      warning: tw`text-warning-500`,
-      danger: tw`text-danger-500`,
-      monochrome: tw`text-black`
-    }
-  }
-};
+const baseStyles = (theme) => ({
+  fontFamily: 'inherit',
+  borderRadius: theme.rounded.md,
+  transition: theme.transition.create(
+    ['color', 'background-color', 'border-color', 'text-decoration-color', 'fill', 'stroke'],
+    { duration: theme.transition.duration.shortest }
+  ),
+  fontWeight: theme.text.weight.bold,
+  width: 'auto',
+  overflow: 'hidden',
+  '&:active': { transform: 'scale(0.95)' }
+});
 
-const iconVariants = {
-  root: tw`inline-flex items-center justify-center font-medium my-1`,
-  variants: {
-    edge: {
-      start: tw`mr-[10px]`,
-      end: tw`ml-[10px]`
+const sizeStyles = (theme, ownerState) =>
+  ({
+    mini: {
+      minWidth: `${theme.spacing(8)}`,
+      padding: `${theme.spacing(0.25)} ${theme.spacing(1)}`,
+      ...theme.text.size.sm
     },
-    size: {
-      xs: tw`leading-4 h-[14px] w-[14px]`,
-      small: tw`leading-4 h-4 w-4`,
-      medium: tw`leading-6 h-[18px] w-[18px]`,
-      large: tw`leading-7 h-5 w-5`,
-      xl: tw`leading-8 h-[22px] w-[22px]`
-    }
-  },
-  compoundVariants: {
-    start: {
-      xs: tw`mr-2`,
-      small: tw`mr-2`,
-      large: tw`mr-3`,
-      xl: tw`mr-3`
+    small: {
+      minWidth: `${theme.spacing(8)}`,
+      padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
+      ...theme.text.size.sm
     },
-    end: {
-      xs: tw`ml-2`,
-      small: tw`ml-2`,
-      large: tw`ml-3`,
-      xl: tw`ml-3`
+    medium: {
+      minWidth: `${theme.spacing(10)}`,
+      padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
+      ...theme.text.size.base
+    },
+    large: {
+      minWidth: `${theme.spacing(12)}`,
+      padding: `${theme.spacing(0.5)} ${theme.spacing(2.5)}`,
+      ...theme.text.size.lg
+    },
+    jumbo: {
+      minWidth: `${theme.spacing(16)}`,
+      padding: `${theme.spacing(1)} ${theme.spacing(3)}`,
+      ...theme.text.size.xl
+    },
+    auto: {
+      minWidth: 'auto',
+      padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
+      ...theme.text.size.base
     }
-  }
-};
+  }[ownerState.size]);
 
-const Button = forwardRef((props, ref) => {
-  const contextProps = useContext(ButtonGroupContext);
+const variantStyles = (theme, ownerState) =>
+  ({
+    text: {
+      color: theme.color.mode === 'dark' ? theme.color.white : theme.color.black,
+      backgroundColor: 'transparent',
+      filter: theme.dropShadow[4],
+      '&:hover': {
+        color: theme.color[ownerState.color].body,
+        backgroundColor: theme.alpha.add(theme.color[ownerState.color].body, 0.2)
+      }
+    },
+    outlined: {
+      color: theme.color[ownerState.color].body,
+      backgroundColor: 'transparent',
+      boxShadow: theme.boxShadow[4],
+      borderColor: theme.color[ownerState.color].body,
+      '&:hover': {
+        backgroundColor: theme.alpha.add(theme.color[ownerState.color].body, 0.2)
+      }
+    },
+    filled: {
+      color: theme.color[ownerState.color].text,
+      backgroundColor: theme.color[ownerState.color].body,
+      boxShadow: theme.boxShadow[4],
+      '&:hover': {
+        backgroundColor: theme.alpha.add(theme.color[ownerState.color][600], 1)
+      }
+    },
+    colorText: {
+      color: theme.color[ownerState.color].body,
+      backgroundColor: 'transparent',
+      filter: theme.dropShadow[4],
+
+      '&:hover': {
+        backgroundColor: theme.alpha.add(theme.color[ownerState.color].body, 0.2)
+      }
+    }
+  }[ownerState.variant]);
+
+const disabledStyles = (theme, ownerState) =>
+  ({
+    text: {
+      color: theme.alpha.add(theme.color.disabled.text, 0.6),
+      boxShadow: 'none'
+    },
+    outlined: {
+      color: theme.alpha.add(theme.color.disabled.text, 0.6),
+      borderColor: theme.color.disabled.body,
+      boxShadow: 'none'
+    },
+    filled: {
+      color: theme.color.disabled.text,
+      backgroundColor: theme.color.disabled.body
+    },
+    colorText: {
+      color: theme.alpha.add(theme.color.disabled.text, 0.6)
+    }
+  }[ownerState.variant]);
+
+const ButtonRoot = styled(ButtonBase)(({ theme, ownerState }) => {
+  return {
+    ...baseStyles(theme, ownerState),
+    ...sizeStyles(theme, ownerState),
+    ...(ownerState.color !== 'inherit'
+      ? variantStyles(theme, ownerState)
+      : {
+          color: 'inherit',
+          backgroundColor: 'transparent'
+        }),
+    ...(ownerState.variant === 'outlined' && {
+      border: '1px solid'
+    }),
+    ...(ownerState.disabled && {
+      boxShadow: 'none',
+      filter: 'none',
+      pointerEvents: 'none',
+      ...disabledStyles(theme, ownerState)
+    }),
+    ...(ownerState.disableElevation && {
+      boxShadow: 'none',
+      filter: 'none'
+    }),
+    ...(ownerState.fullWidth && {
+      width: '100%'
+    })
+  };
+});
+
+const ButtonIcon = styled('span')(({ ownerState }) => ({
+  display: 'inherit',
+  alignItems: 'inherit',
+  justifyContent: 'inherit',
+  fontSize: 'inherit',
+  marginTop: 4,
+  marginBottom: 4,
+  marginLeft: ownerState.position === 'start' ? 0 : 10,
+  marginRight: ownerState.position === 'start' ? 10 : 0,
+  lineHeight: 'inherit',
+  height: {
+    mini: '0.75rem',
+    small: '0.875rem',
+    medium: '1rem',
+    large: '1.125rem',
+    jumbo: '1.25rem',
+    auto: '1rem'
+  }[ownerState.size],
+  width: {
+    mini: '0.75rem',
+    small: '0.875rem',
+    medium: '1rem',
+    large: '1.125rem',
+    jumbo: '1.25rem',
+    auto: '1rem'
+  }[ownerState.size]
+}));
+
+const Button = React.forwardRef((inProps, ref) => {
+  const contextProps = React.useContext(ButtonGroupContext);
+  const props = mergeProps(contextProps, inProps);
+
   const {
     children,
     className,
-    color = 'primary',
+    classes,
+    color = 'default',
+    component = 'button',
     disabled = false,
     disableElevation = false,
     disableFocusRipple = false,
@@ -98,62 +186,86 @@ const Button = forwardRef((props, ref) => {
     fullWidth = false,
     size = 'medium',
     startIcon: startIconProp,
-    styles,
-    variant = 'contain',
+    type,
+    variant = 'text',
     ...other
-  } = { ...props, ...contextProps };
+  } = props;
 
-  const buttonStyles = [
-    buttonVariants.root,
-    buttonVariants.variants.color[color],
-    buttonVariants.variants.variant[variant],
-    buttonVariants.variants.size[size],
-    variant !== 'contain' && buttonVariants.compoundVariants.root[color],
-    variant === 'outline' && buttonVariants.compoundVariants.outline[color],
-    styles,
-    disabled && buttonVariants.disabled,
-    disableElevation && tw`shadow-none drop-shadow-none`,
-    fullWidth && tw`w-full`
-  ].filter(Boolean);
-
-  const startIconStyles = [
-    iconVariants.root,
-    iconVariants.variants.edge.start,
-    iconVariants.variants.size[size],
-    iconVariants.compoundVariants.start[size]
-  ].filter(Boolean);
-
-  const endIconStyles = [
-    iconVariants.root,
-    iconVariants.variants.edge.end,
-    iconVariants.variants.size[size],
-    iconVariants.compoundVariants.end[size]
-  ].filter(Boolean);
+  const ownerState = {
+    ...props,
+    color,
+    component,
+    disabled,
+    disableElevation,
+    disableFocusRipple,
+    fullWidth,
+    size,
+    variant
+  };
 
   const startIcon = startIconProp && (
-    <span css={startIconStyles}>{startIconProp}</span>
+    <ButtonIcon
+      className={clsx('Button-StartIcon', classes?.startIcon)}
+      ownerState={{ ...ownerState, position: 'start' }}
+    >
+      <Icon
+        icon={startIconProp}
+        size={
+          {
+            mini: '1.125rem',
+            small: '1.25rem',
+            medium: '1.375rem',
+            large: '1.5rem',
+            jumbo: '1.675rem',
+            auto: 'auto'
+          }[ownerState.size]
+        }
+        css={{ transition: 'none' }}
+      />
+    </ButtonIcon>
   );
 
-  const endIcon = endIconProp && <span css={endIconStyles}>{endIconProp}</span>;
+  const endIcon = endIconProp && (
+    <ButtonIcon
+      className={clsx('Button-EndIcon', classes?.endIcon)}
+      ownerState={{ ...ownerState, position: 'end' }}
+    >
+      <Icon
+        icon={endIconProp}
+        size={
+          {
+            mini: '1.125rem',
+            small: '1.25rem',
+            medium: '1.375rem',
+            large: '1.5rem',
+            jumbo: '1.675rem',
+            auto: 'auto'
+          }[ownerState.size]
+        }
+        css={{ transition: 'none' }}
+      />
+    </ButtonIcon>
+  );
 
   return (
-    <ButtonBase
-      className={className}
-      css={buttonStyles}
+    <ButtonRoot
+      className={clsx('Button-Root', className)}
+      ownerState={ownerState}
+      component={component}
+      disabled={disabled}
       focusRipple={!disableFocusRipple}
-      focusVisibleClassName={cn(
-        variant === 'contained' && 'shadow-lg',
-        focusVisibleClassName
-      )}
+      focusVisibleClassName={clsx(classes?.focusVisible, focusVisibleClassName)}
       ref={ref}
+      type={type}
       {...other}
+      classes={classes}
     >
       {startIcon}
       {children}
       {endIcon}
-    </ButtonBase>
+    </ButtonRoot>
   );
 });
 Button.displayName = 'Button';
 
-export { Button, buttonVariants };
+export default Button;

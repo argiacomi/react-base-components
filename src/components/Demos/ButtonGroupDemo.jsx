@@ -1,4 +1,4 @@
-import { css } from 'styled-components/macro';
+import { css } from 'styled-components/macro'; //eslint-disable-line
 import { Button, ButtonGroup, Box } from '@components';
 
 const buttons = [

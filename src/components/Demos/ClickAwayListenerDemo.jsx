@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { css, useTheme } from 'styled-components/macro'; //eslint-disable-line
-import { Box, ClickAwayListener, IGNORE_CLASS_NAME } from '@components';
+import { Box, ClickAwayListener, Portal } from '@components';
 
-export default function ClickAway() {
+export default function ClickAwayDemo() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -26,21 +26,17 @@ export default function ClickAway() {
   };
 
   return (
-    <>
-      <ClickAwayListener onClickAway={handleClickAway}>
-        <Box component='span' css={{ position: 'relative', backgroundColor: 'white' }}>
-          <button type='button' onClick={handleClick}>
-            Open menu dropdown
-          </button>
-          {open ? (
-            <Box css={styles}>Click me, I will stay visible until you click outside.</Box>
-          ) : null}
-        </Box>
-      </ClickAwayListener>
-      <Box
-        className={IGNORE_CLASS_NAME}
-        css={{ width: '100px', height: '100px', backgroundColor: 'red' }}
-      ></Box>
-    </>
+    <ClickAwayListener eventTypes={['onMouseDown', 'onTouchStart']} onClickAway={handleClickAway}>
+      <div>
+        <button type='button' onClick={handleClick}>
+          Open menu dropdown
+        </button>
+        {open ? (
+          <Portal>
+            <Box sx={styles}>Click me, I will stay visible until you click outside.</Box>
+          </Portal>
+        ) : null}
+      </div>
+    </ClickAwayListener>
   );
 }

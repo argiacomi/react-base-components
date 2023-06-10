@@ -1,6 +1,5 @@
-import * as React from 'react';
-import { css } from 'styled-components/macro';
-import { Alert, AlertTitle, Stack } from '@components';
+import { css } from 'styled-components/macro'; //eslint-disable-line
+import { Alert, Stack } from '@components';
 
 export default function DescriptionAlerts() {
   const variants = ['standard', 'outlined', 'filled'];

@@ -87,10 +87,10 @@ const AlertAction = styled('div')(({ theme }) => ({
   marginRight: `-${theme.spacing(1)}`
 }));
 
-const Icon = styled(BaseIcon)(({ theme }) => ({
+const Icon = styled(BaseIcon)({
   stroke: 'currentcolor',
   fill: 'none'
-}));
+});
 
 const defaultIconMapping = {
   success: <Icon icon='FiCheckCircle' fontSize='inherit' />,

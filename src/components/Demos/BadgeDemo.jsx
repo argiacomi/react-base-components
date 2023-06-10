@@ -1,6 +1,6 @@
 import React from 'react';
+import { css } from 'styled-components/macro'; //eslint-disable-line
 import { Badge, Box, ButtonGroup, Button, Icon, Stack, Switch, Text } from '@components';
-import { css } from 'styled-components/macro';
 
 export default function BadgeVisibility() {
   const [count, setCount] = React.useState(1);

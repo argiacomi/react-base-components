@@ -1,20 +1,22 @@
-import { css } from 'styled-components/macro';
+import { css } from 'styled-components/macro'; //eslint-disable-line
 import {
-  AlertDemo,
-  AvatarDemo,
-  BadgeDemo,
-  ButtonDemo,
-  ButtonGroupDemo,
-  ChipDemo,
-  ClickAwayListenerDemo,
-  PopperDemo
+  Box,
+  // AlertDemo,
+  // AvatarDemo,
+  // BadgeDemo,
+  // ButtonDemo,
+  // ButtonGroupDemo,
+  // ChipDemo,
+  // PopperDemo,
+  // ClickAwayListenerDemo,
+  FocusTrapDemo
 } from '@components';
 
 const App = () => {
   return (
-    <div css={{ margin: '1rem' }}>
-      <ClickAwayListenerDemo />
-    </div>
+    <Box css={{ margin: '1rem' }}>
+      <FocusTrapDemo />
+    </Box>
   );
 };
 

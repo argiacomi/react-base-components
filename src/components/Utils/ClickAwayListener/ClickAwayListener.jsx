@@ -123,6 +123,7 @@ export function ClickAwayListener(props) {
 
   eventTypes.forEach((eventType) => {
     childrenProps[eventType] = createHandleSynthetic(eventType);
+    childrenProps.role = 'presentation';
   });
 
   React.useEffect(() => {

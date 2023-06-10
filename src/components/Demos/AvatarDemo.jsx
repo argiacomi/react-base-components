@@ -1,11 +1,10 @@
-import { css } from 'styled-components';
+import { css } from 'styled-components/macro'; //eslint-disable-line
 import { Avatar, AvatarGroup, Icon, Stack } from '@components';
 
 function stringToColor(string) {
   let hash = 0;
   let i;
 
-  /* eslint-disable no-bitwise */
   for (i = 0; i < string.length; i += 1) {
     hash = string.charCodeAt(i) + ((hash << 5) - hash);
   }

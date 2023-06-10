@@ -188,6 +188,7 @@ const ButtonGroup = React.forwardRef((props, ref) => {
       variant
     }),
     [
+      classes,
       color,
       colorText,
       disabled,
@@ -196,8 +197,7 @@ const ButtonGroup = React.forwardRef((props, ref) => {
       disableRipple,
       fullWidth,
       size,
-      variant,
-      buttonGroupClasses
+      variant
     ]
   );
 

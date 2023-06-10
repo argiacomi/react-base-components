@@ -73,6 +73,25 @@ export const baseTheme = {
     add: (color, alpha = 0.05) => {
       const colorObj = Color(color).alpha(alpha);
       return colorObj.string();
+    },
+    lighten: (color, coefficient = 0.15) => {
+      const colorObj = Color(color).lighten(coefficient);
+      return colorObj.string();
+    },
+    darken: (color, coefficient = 0.15) => {
+      const colorObj = Color(color).darken(coefficient);
+      return colorObj.string();
+    },
+    emphasize: (color, coefficient = 0.15) => {
+      const colorObj = Color(color).isLight()
+        ? Color(color).darken(coefficient)
+        : Color(color).lighten(coefficient);
+      return colorObj.string();
+    },
+    contrastText: (color) => {
+      return Color(color).contrast(Color('rgba(0, 0, 0, 0.89)')) >= 3
+        ? 'rgba(0, 0, 0, 0.89)'
+        : '#ffffff';
     }
   },
   breakpoints: {
@@ -393,6 +412,16 @@ export const baseTheme = {
       linear: 'linear',
       sharp: 'cubic-bezier(0.4, 0, 0.6, 1)'
     }
+  },
+  zIndex: {
+    mobileStepper: 1000,
+    fab: 1050,
+    speedDial: 1050,
+    appBar: 1100,
+    drawer: 1200,
+    modal: 1300,
+    snackbar: 1400,
+    tooltip: 1500
   }
 };
 

@@ -9,13 +9,14 @@ import {
   // ChipDemo,
   // PopperDemo,
   // ClickAwayListenerDemo,
-  FocusTrapDemo
+  // FocusTrapDemo,
+  SnackbarDemo
 } from '@components';
 
 const App = () => {
   return (
     <Box css={{ margin: '1rem' }}>
-      <FocusTrapDemo />
+      <SnackbarDemo />
     </Box>
   );
 };

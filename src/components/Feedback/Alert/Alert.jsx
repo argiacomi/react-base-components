@@ -99,7 +99,7 @@ const defaultIconMapping = {
   info: <Icon icon='FiInfo' fontSize='inherit' />
 };
 
-const CloseIcon = <Icon icon='MdClose' fontSize='inherit' />;
+const CloseIcon = () => <Icon icon='MdClose' style={{ fill: 'currentColor' }} fontSize='inherit' />;
 
 const Alert = React.forwardRef((props, ref) => {
   const {

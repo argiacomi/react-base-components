@@ -3,7 +3,6 @@ import { PopperArrow, PopperContent } from '@components';
 import clsx from 'clsx';
 import * as Floating from '@floating-ui/dom';
 import { useEnhancedEffect, useForkRef } from '@component/hooks';
-
 import * as Transitions from '@transitions';
 
 const resolveAnchorEl = (anchorEl) => (typeof anchorEl === 'function' ? anchorEl() : anchorEl);

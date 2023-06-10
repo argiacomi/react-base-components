@@ -1,8 +1,10 @@
-import { default as scStyled } from 'styled-components/macro';
+import { default as scStyled, useTheme as useStyledTheme } from 'styled-components/macro';
 
-const styled = (component) =>
+export const styled = (component) =>
   scStyled(component).withConfig({
     shouldForwardProp: (prop) => !['ownerState'].includes(prop)
   });
 
-export default styled;
+export const useTheme = () => {
+  return useStyledTheme();
+};

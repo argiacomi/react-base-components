@@ -7,3 +7,4 @@ export { default as ChipDemo } from './ChipDemo';
 export { default as ClickAwayListenerDemo } from './ClickAwayListenerDemo';
 export { default as FocusTrapDemo } from './FocusTrapDemo';
 export { default as PopperDemo } from './PopperDemo';
+export { default as SnackbarDemo } from './SnackbarDemo';

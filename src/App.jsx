@@ -5,18 +5,14 @@ import {
   BadgeDemo,
   ButtonDemo,
   ButtonGroupDemo,
+  ChipDemo,
   PopperDemo
 } from '@components';
 
 const App = () => {
   return (
     <div css={{ margin: '1rem' }}>
-      <AvatarDemo />
-      <ButtonGroupDemo />
-      <AlertDemo />
-      <BadgeDemo />
-      <ButtonDemo />
-      <PopperDemo />
+      <ChipDemo />
     </div>
   );
 };

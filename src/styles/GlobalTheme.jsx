@@ -15,6 +15,7 @@ const colorThemes = {
     color: {
       mode: 'light',
       background: '#f2f2f2',
+      selected: 'rgba(0, 0, 0, 0.08)',
       disabled: {
         body: '#cdcdcd',
         text: '#8F8F8F'
@@ -39,6 +40,7 @@ const colorThemes = {
     color: {
       mode: 'dark',
       background: '#292929',
+      selected: 'rgba(255, 255, 255, 0.16)',
       disabled: {
         body: 'rgba(255, 255, 255, 0.25)',
         text: '#616161'

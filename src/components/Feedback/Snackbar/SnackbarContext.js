@@ -1,11 +1,15 @@
 import React from 'react';
 
-const SnackbarContext = React.createContext();
+export const SnackbarContext = React.createContext();
 
 if (!import.meta.env.PROD) {
   SnackbarContext.displayName = 'SnackbarContext';
 }
 
-export default SnackbarContext;
-
-export const useSnackbarQueue = () => React.useContext(SnackbarContext);
+export const useSnackbarQueue = () => {
+  const context = React.useContext(SnackbarContext);
+  if (!context) {
+    throw new Error('useSnackbarQueue must be used within a SnackbarProvider');
+  }
+  return context;
+};

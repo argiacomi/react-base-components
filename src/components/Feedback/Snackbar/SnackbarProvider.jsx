@@ -1,5 +1,5 @@
 import React from 'react';
-import SnackbarContext from './SnackbarContext';
+import { SnackbarContext } from './SnackbarContext';
 import SnackbarContainer from './SnackbarContainer';
 
 const SnackbarProvider = ({ children }) => {
@@ -14,7 +14,7 @@ const SnackbarProvider = ({ children }) => {
   };
 
   return (
-    <SnackbarContext.Provider value={{ addSnackbar, removeSnackbar }}>
+    <SnackbarContext.Provider value={{ snackbarQueue, addSnackbar, removeSnackbar }}>
       {children}
       <SnackbarContainer snackbarQueue={snackbarQueue} />
     </SnackbarContext.Provider>

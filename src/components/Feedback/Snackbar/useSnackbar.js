@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEventCallback, extractEventHandlers } from '@components/lib';
 
-export default function useSnackbar(parameters) {
+export default function useSnackbar(parameters = {}) {
   const {
     autoHideDuration = null,
     disableWindowBlurListener = false,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled, useTheme } from '@styles';
 import { useSlotProps } from '@components/lib';
-import { ClickAwayListener, Grow } from '@components/utils';
+import { ClickAwayListener } from '@components/utils';
 import useSnackbar from './useSnackbar';
 import SnackbarContent from './SnackbarContent';
 import * as Transitions from '@transitions';
@@ -51,8 +51,6 @@ const SnackbarRoot = styled('div')(({ theme, ownerState }) => {
 });
 
 const Snackbar = React.forwardRef((props, ref) => {
-  console.log('props', props);
-
   const theme = useTheme();
   const defaultTransitionDuration = {
     enter: theme.transition.duration.enteringScreen,

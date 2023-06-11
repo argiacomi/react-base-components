@@ -4,7 +4,7 @@ import { Portal } from '@components/utils';
 import clsx from 'clsx';
 import { SnackbarContext } from './SnackbarContext';
 import Snackbar from './Snackbar';
-import SnackbarContainer from './SnackbarContainer';
+import SnackbarContainer, { componentClasses } from './SnackbarContainer';
 
 const isOptions = (messageOrOptions) => {
   const isMessage = typeof messageOrOptions === 'string' || React.isValidElement(messageOrOptions);
@@ -107,7 +107,7 @@ const SnackbarProvider = (props) => {
         variant: 'default',
         autoHideDuration: 5000,
         anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
-        TransitionComponent: 'Slide',
+        transition: 'Slide',
         transitionDuration: {
           enter: 225,
           exit: 195
@@ -252,7 +252,7 @@ const SnackbarProvider = (props) => {
   return (
     <SnackbarContext.Provider value={{ addSnackbar, closeSnackbar }}>
       {props.children}
-      <Portal>
+      <Portal disablePortal>
         {Object.keys(categ).map((origin) => {
           const [nomineeSnack] = categ[origin];
           return (
@@ -262,17 +262,41 @@ const SnackbarProvider = (props) => {
               anchorOrigin={nomineeSnack?.anchorOrigin}
               classes={classes}
             >
-              {categ[origin].map((snack) => (
-                <Snackbar
-                  key={snack.id}
-                  classes={classes}
-                  onClose={handleCloseSnack}
-                  onEnter={props.onEnter}
-                  onExit={props.onExit}
-                  onExited={createChainedFunction([handleExitedSnack, props.onExited], snack.id)}
-                  onEntered={createChainedFunction([handleEnteredSnack, props.onEntered], snack.id)}
-                />
-              ))}
+              {categ[origin].map((snack) => {
+                const TransitionProps = {
+                  onClose: handleCloseSnack,
+                  onEnter: props.onEnter,
+                  onExit: props.onExit,
+                  onExited: createChainedFunction([handleExitedSnack, props.onExited], snack.id),
+                  onEntered: createChainedFunction([handleEnteredSnack, props.onEntered], snack.id)
+                };
+                return (
+                  <Snackbar
+                    key={snack.id}
+                    action={snack.action}
+                    anchorOrigin={snack.anchorOrigin}
+                    autoHideDuration={snack.autoHideDuration}
+                    className={clsx(componentClasses.snackbar, snack.className)}
+                    ClickAwayListenerProps={snack.ClickAwayListenerProps}
+                    ContentProps={snack.ContentProps}
+                    disableWindowBlurListener={snack.disableWindowBlurListener}
+                    message={snack.message}
+                    open={snack.open}
+                    transition={snack.TransitionComponent}
+                    TransitionProps={TransitionProps}
+                    classes={classes}
+                    style={{
+                      zIndex: 'auto',
+                      position: 'relative',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: 'auto',
+                      ...snack.style
+                    }}
+                  />
+                );
+              })}
             </SnackbarContainer>
           );
         })}

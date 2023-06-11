@@ -2,15 +2,12 @@ import React from 'react';
 import clsx from 'clsx';
 import { styled } from '@styles';
 
-const componentClasses = {
+export const componentClasses = {
   root: 'SnackbarContainer-Root',
-  Snackbar: 'SnackbarContainer-Snackbar',
-  CollapseWrapper: 'SnackbarContainer-CollapseWrapper',
-  Content: 'SnackbarContainer-SnackbarContent'
+  snackbar: 'SnackbarContainer-Snackbar'
 };
 
 const SnackbarContainerRoot = styled('div')(({ theme, ownerState }) => ({
-  boxSizing: 'border-box',
   display: 'flex',
   maxHeight: '100%',
   position: 'fixed',
@@ -22,7 +19,7 @@ const SnackbarContainerRoot = styled('div')(({ theme, ownerState }) => ({
     easing: 'ease'
   }),
   pointerEvents: 'none',
-  [`& .${componentClasses.CollapseWrapper}`]: {
+  [`.${componentClasses.snackbar}`]: {
     padding: `${theme.spacing(0.75)} 0rem`,
     transition: 'padding 300ms ease 0ms'
   },
@@ -32,23 +29,23 @@ const SnackbarContainerRoot = styled('div')(({ theme, ownerState }) => ({
     maxWidth: `calc(100% - ${theme.spacing(4)})`
   },
   ...(ownerState.dense && {
-    [`& .${componentClasses.CollapseWrapper}`]: {
+    [`& .${componentClasses.snackbar}`]: {
       padding: `${theme.spacing(0.25)} 0rem`
     }
   }),
   ...{
     top: {
-      top: `${theme.spacing(2.5) - theme.spacing(0.75)}`,
+      top: theme.spacing(2.5 - 0.75),
       flexDirection: 'column'
     },
     bottom: {
-      bottom: `${theme.spacing(2.5) - theme.spacing(0.75)}`,
+      bottom: theme.spacing(2.5 - 0.75),
       flexDirection: 'column-reverse'
     }
   }[ownerState.anchorOrigin?.vertical],
   ...{
     left: {
-      left: `${theme.spacing(2.5)}px`,
+      left: theme.spacing(2.5),
       [theme.breakpoints.up('sm')]: {
         alignItems: 'flex-start'
       },
@@ -57,7 +54,7 @@ const SnackbarContainerRoot = styled('div')(({ theme, ownerState }) => ({
       }
     },
     right: {
-      right: `${theme.spacing(2.5)}px`,
+      right: theme.spacing(2.5),
       [theme.breakpoints.up('sm')]: {
         alignItems: 'flex-end'
       },
@@ -89,8 +86,6 @@ const SnackbarContainer = React.forwardRef((props, ref) => {
     anchorOrigin,
     dense
   };
-
-  console.log('SnackbarContainer', ownerState);
 
   return (
     <SnackbarContainerRoot

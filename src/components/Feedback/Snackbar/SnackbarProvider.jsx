@@ -13,6 +13,8 @@ const SnackbarProvider = ({ children }) => {
     setSnackbarQueue((oldQueue) => oldQueue.slice(1));
   };
 
+  console.log('provider', snackbarQueue);
+
   return (
     <SnackbarContext.Provider value={{ snackbarQueue, addSnackbar, removeSnackbar }}>
       {children}

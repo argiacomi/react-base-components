@@ -4,6 +4,8 @@ import { useSnackbarQueue } from './SnackbarContext';
 const SnackbarContainer = ({ snackbarQueue }) => {
   const { removeSnackbar } = useSnackbarQueue();
 
+  console.log('container', snackbarQueue);
+
   return (
     <div>
       {snackbarQueue.map((snackbar, i) => (

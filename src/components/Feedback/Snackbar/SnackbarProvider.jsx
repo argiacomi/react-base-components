@@ -12,7 +12,7 @@ const isOptions = (messageOrOptions) => {
 };
 
 const SnackbarProvider = (props) => {
-  const { maxSnack = 3 } = props;
+  const { maxSnack = 3, dense = false, classes } = props;
 
   const [state, setState] = React.useState({
     snacks: [],
@@ -133,20 +133,20 @@ const SnackbarProvider = (props) => {
         open: true,
         entered: false,
         requestClose: false,
-        persist: merger('persist'),
-        action: merger('action'),
-        content: merger('content'),
-        variant: merger('variant'),
-        anchorOrigin: merger('anchorOrigin'),
-        disableWindowBlurListener: merger('disableWindowBlurListener'),
-        autoHideDuration: merger('autoHideDuration'),
-        hideIconVariant: merger('hideIconVariant'),
-        TransitionComponent: merger('TransitionComponent'),
-        transitionDuration: merger('transitionDuration'),
-        TransitionProps: merger('TransitionProps', true),
-        iconVariant: merger('iconVariant', true),
-        style: merger('style', true),
-        SnackbarProps: merger('SnackbarProps', true),
+        persist: merger.persist,
+        action: merger.action,
+        content: merger.content,
+        variant: merger.variant,
+        anchorOrigin: merger.anchorOrigin,
+        disableWindowBlurListener: merger.disableWindowBlurListener,
+        autoHideDuration: merger.autoHideDuration,
+        hideIconVariant: merger.hideIconVariant,
+        TransitionComponent: merger.TransitionComponent,
+        transitionDuration: merger.transitionDuration,
+        TransitionProps: merger.TransitionProps || true,
+        iconVariant: merger.iconVariant || true,
+        style: merger.style || true,
+        SnackbarProps: merger.SnackbarProps || true,
         className: clsx(props.className, options.className)
       };
 
@@ -240,22 +240,41 @@ const SnackbarProvider = (props) => {
     }));
   }, []);
 
+  const categ = state.snacks.reduce((acc, current) => {
+    const category = `${current.anchorOrigin.vertical}${current.anchorOrigin.horizontal}`;
+    const existingOfCategory = acc[category] || [];
+    return {
+      ...acc,
+      [category]: [...existingOfCategory, current]
+    };
+  }, {});
+
   return (
     <SnackbarContext.Provider value={{ addSnackbar, closeSnackbar }}>
       {props.children}
       <Portal>
-        <SnackbarContainer>
-          {state.snacks.map((snack, i) => (
-            <Snackbar
-              key={snack.id}
-              snack={snack}
-              offset={state.snacks.slice(0, i).reduce((acc, val) => acc + val.height, 0)}
-              onClose={handleCloseSnack}
-              onExited={handleExitedSnack}
-              onEntered={handleEnteredSnack}
-            />
-          ))}
-        </SnackbarContainer>
+        {Object.keys(categ).map((origin) => {
+          const [nomineeSnack] = categ[origin];
+          <SnackbarContainer
+            key={origin}
+            dense={dense}
+            anchorOrigin={nomineeSnack?.anchorOrigin}
+            classes={classes}
+          >
+            {categ[origin].map((snack) => (
+              <Snackbar
+                key={snack.id}
+                classes={classes}
+                onClose={handleCloseSnack}
+                onEnter={props.onEnter}
+                onExit={props.onExit}
+                onExited={handleExitedSnack}
+                onEntered={handleEnteredSnack}
+                {...snack}
+              />
+            ))}
+          </SnackbarContainer>;
+        })}
       </Portal>
     </SnackbarContext.Provider>
   );

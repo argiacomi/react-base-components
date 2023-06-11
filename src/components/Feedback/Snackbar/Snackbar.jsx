@@ -51,6 +51,8 @@ const SnackbarRoot = styled('div')(({ theme, ownerState }) => {
 });
 
 const Snackbar = React.forwardRef((props, ref) => {
+  console.log('props', props);
+
   const theme = useTheme();
   const defaultTransitionDuration = {
     enter: theme.transition.duration.enteringScreen,
@@ -67,13 +69,7 @@ const Snackbar = React.forwardRef((props, ref) => {
     ContentProps,
     disableWindowBlurListener = false,
     message,
-    onBlur,
-    onClose,
-    onFocus,
-    onMouseEnter,
-    onMouseLeave,
     open,
-    resumeHideDuration,
     transition = 'Slide',
     transitionDuration = defaultTransitionDuration,
     TransitionProps: { onEnter, onExited, ...TransitionProps } = {},

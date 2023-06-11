@@ -1,5 +1,5 @@
 import React from 'react';
-import { mergeProps } from '@components/lib';
+import { mergeProps, createChainedFunction } from '@components/lib';
 import { Portal } from '@components/utils';
 import clsx from 'clsx';
 import { SnackbarContext } from './SnackbarContext';
@@ -255,25 +255,26 @@ const SnackbarProvider = (props) => {
       <Portal>
         {Object.keys(categ).map((origin) => {
           const [nomineeSnack] = categ[origin];
-          <SnackbarContainer
-            key={origin}
-            dense={dense}
-            anchorOrigin={nomineeSnack?.anchorOrigin}
-            classes={classes}
-          >
-            {categ[origin].map((snack) => (
-              <Snackbar
-                key={snack.id}
-                classes={classes}
-                onClose={handleCloseSnack}
-                onEnter={props.onEnter}
-                onExit={props.onExit}
-                onExited={handleExitedSnack}
-                onEntered={handleEnteredSnack}
-                {...snack}
-              />
-            ))}
-          </SnackbarContainer>;
+          return (
+            <SnackbarContainer
+              key={origin}
+              dense={dense}
+              anchorOrigin={nomineeSnack?.anchorOrigin}
+              classes={classes}
+            >
+              {categ[origin].map((snack) => (
+                <Snackbar
+                  key={snack.id}
+                  classes={classes}
+                  onClose={handleCloseSnack}
+                  onEnter={props.onEnter}
+                  onExit={props.onExit}
+                  onExited={createChainedFunction([handleExitedSnack, props.onExited], snack.id)}
+                  onEntered={createChainedFunction([handleEnteredSnack, props.onEntered], snack.id)}
+                />
+              ))}
+            </SnackbarContainer>
+          );
         })}
       </Portal>
     </SnackbarContext.Provider>

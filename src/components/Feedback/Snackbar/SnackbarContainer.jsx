@@ -18,7 +18,6 @@ const SnackbarContainerRoot = styled('div')(({ theme, ownerState }) => ({
     duration: 300,
     easing: 'ease'
   }),
-  pointerEvents: 'none',
   [`.${componentClasses.snackbar}`]: {
     padding: `${theme.spacing(0.75)} 0rem`,
     transition: 'padding 300ms ease 0ms'

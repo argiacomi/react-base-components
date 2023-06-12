@@ -5,6 +5,9 @@ import clsx from 'clsx';
 import { SnackbarContext } from './SnackbarContext';
 import Snackbar from './Snackbar';
 import SnackbarContainer, { componentClasses } from './SnackbarContainer';
+import { nanoid } from 'nanoid';
+
+const alertVariants = ['danger', 'info', 'success', 'warning'];
 
 const isOptions = (messageOrOptions) => {
   const isMessage = typeof messageOrOptions === 'string' || React.isValidElement(messageOrOptions);
@@ -165,7 +168,6 @@ const SnackbarProvider = (props) => {
 
       const defaults = {
         maxSnack: 3,
-        variant: 'default',
         autoHideDuration: 5000,
         anchorOrigin: { vertical: 'bottom', horizontal: 'left' }
       };
@@ -177,7 +179,7 @@ const SnackbarProvider = (props) => {
       const { key, preventDuplicate, ...options } = opts;
 
       const hasSpecifiedKey = !!key || key === 0;
-      const id = hasSpecifiedKey ? key : new Date().getTime() + Math.random();
+      const id = hasSpecifiedKey ? key : nanoid();
 
       let merger = mergeProps(defaults, props);
       merger = mergeProps(merger, options);
@@ -191,7 +193,7 @@ const SnackbarProvider = (props) => {
         exited: false,
         action: merger.action,
         content: merger.content,
-        variant: merger.variant,
+        severity: merger.severity,
         anchorOrigin: merger.anchorOrigin,
         disableWindowBlurListener: merger.disableWindowBlurListener,
         autoHideDuration: merger.autoHideDuration,
@@ -202,7 +204,8 @@ const SnackbarProvider = (props) => {
         iconVariant: merger.iconVariant || true,
         style: merger.style || true,
         SnackbarProps: merger.SnackbarProps || true,
-        className: clsx(props.className, options.className)
+        className: clsx(props.className, options.className),
+        children: options.children || undefined
       };
 
       if (snack.persist) {
@@ -266,6 +269,7 @@ const SnackbarProvider = (props) => {
                 return (
                   <Snackbar
                     key={snack.id}
+                    id={snack.id}
                     action={snack.action}
                     anchorOrigin={snack.anchorOrigin}
                     autoHideDuration={snack.autoHideDuration}
@@ -281,7 +285,9 @@ const SnackbarProvider = (props) => {
                     TransitionProps={TransitionProps}
                     classes={classes}
                     style={snack.style}
-                  />
+                  >
+                    {snack.children}
+                  </Snackbar>
                 );
               })}
             </SnackbarContainer>

@@ -5,6 +5,7 @@ export default function useSnackbar(parameters = {}) {
   const {
     autoHideDuration = null,
     disableWindowBlurListener = false,
+    id,
     onClose,
     open,
     resumeHideDuration
@@ -32,8 +33,8 @@ export default function useSnackbar(parameters = {}) {
     };
   }, [open, onClose]);
 
-  const handleClose = useEventCallback((event, reason) => {
-    onClose?.(event, reason);
+  const handleClose = useEventCallback((event, reason, id) => {
+    onClose?.(event, reason, id);
   });
 
   const setAutoHideTimer = useEventCallback((autoHideDurationParam) => {
@@ -43,7 +44,7 @@ export default function useSnackbar(parameters = {}) {
 
     clearTimeout(timerAutoHide.current);
     timerAutoHide.current = setTimeout(() => {
-      handleClose(null, 'timeout');
+      handleClose(null, 'timeout', id);
     }, autoHideDurationParam);
   });
 

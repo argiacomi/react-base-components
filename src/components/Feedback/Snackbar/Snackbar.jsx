@@ -74,36 +74,32 @@ const Snackbar = React.forwardRef((props, ref) => {
     children,
     className,
     ClickAwayListenerProps,
+    Component,
     ContentProps,
     disableWindowBlurListener = false,
-    key,
+    id,
     message,
-    onBlur,
-    onClose,
-    onFocus,
-    onMouseEnter,
-    onMouseLeave,
     open,
     queue = false,
-    resumeHideDuration,
     transition = 'Slide',
     transitionDuration = defaultTransitionDuration,
     TransitionProps: { onEnter, onExited, ...TransitionProps } = {},
     ...other
   } = props;
 
-  console.log('Snackbar', props);
-
   const TransitionComponent =
     typeof transition === 'string'
       ? Transitions[transition] || Transitions['Grow']
       : Transitions['Grow'];
+
+  const QueueTransition = Transitions['Collapse'];
 
   const ownerState = {
     ...props,
     anchorOrigin: { vertical, horizontal },
     autoHideDuration,
     disableWindowBlurListener,
+    id,
     queue,
     TransitionComponent,
     transitionDuration
@@ -111,9 +107,12 @@ const Snackbar = React.forwardRef((props, ref) => {
 
   const { getRootProps, onClickAway } = useSnackbar({ ...ownerState });
 
+  const timeout = React.useRef();
   const [exited, setExited] = React.useState(true);
+  const [collapsed, setCollapsed] = React.useState(true);
 
   const rootProps = useSlotProps({
+    as: Component || 'div',
     elementType: SnackbarRoot,
     getSlotProps: getRootProps,
     externalForwardedProps: other,
@@ -125,27 +124,62 @@ const Snackbar = React.forwardRef((props, ref) => {
   });
 
   const handleExited = (node) => {
-    setExited(true);
+    setCollapsed((col) => !col);
 
-    if (onExited) {
-      onExited(node);
-    }
+    timeout.current = setTimeout(() => {
+      setExited(true);
+      if (onExited) {
+        onExited(node);
+      }
+    }, 150);
   };
 
   const handleEnter = (node, isAppearing) => {
     setExited(false);
 
     if (onEnter) {
-      onEnter(node, isAppearing, key);
+      onEnter(node, isAppearing, id);
     }
   };
+
+  React.useEffect(() => {
+    if (timeout.current) {
+      clearTimeout(timeout.current);
+    }
+  }, []);
 
   if (!open && exited) {
     return null;
   }
 
-  return (
-    <ClickAwayListener onClickAway={onClickAway} {...ClickAwayListenerProps}>
+  return queue ? (
+    <QueueTransition in={collapsed} onExited={handleExited}>
+      <ClickAwayListener
+        onClickAway={onClickAway}
+        eventTypes={['onTouchEnd']}
+        {...ClickAwayListenerProps}
+      >
+        <SnackbarRoot {...rootProps}>
+          <TransitionComponent
+            appear
+            in={open}
+            timeout={transitionDuration}
+            direction={getDirection(vertical, horizontal)}
+            onEnter={handleEnter}
+            onExited={handleExited}
+            {...TransitionProps}
+          >
+            {children || <SnackbarContent message={message} action={action} {...ContentProps} />}
+          </TransitionComponent>
+        </SnackbarRoot>
+      </ClickAwayListener>
+    </QueueTransition>
+  ) : (
+    <ClickAwayListener
+      onClickAway={onClickAway}
+      eventTypes={['onTouchEnd']}
+      {...ClickAwayListenerProps}
+    >
       <SnackbarRoot {...rootProps}>
         <TransitionComponent
           appear

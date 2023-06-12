@@ -18,11 +18,11 @@ const variantStyles = (theme, ownerState, colorProp) => {
       ? {
           getColor: 600,
           getBackgroundColor: 300,
-          opacity: 0.25
+          opacity: 0.35
         }
       : {
-          getColor: 400,
-          getBackgroundColor: 300,
+          getColor: 600,
+          getBackgroundColor: 500,
           opacity: 0.2
         };
 

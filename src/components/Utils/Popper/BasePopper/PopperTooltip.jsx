@@ -64,7 +64,11 @@ const PopperTooltip = React.forwardRef((props, ref) => {
     }
   }, [anchorEl]);
 
-  const { width: arrowInputWidth = 20, id: arrowId = 'arrow' } = arrow || {};
+  const {
+    id: arrowId = 'arrow',
+    width: arrowInputWidth = 20,
+    padding: arrowPadding = 8
+  } = arrow || {};
   const arrowWidth = Math.max(arrowInputWidth, 8);
 
   useEnhancedEffect(() => {
@@ -73,10 +77,10 @@ const PopperTooltip = React.forwardRef((props, ref) => {
     const arrowElement = getArrowElementById(arrowId);
 
     setPopperOptions({
-      arrow: !disableArrow ? { element: arrowElement, padding: 8 } : {},
+      arrow: !disableArrow ? { element: arrowElement, padding: arrowPadding } : {},
       offset:
         typeof offsetPadding === 'number' || typeof offsetPadding === 'boolean'
-          ? offsetPadding + (!disableArrow && (Math.sqrt(2) * arrowWidth) / 2) + 5
+          ? offsetPadding + (!disableArrow && (Math.sqrt(2) * arrowWidth) / 2) + 4
           : typeof offsetPadding === 'string'
           ? parseInt(offsetPadding.replace(/\D/g, '')) +
             (!disableArrow && (Math.sqrt(2) * arrowWidth) / 2)
@@ -164,6 +168,7 @@ const PopperTooltip = React.forwardRef((props, ref) => {
               left: `${x}px`,
               top: `${y}px`
             });
+
             if (!disableArrow) {
               const { x: arrowX, y: arrowY } = data.arrow;
               const staticSide = {
@@ -245,7 +250,6 @@ const PopperTooltip = React.forwardRef((props, ref) => {
     role: 'tooltip',
     ref: ownRef,
     className: clsx(className, slotProps?.root?.className, 'PopperTooltip-Root'),
-    disableArrow: disableArrow,
     position: position,
     elevation: props.elevation,
     square: props.square,
@@ -274,7 +278,7 @@ const PopperTooltip = React.forwardRef((props, ref) => {
       : Transitions['Fade'];
 
   return transition ? (
-    <TransitionComponent {...TransitionProps} timeout={350}>
+    <TransitionComponent {...TransitionProps}>
       <PopperContent as={rootComponent} {...rootProps}>
         {!disableArrow && <PopperArrow {...arrowProps} />}
         {children}

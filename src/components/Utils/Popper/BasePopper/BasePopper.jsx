@@ -23,7 +23,7 @@ const BasePopper = React.forwardRef((props, ref) => {
     children,
     className,
     component = 'div',
-    diosableArrow = false,
+    disableArrow = false,
     slots = {},
     slotProps = {},
     container: containerProp,
@@ -34,6 +34,7 @@ const BasePopper = React.forwardRef((props, ref) => {
     popperRef,
     style,
     transition,
+    TransitionProps,
     ...other
   } = props;
 
@@ -63,10 +64,11 @@ const BasePopper = React.forwardRef((props, ref) => {
       isDescendant(document.getElementById('root'), resolvedAnchorEl) &&
       document.getElementById('root');
   }
-
   const display = !open && keepMounted && (!transition || exited) ? 'none' : undefined;
   const transitionProps = transition
     ? {
+        ...TransitionProps,
+        timeout: TransitionProps.timeout || 350,
         in: open,
         onEnter: handleEnter,
         onExited: handleExited
@@ -79,7 +81,7 @@ const BasePopper = React.forwardRef((props, ref) => {
         anchorEl={anchorEl}
         className={clsx('BasePopper-Root', className)}
         component={component}
-        disableArrow={diosableArrow}
+        disableArrow={disableArrow}
         slots={slots}
         slotProps={slotProps}
         open={transition ? !exited : open}

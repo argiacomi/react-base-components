@@ -25,7 +25,7 @@ const PopperContent = React.forwardRef((props, ref) => {
   return (
     <PopperContentRoot
       as={component}
-      className={clsx('PpperContent-Root', className)}
+      className={clsx('PopperContent-Root', className)}
       ownerState={ownerState}
       ref={ref}
       {...other}

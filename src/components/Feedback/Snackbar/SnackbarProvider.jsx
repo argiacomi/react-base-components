@@ -7,8 +7,6 @@ import Snackbar from './Snackbar';
 import SnackbarContainer, { componentClasses } from './SnackbarContainer';
 import { nanoid } from 'nanoid';
 
-const alertVariants = ['danger', 'info', 'success', 'warning'];
-
 const isOptions = (messageOrOptions) => {
   const isMessage = typeof messageOrOptions === 'string' || React.isValidElement(messageOrOptions);
   return !isMessage;

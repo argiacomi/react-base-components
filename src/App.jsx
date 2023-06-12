@@ -11,13 +11,14 @@ import {
   // ClickAwayListenerDemo,
   // FocusTrapDemo,
   // SnackbarDemo,
-  CardDemo
+  // CardDemo,
+  TooltipDemo
 } from '@components';
 
 const App = () => {
   return (
-    <Box css={{ margin: '1rem' }}>
-      <CardDemo />
+    <Box css={{ margin: '3rem' }}>
+      <TooltipDemo />
     </Box>
   );
 };

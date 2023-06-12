@@ -30,7 +30,8 @@ export const TextRoot = styled('span')(({ theme, ownerState }) => {
     }),
     ...(ownerState.paragraph && {
       marginBottom: '1rem'
-    })
+    }),
+    ...(ownerState.color && theme.color.text[ownerState.color])
   };
 });
 

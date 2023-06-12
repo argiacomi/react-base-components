@@ -19,6 +19,39 @@ const SnackbarProvider = (props) => {
     queue: []
   });
 
+  const handleCloseSnack = React.useCallback(
+    (event, reason, key) => {
+      if (props.onClose) {
+        props.onClose(event, reason, key);
+      }
+
+      const shouldCloseAll = key === undefined;
+
+      setState(({ snacks, queue }) => ({
+        snacks: snacks.map((item) => {
+          if (!shouldCloseAll && item.id !== key) {
+            return { ...item };
+          }
+          return item.entered ? { ...item, open: false } : { ...item, requestClose: true };
+        }),
+        queue: queue.filter((item) => item.id !== key)
+      }));
+    },
+    [props]
+  );
+
+  const closeSnackbar = React.useCallback(
+    (key) => {
+      const toBeClosed = state.snacks.find((item) => item.id === key);
+      if ((!!key || key === 0) && toBeClosed && toBeClosed.onClose) {
+        toBeClosed.onClose(null, 'instructed', key);
+      }
+
+      handleCloseSnack(null, 'instructed', key);
+    },
+    [handleCloseSnack, state.snacks]
+  );
+
   const processQueue = React.useCallback((state) => {
     const { queue, snacks } = state;
     if (queue.length > 0) {
@@ -93,6 +126,37 @@ const SnackbarProvider = (props) => {
     [handleDismissOldest, maxSnack, processQueue]
   );
 
+  const handleExitedSnack = React.useCallback(
+    (node, key) => {
+      if (!(!!key || key === 0)) {
+        throw new Error('handleExitedSnack Cannot be called with undefined key');
+      }
+
+      setState((state) => {
+        const newState = processQueue({
+          ...state,
+          snacks: state.snacks.filter((item) => item.id !== key)
+        });
+
+        if (newState.queue.length === 0) {
+          return newState;
+        }
+
+        return handleDismissOldest(newState);
+      });
+    },
+    [handleDismissOldest, processQueue]
+  );
+
+  const handleEnteredSnack = React.useCallback((node, isAppearing, key) => {
+    setState((state) => ({
+      ...state,
+      snacks: state.snacks.map((item) =>
+        item.id === key ? { ...item, entered: isAppearing } : item
+      )
+    }));
+  }, []);
+
   const addSnackbar = React.useCallback(
     (messageOrOptions, optsOrUndefined = {}) => {
       if (messageOrOptions === undefined || messageOrOptions === null) {
@@ -101,17 +165,9 @@ const SnackbarProvider = (props) => {
 
       const defaults = {
         maxSnack: 3,
-        persist: false,
-        hideIconVariant: false,
-        disableWindowBlurListener: false,
         variant: 'default',
         autoHideDuration: 5000,
-        anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
-        transition: 'Slide',
-        transitionDuration: {
-          enter: 225,
-          exit: 195
-        }
+        anchorOrigin: { vertical: 'bottom', horizontal: 'left' }
       };
 
       const opts = isOptions(messageOrOptions) ? messageOrOptions : optsOrUndefined;
@@ -132,8 +188,7 @@ const SnackbarProvider = (props) => {
         message,
         open: true,
         entered: false,
-        requestClose: false,
-        persist: merger.persist,
+        exited: false,
         action: merger.action,
         content: merger.content,
         variant: merger.variant,
@@ -141,7 +196,7 @@ const SnackbarProvider = (props) => {
         disableWindowBlurListener: merger.disableWindowBlurListener,
         autoHideDuration: merger.autoHideDuration,
         hideIconVariant: merger.hideIconVariant,
-        TransitionComponent: merger.TransitionComponent,
+        transition: merger.transition,
         transitionDuration: merger.transitionDuration,
         TransitionProps: merger.TransitionProps || true,
         iconVariant: merger.iconVariant || true,
@@ -177,69 +232,6 @@ const SnackbarProvider = (props) => {
     [handleDisplaySnack, props]
   );
 
-  const handleCloseSnack = React.useCallback(
-    (event, reason, key) => {
-      if (props.onClose) {
-        props.onClose(event, reason, key);
-      }
-
-      const shouldCloseAll = key === undefined;
-
-      setState(({ snacks, queue }) => ({
-        snacks: snacks.map((item) => {
-          if (!shouldCloseAll && item.id !== key) {
-            return { ...item };
-          }
-
-          return item.entered ? { ...item, open: false } : { ...item, requestClose: true };
-        }),
-        queue: queue.filter((item) => item.id !== key)
-      }));
-    },
-    [props]
-  );
-
-  const closeSnackbar = React.useCallback(
-    (key) => {
-      const toBeClosed = state.snacks.find((item) => item.id === key);
-      if ((!!key || key === 0) && toBeClosed && toBeClosed.onClose) {
-        toBeClosed.onClose(null, 'instructed', key);
-      }
-
-      handleCloseSnack(null, 'instructed', key);
-    },
-    [handleCloseSnack, state.snacks]
-  );
-
-  const handleExitedSnack = React.useCallback(
-    (node, key) => {
-      if (!(!!key || key === 0)) {
-        throw new Error('handleExitedSnack Cannot be called with undefined key');
-      }
-
-      setState((state) => {
-        const newState = processQueue({
-          ...state,
-          snacks: state.snacks.filter((item) => item.id !== key)
-        });
-
-        if (newState.queue.length === 0) {
-          return newState;
-        }
-
-        return handleDismissOldest(newState);
-      });
-    },
-    [handleDismissOldest, processQueue]
-  );
-
-  const handleEnteredSnack = React.useCallback((node, key) => {
-    setState((state) => ({
-      ...state,
-      snacks: state.snacks.map((item) => (item.id === key ? { ...item, entered: true } : item))
-    }));
-  }, []);
-
   const categ = state.snacks.reduce((acc, current) => {
     const category = `${current.anchorOrigin.vertical}${current.anchorOrigin.horizontal}`;
     const existingOfCategory = acc[category] || [];
@@ -264,11 +256,12 @@ const SnackbarProvider = (props) => {
             >
               {categ[origin].map((snack) => {
                 const TransitionProps = {
-                  onClose: handleCloseSnack,
-                  onEnter: props.onEnter,
+                  onEnter: props.onEntered,
+                  onEntering: props.onEntering,
+                  onEntered: createChainedFunction([handleEnteredSnack, props.onEntered], snack.id),
                   onExit: props.onExit,
-                  onExited: createChainedFunction([handleExitedSnack, props.onExited], snack.id),
-                  onEntered: createChainedFunction([handleEnteredSnack, props.onEntered], snack.id)
+                  onExiting: props.onExiting,
+                  onExited: createChainedFunction([handleExitedSnack, props.onExited], snack.id)
                 };
                 return (
                   <Snackbar
@@ -281,19 +274,13 @@ const SnackbarProvider = (props) => {
                     ContentProps={snack.ContentProps}
                     disableWindowBlurListener={snack.disableWindowBlurListener}
                     message={snack.message}
+                    onClose={handleCloseSnack}
                     open={snack.open}
-                    transition={snack.TransitionComponent}
+                    queue
+                    transition={snack.transition}
                     TransitionProps={TransitionProps}
                     classes={classes}
-                    style={{
-                      zIndex: 'auto',
-                      position: 'relative',
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      height: 'auto',
-                      ...snack.style
-                    }}
+                    style={snack.style}
                   />
                 );
               })}

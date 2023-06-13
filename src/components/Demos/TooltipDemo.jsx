@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components/macro';
 import {
   Box,
+  ClickAwayListener,
   Grid,
   Button,
   IconButton,
@@ -34,9 +35,126 @@ const HtmlTooltip = styled(Popper)(({ theme }) => ({
   border: '1px solid #dadde9'
 }));
 
+function TriggersTooltips() {
+  const [open, setOpen] = React.useState(false);
+
+  const handleTooltipClose = () => {
+    setOpen(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setOpen(true);
+  };
+
+  return (
+    <div>
+      <Grid container justifyContent='center'>
+        <Grid item>
+          <Tooltip disableFocusListener title='Add'>
+            <Button>Hover or touch</Button>
+          </Tooltip>
+        </Grid>
+        <Grid item>
+          <Tooltip disableHoverListener title='Add'>
+            <Button>Focus or touch</Button>
+          </Tooltip>
+        </Grid>
+        <Grid item>
+          <Tooltip disableFocusListener disableTouchListener title='Add'>
+            <Button>Hover</Button>
+          </Tooltip>
+        </Grid>
+        <Grid item>
+          <ClickAwayListener onClickAway={handleTooltipClose}>
+            <div>
+              <Tooltip
+                PopperProps={{
+                  disablePortal: true
+                }}
+                onClose={handleTooltipClose}
+                open={open}
+                disableFocusListener
+                disableHoverListener
+                disableTouchListener
+                title='Add'
+              >
+                <Button onClick={handleTooltipOpen}>Click</Button>
+              </Tooltip>
+            </div>
+          </ClickAwayListener>
+        </Grid>
+      </Grid>
+    </div>
+  );
+}
+
+function ControlledTooltips() {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  return (
+    <Tooltip open={open} onClose={handleClose} onOpen={handleOpen} title='Add'>
+      <Button>Controlled</Button>
+    </Tooltip>
+  );
+}
+
+const CustomWidthTooltip = styled(Popper)({
+  maxWidth: 500
+});
+
+const NoMaxWidthTooltip = styled(Popper)({
+  maxWidth: 'none'
+});
+
+const longText = `
+Aliquam eget finibus ante, non facilisis lectus. Sed vitae dignissim est, vel aliquam tellus.
+Praesent non nunc mollis, fermentum neque at, semper arcu.
+Nullam eget est sed sem iaculis gravida eget vitae justo.
+`;
+
+function VariableWidth() {
+  return (
+    <Box css={{ width: '100%' }}>
+      <Tooltip title={longText}>
+        <Button css={{ margin: '.5rem' }}>Default Width [300px]</Button>
+      </Tooltip>
+      <Tooltip slots={{ popper: CustomWidthTooltip }} title={longText}>
+        <Button css={{ margin: '.5rem' }}>Custom Width [500px]</Button>
+      </Tooltip>
+      <Tooltip slots={{ popper: NoMaxWidthTooltip }} title={longText}>
+        <Button css={{ margin: '.5rem' }}>No wrapping</Button>
+      </Tooltip>
+    </Box>
+  );
+}
+
+function TransitionsTooltips() {
+  return (
+    <div>
+      <Tooltip title='Add'>
+        <Button>Grow</Button>
+      </Tooltip>
+      <Tooltip transition='Fade' TransitionProps={{ timeout: 600 }} title='Add'>
+        <Button>Fade</Button>
+      </Tooltip>
+      <Tooltip transition='Zoom' title='Add'>
+        <Button>Zoom</Button>
+      </Tooltip>
+    </div>
+  );
+}
+
 export default function TooltipDemo() {
   return (
-    <Stack direction='column' spacing={2}>
+    <Stack direction='column' spacing={4}>
       <Tooltip title='Delete'>
         <IconButton icon='MdDelete' />
       </Tooltip>
@@ -104,18 +222,7 @@ export default function TooltipDemo() {
         <Tooltip slots={{ popper: LightTooltip }} title='Add'>
           <Button>Light</Button>
         </Tooltip>
-        <Tooltip
-          slots={{ popper: BootstrapTooltip }}
-          popperOptions={{
-            arrow: {
-              id: 'arrow',
-              width: 15,
-              padding: 4
-            }
-          }}
-          arrow
-          title='Add'
-        >
+        <Tooltip slots={{ popper: BootstrapTooltip }} arrow title='Add'>
           <Button>Bootstrap</Button>
         </Tooltip>
         <Tooltip
@@ -131,6 +238,40 @@ export default function TooltipDemo() {
           <Button>HTML</Button>
         </Tooltip>
       </div>
+      <Box css={{ width: 500 }}>
+        <Tooltip title='Add' arrow>
+          <Button>Arrow</Button>
+        </Tooltip>
+      </Box>
+      <TriggersTooltips />
+      <Box css={{ width: 500 }}>
+        <ControlledTooltips />
+      </Box>
+      <VariableWidth />
+      <Box css={{ width: 500 }}>
+        <Tooltip title='Add' disableInteractive>
+          <Button>Not interactive</Button>
+        </Tooltip>
+      </Box>
+      <Box css={{ width: 500 }}>
+        <Tooltip title="You don't have permission to do this">
+          <span>
+            <Button disabled>A Disabled Button</Button>
+          </span>
+        </Tooltip>
+      </Box>
+      <TransitionsTooltips />
+      <Tooltip title="You don't have permission to do this" followCursor>
+        <Box
+          css={({ theme }) => ({
+            backgroundcColor: theme.color.disabled.body,
+            color: theme.color.background,
+            padding: '1rem'
+          })}
+        >
+          Disabled Action
+        </Box>
+      </Tooltip>
     </Stack>
   );
 }

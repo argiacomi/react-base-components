@@ -9,7 +9,7 @@ import {
   useForkRef,
   useIsFocusVisible
 } from '@components/lib';
-import { Popper } from '@components/utils';
+import { Popper, PopperContent } from '@components/utils';
 import { nanoid } from 'nanoid';
 
 export const tooltipClasses = {
@@ -37,74 +37,74 @@ const TooltipPopper = styled(Popper)(({ theme, ownerState, open }) => ({
   })
 }));
 
-const TooltipTooltip = styled('div')(({ theme, ownerState }) => ({
-  backgroundColor: theme.alpha.add(theme.color.gray[700], 0.92),
-  borderRadius: theme.rounded.md,
-  color: theme.color.white,
-  fontFamily: 'inherit',
-  padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
-  fontSize: theme.spacing(11 / 8),
-  maxWidth: 300,
-  margin: 2,
-  wordWrap: 'break-word',
-  fontWeight: theme.text.weight.medium,
-  ...(ownerState.arrow && {
-    position: 'relative',
-    margin: 0
-  }),
-  ...(ownerState.touch && {
-    padding: '8px 16px',
-    fontSize: theme.spacing(14 / 8),
-    lineHeight: `${round(16 / 14)}em`,
-    fontWeight: theme.text.weight.normal
-  }),
-  [`.${tooltipClasses.root}[data-popper-placement*="left"] &`]: {
-    transformOrigin: 'right center',
-    ...(!ownerState.isRtl
-      ? {
-          marginRight: theme.spacing(14 / 8),
-          ...(ownerState.touch && {
-            marginRight: theme.spacing(3)
-          })
-        }
-      : {
-          marginLeft: theme.spacing(14 / 8),
-          ...(ownerState.touch && {
-            marginLeft: theme.spacing(3)
-          })
-        })
-  },
-  [`.${tooltipClasses.root}[data-popper-placement*="right"] &`]: {
-    transformOrigin: 'left center',
-    ...(!ownerState.isRtl
-      ? {
-          marginLeft: theme.spacing(14 / 8),
-          ...(ownerState.touch && {
-            marginLeft: theme.spacing(3)
-          })
-        }
-      : {
-          marginRight: theme.spacing(14 / 8),
-          ...(ownerState.touch && {
-            marginRight: theme.spacing(3)
-          })
-        })
-  },
-  [`.${tooltipClasses.root}[data-popper-placement*="top"] &`]: {
-    transformOrigin: 'center bottom',
-    marginBottom: theme.spacing(14 / 8),
+const TooltipTooltip = styled(PopperContent)(({ theme, ownerState }) => {
+  const backgroundColor = theme.alpha.add(theme.color.gray[700], 0.92);
+  return {
+    backgroundColor: backgroundColor,
+    ['--popper-arrow-bg']: backgroundColor,
+    borderRadius: theme.rounded.md,
+    color: theme.color.white,
+    fontFamily: 'inherit',
+    padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
+    fontSize: theme.spacing(11 / 8),
+    maxWidth: 300,
+    margin: 2,
+    wordWrap: 'break-word',
+    fontWeight: theme.text.weight.medium,
     ...(ownerState.touch && {
-      marginBottom: theme.spacing(3)
-    })
-  },
-  [`.${tooltipClasses.root}[data-popper-placement*="bottom"] &`]: {
-    transformOrigin: 'center top',
-    marginTop: theme.spacing(14 / 8),
-    ...(ownerState.touch && {
-      marginTop: theme.spacing(3)
-    })
-  }
-}));
+      padding: '8px 16px',
+      fontSize: theme.spacing(14 / 8),
+      lineHeight: `${round(16 / 14)}em`,
+      fontWeight: theme.text.weight.normal
+    }),
+    [`.${tooltipClasses.root}[data-popper-placement*="left"] &`]: {
+      transformOrigin: 'right center',
+      ...(!ownerState.isRtl
+        ? {
+            marginRight: theme.spacing(14 / 8),
+            ...(ownerState.touch && {
+              marginRight: theme.spacing(3)
+            })
+          }
+        : {
+            marginLeft: theme.spacing(14 / 8),
+            ...(ownerState.touch && {
+              marginLeft: theme.spacing(3)
+            })
+          })
+    },
+    [`.${tooltipClasses.root}[data-popper-placement*="right"] &`]: {
+      transformOrigin: 'left center',
+      ...(!ownerState.isRtl
+        ? {
+            marginLeft: theme.spacing(14 / 8),
+            ...(ownerState.touch && {
+              marginLeft: theme.spacing(3)
+            })
+          }
+        : {
+            marginRight: theme.spacing(14 / 8),
+            ...(ownerState.touch && {
+              marginRight: theme.spacing(3)
+            })
+          })
+    },
+    [`.${tooltipClasses.root}[data-popper-placement*="top"] &`]: {
+      transformOrigin: 'center bottom',
+      marginBottom: theme.spacing(14 / 8),
+      ...(ownerState.touch && {
+        marginBottom: theme.spacing(3)
+      })
+    },
+    [`.${tooltipClasses.root}[data-popper-placement*="bottom"] &`]: {
+      transformOrigin: 'center top',
+      marginTop: theme.spacing(14 / 8),
+      ...(ownerState.touch && {
+        marginTop: theme.spacing(3)
+      })
+    }
+  };
+});
 
 // Variables for hysteresis behavior. They are used for delaying the opening or closing of the tooltip.
 let hystersisOpen = false;
@@ -135,7 +135,7 @@ const Tooltip = React.forwardRef((props, ref) => {
     followCursor = false,
     keepMounted = false,
     id: idProp,
-    leaveDelay = 0,
+    leaveDelay = 50,
     leaveTouchDelay = 1500,
     onClose,
     onOpen,
@@ -402,7 +402,8 @@ const Tooltip = React.forwardRef((props, ref) => {
     cursorPosition = { x: event.clientX, y: event.clientY };
 
     if (popperRef.current) {
-      popperRef.current.update();
+      console.log(Object.entries(popperRef.current));
+      // popperRef.current.update();
     }
   };
 
@@ -494,8 +495,10 @@ const Tooltip = React.forwardRef((props, ref) => {
     let tooltipModifiers = {
       arrow: {
         id: 'arrow',
-        padding: 4
-      }
+        width: 15,
+        padding: 8
+      },
+      size: false
     };
 
     if (popperOptionsProp) {
@@ -540,11 +543,7 @@ const Tooltip = React.forwardRef((props, ref) => {
     ownerState
   );
 
-  const transitionProps = appendOwnerState(
-    transition,
-    { ...TransitionProps, ...slotPropsprop.transition },
-    ownerState
-  );
+  const transitionProps = { ...TransitionProps, ...slotPropsprop.transition };
 
   const tooltipProps = {
     ...slotPropsprop.tooltip,
@@ -590,6 +589,7 @@ const Tooltip = React.forwardRef((props, ref) => {
           id={id}
           slotProps={slotProps}
           // transition={transition}
+          transition={transition}
           TransitionProps={transitionProps}
           {...interactiveWrapperListeners}
           {...popperProps}

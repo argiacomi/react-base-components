@@ -402,8 +402,7 @@ const Tooltip = React.forwardRef((props, ref) => {
     cursorPosition = { x: event.clientX, y: event.clientY };
 
     if (popperRef.current) {
-      console.log(Object.entries(popperRef.current));
-      // popperRef.current.update();
+      popperRef.current.update();
     }
   };
 

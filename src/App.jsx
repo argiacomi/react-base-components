@@ -13,13 +13,16 @@ import {
   // SnackbarDemo,
   // CardDemo,
   // TooltipDemo,
-  ListDemo
+  // ListDemo,
+  // BackdropDemo,
+  // ModalDemo,
+  DrawerDemo
 } from '@components';
 
 const App = () => {
   return (
     <Box css={{ margin: '3rem' }}>
-      <ListDemo />
+      <DrawerDemo />
     </Box>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import { styled } from '@styles';
 import { Portal, PopperTooltip } from '@components';
 
 const resolveAnchorEl = (anchorEl) => (typeof anchorEl === 'function' ? anchorEl() : anchorEl);
@@ -16,6 +17,14 @@ const isDescendant = (parent, child) => {
   }
   return false;
 };
+
+const BasePopperTooltip = styled(PopperTooltip)(({ ownerState }) => ({
+  width: 'max-content',
+  position: ownerState.position,
+  top: 0,
+  left: 0,
+  display: !ownerState.open && 'none'
+}));
 
 const BasePopper = React.forwardRef((props, ref) => {
   const {
@@ -64,20 +73,26 @@ const BasePopper = React.forwardRef((props, ref) => {
       isDescendant(document.getElementById('root'), resolvedAnchorEl) &&
       document.getElementById('root');
   }
-  const display = !open && keepMounted && (!transition || exited) ? 'none' : undefined;
+
   const transitionProps = transition
     ? {
         ...TransitionProps,
-        timeout: TransitionProps.timeout || 350,
+        timeout: TransitionProps?.timeout || 350,
         in: open,
         onEnter: handleEnter,
         onExited: handleExited
       }
     : undefined;
 
+  const ownerState = { ...props, position: popperOptions.position, open, exited, style };
+
+  if (!keepMounted && !open && (!transition || exited)) {
+    return null;
+  }
+
   return (
     <Portal disablePortal={disablePortal} container={container}>
-      <PopperTooltip
+      <BasePopperTooltip
         anchorEl={anchorEl}
         className={clsx('BasePopper-Root', className)}
         component={component}
@@ -89,19 +104,12 @@ const BasePopper = React.forwardRef((props, ref) => {
         popperRef={popperRef}
         ref={ref}
         {...other}
-        style={{
-          width: 'max-content',
-          position: popperOptions.position,
-          top: 0,
-          left: 0,
-          display,
-          ...style
-        }}
         transition={transition}
         TransitionProps={transitionProps}
+        ownerState={ownerState}
       >
         {children}
-      </PopperTooltip>
+      </BasePopperTooltip>
     </Portal>
   );
 });

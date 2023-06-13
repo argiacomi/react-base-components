@@ -66,7 +66,7 @@ const PopperTooltip = React.forwardRef((props, ref) => {
 
   const {
     id: arrowId = 'arrow',
-    width: arrowInputWidth = 20,
+    width: arrowInputWidth = 8,
     padding: arrowPadding = 8
   } = arrow || {};
   const arrowWidth = Math.max(arrowInputWidth, 8);

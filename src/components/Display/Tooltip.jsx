@@ -167,7 +167,9 @@ const Tooltip = React.forwardRef((props, ref) => {
   let open = openState;
 
   if (!import.meta.env.PROD) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { current: isControlled } = React.useRef(openProp !== undefined);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     React.useEffect(() => {
       if (
         childNode &&
@@ -464,7 +466,7 @@ const Tooltip = React.forwardRef((props, ref) => {
     }
 
     return tooltipModifiers;
-  }, [popperOptionsProp]);
+  }, [anchorEl, followCursor, popperOptionsProp]);
 
   const ownerState = {
     ...props,

@@ -19,7 +19,6 @@ export const TextRoot = styled('span')(({ theme, ownerState }) => {
     ...(ownerState.align !== 'inherit' && {
       textAlign: ownerState.align
     }),
-    color: color,
     ...(ownerState.noWrap && {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
@@ -31,7 +30,7 @@ export const TextRoot = styled('span')(({ theme, ownerState }) => {
     ...(ownerState.paragraph && {
       marginBottom: '1rem'
     }),
-    ...(ownerState.color && theme.color.text[ownerState.color])
+    color: (ownerState.color && theme.color.text[ownerState.color]) || color
   };
 });
 

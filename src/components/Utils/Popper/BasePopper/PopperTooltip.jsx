@@ -191,8 +191,6 @@ const PopperTooltip = React.forwardRef((props, ref) => {
         );
       };
 
-      console.log(resolvedAnchorElement, popperOptions.autoUpdate);
-
       cleanup = Floating.autoUpdate(
         resolvedAnchorElement,
         tooltipRef.current,

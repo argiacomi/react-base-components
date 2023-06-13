@@ -96,8 +96,8 @@ const SwitchThumb = styled('span', {
 })(({ theme }) => ({
   filter: theme.dropShadow['2xl'],
   backgroundColor: 'currentColor',
-  width: '1rem',
-  height: '1rem',
+  width: theme.spacing(2),
+  height: theme.spacing(2),
   borderRadius: theme.rounded.full
 }));
 

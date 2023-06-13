@@ -12,13 +12,14 @@ import {
   // FocusTrapDemo,
   // SnackbarDemo,
   // CardDemo,
-  TooltipDemo
+  // TooltipDemo,
+  ListDemo
 } from '@components';
 
 const App = () => {
   return (
     <Box css={{ margin: '3rem' }}>
-      <TooltipDemo />
+      <ListDemo />
     </Box>
   );
 };

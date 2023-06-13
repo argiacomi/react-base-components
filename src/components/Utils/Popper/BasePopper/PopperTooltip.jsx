@@ -58,6 +58,7 @@ const PopperTooltip = React.forwardRef((props, ref) => {
   );
   const [popperOptions, setPopperOptions] = React.useState({});
 
+  console.log('anchorEl', anchorEl);
   useEnhancedEffect(() => {
     if (anchorEl) {
       setResolvedAnchorElement(resolveAnchorEl(anchorEl));
@@ -77,6 +78,7 @@ const PopperTooltip = React.forwardRef((props, ref) => {
     const arrowElement = getArrowElementById(arrowId);
 
     setPopperOptions({
+      autoUpdate: typeof shouldAutoUpdate === 'boolean' ? {} : { ...shouldAutoUpdate },
       arrow: !disableArrow ? { element: arrowElement, padding: arrowPadding } : {},
       offset:
         typeof offsetPadding === 'number' || typeof offsetPadding === 'boolean'
@@ -190,7 +192,14 @@ const PopperTooltip = React.forwardRef((props, ref) => {
         );
       };
 
-      cleanup = Floating.autoUpdate(resolvedAnchorElement, tooltipRef.current, updatePosition);
+      console.log(resolvedAnchorElement);
+
+      cleanup = Floating.autoUpdate(
+        resolvedAnchorElement,
+        tooltipRef.current,
+        updatePosition,
+        popperOptions.autoUpdate
+      );
     } else {
       Floating.computePosition(resolvedAnchorElement, tooltipRef.current, popperSettings).then(
         ({ x, y, placement, middlewareData: data }) => {

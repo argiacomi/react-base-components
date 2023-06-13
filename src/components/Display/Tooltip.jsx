@@ -109,7 +109,7 @@ const TooltipTooltip = styled(PopperContent)(({ theme, ownerState }) => {
 // Variables for hysteresis behavior. They are used for delaying the opening or closing of the tooltip.
 let hystersisOpen = false;
 let hystersisTimer = null;
-let cursorPosition = { x: 0, y: 0 }; // Store the current cursor position
+let virtualEl;
 
 // Reset the hysteresis state.
 export function testReset() {
@@ -399,11 +399,20 @@ const Tooltip = React.forwardRef((props, ref) => {
       childrenProps.onMouseMove(event);
     }
 
-    cursorPosition = { x: event.clientX, y: event.clientY };
-
-    if (popperRef.current) {
-      popperRef.current.update();
-    }
+    virtualEl = {
+      getBoundingClientRect() {
+        return {
+          width: 0,
+          height: 0,
+          x: event.clientX,
+          y: event.clientY,
+          top: event.clientY,
+          left: event.clientX,
+          right: event.clientX,
+          bottom: event.clientY
+        };
+      }
+    };
   };
 
   // This section sets up the properties for the tooltip.
@@ -497,7 +506,8 @@ const Tooltip = React.forwardRef((props, ref) => {
         width: 15,
         padding: 8
       },
-      size: false
+      size: false,
+      autoUpdate: followCursor && { animationFrame: true }
     };
 
     if (popperOptionsProp) {
@@ -564,20 +574,7 @@ const Tooltip = React.forwardRef((props, ref) => {
         <PopperComponent
           as={Popper}
           placement={placement}
-          anchorEl={
-            followCursor
-              ? {
-                  getBoundingClientRect: () => ({
-                    top: cursorPosition.y,
-                    left: cursorPosition.x,
-                    right: cursorPosition.x,
-                    bottom: cursorPosition.y,
-                    width: 0,
-                    height: 0
-                  })
-                }
-              : childNode
-          }
+          anchorEl={followCursor ? virtualEl : childNode}
           component={TooltipComponent}
           keepMounted={keepMounted}
           disablePortal={disablePortal}

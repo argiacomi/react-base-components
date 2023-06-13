@@ -152,6 +152,51 @@ function TransitionsTooltips() {
   );
 }
 
+function AnchorElTooltips() {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const positionRef = React.useRef({
+    x: 0,
+    y: 0
+  });
+  const areaRef = React.useRef(null);
+
+  const handleMouseMove = (event) => {
+    positionRef.current = { x: event.clientX, y: event.clientY };
+
+    setAnchorEl({
+      getBoundingClientRect: () => {
+        return new DOMRect(positionRef.current.x, areaRef.current.getBoundingClientRect().y, 0, 0);
+      }
+    });
+  };
+
+  return (
+    <Tooltip title='Add' placement='top' arrow anchorEl={anchorEl}>
+      <Box
+        ref={areaRef}
+        onMouseMove={handleMouseMove}
+        css={({ theme }) => ({
+          backgroundColor: theme.color.primary.body,
+          color: theme.color.white,
+          padding: '1rem',
+          width: 75,
+          height: 55
+        })}
+      >
+        Hover
+      </Box>
+    </Tooltip>
+  );
+}
+
+function DelayTooltips() {
+  return (
+    <Tooltip title='Add' enterDelay={500} leaveDelay={200}>
+      <Button>[500ms, 200ms]</Button>
+    </Tooltip>
+  );
+}
+
 export default function TooltipDemo() {
   return (
     <Stack direction='column' spacing={4}>
@@ -266,12 +311,17 @@ export default function TooltipDemo() {
           css={({ theme }) => ({
             backgroundcColor: theme.color.disabled.body,
             color: theme.color.background,
-            padding: '1rem'
+            padding: '1rem',
+            width: 140
           })}
         >
           Disabled Action
         </Box>
       </Tooltip>
+      <AnchorElTooltips />
+      <Box css={{ width: 200 }}>
+        <DelayTooltips />
+      </Box>
     </Stack>
   );
 }

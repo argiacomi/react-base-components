@@ -58,7 +58,6 @@ const PopperTooltip = React.forwardRef((props, ref) => {
   );
   const [popperOptions, setPopperOptions] = React.useState({});
 
-  console.log('anchorEl', anchorEl);
   useEnhancedEffect(() => {
     if (anchorEl) {
       setResolvedAnchorElement(resolveAnchorEl(anchorEl));
@@ -192,7 +191,7 @@ const PopperTooltip = React.forwardRef((props, ref) => {
         );
       };
 
-      console.log(resolvedAnchorElement);
+      console.log(resolvedAnchorElement, popperOptions.autoUpdate);
 
       cleanup = Floating.autoUpdate(
         resolvedAnchorElement,

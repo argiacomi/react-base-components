@@ -18,14 +18,10 @@ export const tooltipClasses = {
   arrow: 'Tooltip-Arrow'
 };
 
-// Helper function for rounding numbers
 function round(value) {
   return Math.round(value * 1e5) / 1e5;
 }
 
-// Styled components for Tooltip.
-// These are simple wrappers for components like Popper, div, and span
-// with a different classname attached to it for styling purposes.
 const TooltipPopper = styled(Popper)(({ theme, ownerState, open }) => ({
   zIndex: theme.zIndex.tooltip,
   pointerEvents: 'none',
@@ -106,21 +102,18 @@ const TooltipTooltip = styled(PopperContent)(({ theme, ownerState }) => {
   };
 });
 
-// Variables for hysteresis behavior. They are used for delaying the opening or closing of the tooltip.
 let hystersisOpen = false;
 let hystersisTimer = null;
-let virtualEl;
 
-// Reset the hysteresis state.
 export function testReset() {
   hystersisOpen = false;
   clearTimeout(hystersisTimer);
 }
 
-// The Tooltip component itself
 const Tooltip = React.forwardRef((props, ref) => {
   const {
     arrow = false,
+    anchorEl,
     children,
     className,
     describeChild = false,
@@ -150,27 +143,20 @@ const Tooltip = React.forwardRef((props, ref) => {
     ...other
   } = props;
 
-  // Use theme for direction
   const theme = useTheme();
   const isRtl = theme.direction === 'rtl';
 
-  // Create a state variable for childNode and arrowRef using React's useState.
-  // Initialize ignoreNonTouchEvents to false. This will help us handle touch and non-touch events differently.
   const [childNode, setChildNode] = React.useState();
+  const [virtualEl, setvirtualEl] = React.useState();
   const ignoreNonTouchEvents = React.useRef(false);
 
-  // disableInteractive is true if disableInteractiveProp or followCursor are true.
   const disableInteractive = disableInteractiveProp || followCursor;
 
-  // Create refs for timers. These are used to handle delays before the tooltip opens or closes.
   const closeTimer = React.useRef();
   const enterTimer = React.useRef();
   const leaveTimer = React.useRef();
   const touchTimer = React.useRef();
 
-  // 'useControlled' hook is used to create the 'openState' state variable.
-  // This variable tracks whether the tooltip is currently open or not.
-  // Also checks if the Tooltip is controlled or uncontrolled based on whether openProp is provided or not.
   const [openState, setOpenState] = useControlled({
     controlled: openProp,
     default: false,
@@ -180,8 +166,6 @@ const Tooltip = React.forwardRef((props, ref) => {
 
   let open = openState;
 
-  // In non-production environments, an effect is used to warn if a disabled button is used as a child of Tooltip.
-  // Disabled elements do not fire events, which Tooltip needs in order to work properly.
   if (!import.meta.env.PROD) {
     const { current: isControlled } = React.useRef(openProp !== undefined);
     React.useEffect(() => {
@@ -202,13 +186,10 @@ const Tooltip = React.forwardRef((props, ref) => {
     }, [title, childNode, isControlled]);
   }
 
-  // Generate a unique id for the Tooltip.
   const id = nanoid(idProp);
 
-  // PrevUserSelect stores the user-select style before a tooltip is shown.
   const prevUserSelect = React.useRef();
 
-  // stopTouchInteraction is a function that reverts the user-select style after the tooltip is shown and clears the touch timer.
   const stopTouchInteraction = React.useCallback(() => {
     if (prevUserSelect.current !== undefined) {
       document.body.style.WebkitUserSelect = prevUserSelect.current;
@@ -217,7 +198,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     clearTimeout(touchTimer.current);
   }, []);
 
-  // An effect is used to clean up timeouts when the Tooltip component unmounts.
   React.useEffect(() => {
     return () => {
       clearTimeout(closeTimer.current);
@@ -227,7 +207,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     };
   }, [stopTouchInteraction]);
 
-  // handleOpen is a function that opens the tooltip and calls onOpen if provided.
   const handleOpen = (event) => {
     clearTimeout(hystersisTimer);
     hystersisOpen = true;
@@ -239,7 +218,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     }
   };
 
-  // handleClose is a function that closes the tooltip and calls onClose if provided.
   const handleClose = useEventCallback((event) => {
     clearTimeout(hystersisTimer);
     hystersisTimer = setTimeout(() => {
@@ -257,7 +235,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     }, theme.transition.duration.shortest);
   });
 
-  // handleEnter opens the tooltip with a delay.
   const handleEnter = (event) => {
     if (ignoreNonTouchEvents.current && event.type !== 'touchstart') {
       return;
@@ -281,7 +258,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     }
   };
 
-  // handleLeave closes the tooltip with a delay.
   const handleLeave = (event) => {
     clearTimeout(enterTimer.current);
     clearTimeout(leaveTimer.current);
@@ -290,8 +266,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     }, leaveDelay);
   };
 
-  // Define an object that can hold a reference to the tooltip and check its visibility.
-  // If the tooltip is not visible, call handleLeave to close the tooltip.
   const {
     isFocusVisibleRef,
     onBlur: handleBlurVisible,
@@ -307,7 +281,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     }
   };
 
-  // handleFocus is called when the tooltip gets focus. It updates the childNode and calls handleEnter.
   const handleFocus = (event) => {
     if (!childNode) {
       setChildNode(event.currentTarget);
@@ -320,7 +293,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     }
   };
 
-  // detectTouchStart sets ignoreNonTouchEvents to true and calls onTouchStart of the children props if it exists.
   const detectTouchStart = (event) => {
     ignoreNonTouchEvents.current = true;
 
@@ -330,11 +302,9 @@ const Tooltip = React.forwardRef((props, ref) => {
     }
   };
 
-  // handleMouseOver and handleMouseLeave are references to handleEnter and handleLeave respectively.
   const handleMouseOver = handleEnter;
   const handleMouseLeave = handleLeave;
 
-  // handleTouchStart disables text selection on long-tap on iOS devices, sets a timeout to revert this change, and calls handleEnter.
   const handleTouchStart = (event) => {
     detectTouchStart(event);
     clearTimeout(leaveTimer.current);
@@ -350,7 +320,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     }, enterTouchDelay);
   };
 
-  // handleTouchEnd calls onTouchEnd of the children props if it exists, calls stopTouchInteraction, and sets a timeout to call handleClose.
   const handleTouchEnd = (event) => {
     if (children.props?.onTouchEnd) {
       children.props?.onTouchEnd(event);
@@ -363,7 +332,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     }, leaveTouchDelay);
   };
 
-  // This effect sets up a keydown event listener on the document that closes the tooltip if the escape key is pressed.
   React.useEffect(() => {
     if (!open) {
       return undefined;
@@ -382,24 +350,21 @@ const Tooltip = React.forwardRef((props, ref) => {
     };
   }, [handleClose, open]);
 
-  // handleRef is a function that sets the ref for the child node.
   const handleRef = useForkRef(children.ref, focusVisibleRef, setChildNode, ref);
 
-  // If the title is empty, the tooltip is not displayed.
   if (!title && title !== 0) {
     open = false;
   }
 
   const popperRef = React.useRef();
 
-  // handleMouseMove updates the cursorPosition and calls onMouseMove of the children props if it exists.
   const handleMouseMove = (event) => {
     const childrenProps = children.props;
     if (childrenProps.onMouseMove) {
       childrenProps.onMouseMove(event);
     }
 
-    virtualEl = {
+    setvirtualEl({
       getBoundingClientRect() {
         return {
           width: 0,
@@ -412,11 +377,9 @@ const Tooltip = React.forwardRef((props, ref) => {
           bottom: event.clientY
         };
       }
-    };
+    });
   };
 
-  // This section sets up the properties for the tooltip.
-  // nameOrDescProps sets either the 'aria-label' or the 'aria-labelledby' and 'title' attributes depending on whether the tooltip text is a string and whether it describes the child.
   const nameOrDescProps = {};
   const titleIsString = typeof title === 'string';
   if (describeChild) {
@@ -427,7 +390,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     nameOrDescProps['aria-labelledby'] = open && !titleIsString ? id : null;
   }
 
-  // childrenProps are the props that are passed to the child of the tooltip.
   const childrenProps = {
     ...nameOrDescProps,
     ...other,
@@ -438,7 +400,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     ...(followCursor ? { onMouseMove: handleMouseMove } : {})
   };
 
-  // This section contains a warning for development mode if the 'title' prop is present on the children of the Tooltip.
   if (!import.meta.env.PROD) {
     if (children.props?.title) {
       console.error(
@@ -448,19 +409,13 @@ const Tooltip = React.forwardRef((props, ref) => {
     }
   }
 
-  // Define an empty object for interactive wrapper listeners
   const interactiveWrapperListeners = {};
 
-  // This block adds 'touchstart' and 'touchend' event handlers to childrenProps if 'disableTouchListener' prop is not set.
-  // The handlers are directly assigned using the 'handleTouchStart' and 'handleTouchEnd' functions.
   if (!disableTouchListener) {
     childrenProps.onTouchStart = handleTouchStart;
     childrenProps.onTouchEnd = handleTouchEnd;
   }
 
-  // This block adds 'mouseover' and 'mouseleave' event handlers to childrenProps if 'disableHoverListener' prop is not set.
-  // The handlers are created using the 'composeEventHandler' function which combines the provided handlers with the existing ones in the 'childrenProps'.
-  // If 'disableInteractive' is not set, the same handlers are added to the 'interactiveWrapperListeners'.
   if (!disableHoverListener) {
     childrenProps.onMouseOver = createChainedFunction([handleMouseOver, childrenProps.onMouseOver]);
     childrenProps.onMouseLeave = createChainedFunction([
@@ -474,8 +429,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     }
   }
 
-  // Similar to the block above, this one adds 'focus' and 'blur' event handlers to the 'childrenProps' if 'disableFocusListener' prop is not set.
-  // Again, if 'disableInteractive' is not set, the same handlers are added to the 'interactiveWrapperListeners'.
   if (!disableFocusListener) {
     childrenProps.onFocus = createChainedFunction([handleFocus, childrenProps.onFocus]);
     childrenProps.onBlur = createChainedFunction([handleBlur, childrenProps.onBlur]);
@@ -486,8 +439,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     }
   }
 
-  // This block in the development mode warns the developer if the 'title' prop is set on the children of the Tooltip component.
-  // It recommends either removing the 'title' prop from the children or the Tooltip component.
   if (!import.meta.env.PROD) {
     if (children.props?.title) {
       console.error(
@@ -497,8 +448,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     }
   }
 
-  // tooltipModifiers are the modifiers used by the tooltip popper.
-  // The popperOptions merges tooltipModifiers with any modifiers passed in the PopperProps.
   const popperOptions = React.useMemo(() => {
     let tooltipModifiers = {
       arrow: {
@@ -507,7 +456,7 @@ const Tooltip = React.forwardRef((props, ref) => {
         padding: 8
       },
       size: false,
-      autoUpdate: followCursor && { animationFrame: true }
+      autoUpdate: (followCursor || anchorEl) && { animationFrame: true }
     };
 
     if (popperOptionsProp) {
@@ -517,7 +466,6 @@ const Tooltip = React.forwardRef((props, ref) => {
     return tooltipModifiers;
   }, [popperOptionsProp]);
 
-  // ownerState contains properties of the Tooltip component.
   const ownerState = {
     ...props,
     isRtl,
@@ -527,17 +475,12 @@ const Tooltip = React.forwardRef((props, ref) => {
     touch: ignoreNonTouchEvents.current
   };
 
-  // PopperComponent is the popper component used by the Tooltip.
   const PopperComponent = slots.popper ?? TooltipPopper;
 
-  // TransitionComponent is the transition component used by the Tooltip.
   const transition = slots.transition ?? transitionProp ?? 'Grow';
 
-  // TooltipComponent is the actual tooltip component.
   const TooltipComponent = slots.tooltip ?? TooltipTooltip;
 
-  // The popperProps, transitionProps, tooltipProps, and tooltipArrowProps objects are created.
-  // They are used to combine classes, ownerState, and props for their respective components.
   const popperProps = appendOwnerState(
     PopperComponent,
     {
@@ -570,11 +513,10 @@ const Tooltip = React.forwardRef((props, ref) => {
     <React.Fragment>
       {React.cloneElement(children, childrenProps)}
       {open && (
-        // The Popper component is used for positioning the Tooltip. It uses the popper.js library under the hood.
         <PopperComponent
           as={Popper}
           placement={placement}
-          anchorEl={followCursor ? virtualEl : childNode}
+          anchorEl={anchorEl ?? (followCursor ? virtualEl : childNode)}
           component={TooltipComponent}
           keepMounted={keepMounted}
           disablePortal={disablePortal}
@@ -584,7 +526,6 @@ const Tooltip = React.forwardRef((props, ref) => {
           popperOptions={popperOptions}
           id={id}
           slotProps={slotProps}
-          // transition={transition}
           transition={transition}
           TransitionProps={transitionProps}
           {...interactiveWrapperListeners}

@@ -119,7 +119,7 @@ const Breadcrumbs = React.forwardRef((props, ref) => {
       if (!import.meta.env.PROD) {
         if (isFragment(child)) {
           console.error(
-            `MUI: The Breadcrumbs component doesn't accept a Fragment as a child.
+            `The Breadcrumbs component doesn't accept a Fragment as a child.
             Consider providing an array instead.`
           );
         }

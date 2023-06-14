@@ -107,7 +107,7 @@ const ToggleButton = React.forwardRef((props, ref) => {
     <ToggleButtonRoot
       className={clsx(classes.root, className)}
       disabled={disabled}
-      focusRipple={!disableFocusRipple}
+      disableFocusRipple={disableFocusRipple}
       ref={ref}
       onClick={handleChange}
       onChange={onChange}

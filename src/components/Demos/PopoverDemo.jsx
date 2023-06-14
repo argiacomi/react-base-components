@@ -96,7 +96,7 @@ function AnchorPlayground() {
 
   const radioAnchorClasses = {
     color: 'green',
-    '&.Mui-checked': {
+    '&.checked': {
       color: 'green'
     }
   };

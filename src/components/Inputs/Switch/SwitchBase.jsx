@@ -132,7 +132,7 @@ const SwitchBase = React.forwardRef((props, ref) => {
       component='span'
       className={clsx('SwitchBase-Root', switchBaseClasses, className)}
       centerRipple
-      focusRipple={!disableFocusRipple}
+      disableFocusRipple={disableFocusRipple}
       disabled={disabled}
       tabIndex={null}
       role={undefined}

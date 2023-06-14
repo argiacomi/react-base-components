@@ -139,7 +139,7 @@ const Popover = React.forwardRef((props, ref) => {
         box.bottom === 0
       ) {
         console.warn(
-          `MUI: The 'anchorEl' prop provided to the component is invalid.
+          `The 'anchorEl' prop provided to the component is invalid.
           The anchor element should be part of the document layout.
           Make sure the element is present in the document or that it's not display none.`
         );
@@ -204,7 +204,7 @@ const Popover = React.forwardRef((props, ref) => {
       if (!import.meta.env.PROD) {
         if (elemRect.height > heightThreshold && elemRect.height && heightThreshold) {
           console.error(
-            `MUI: The popover component is too tall.
+            `The popover component is too tall.
               Some part of it can not be seen on the screen (${
                 elemRect.height - heightThreshold
               }px).

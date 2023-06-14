@@ -9,6 +9,7 @@ const AppBarRoot = styled(Paper)(({ theme, ownerState }) => ({
   width: '100%',
   boxSizing: 'border-box',
   flexShrink: 0,
+  borderRadius: 0,
   ...{
     fixed: {
       position: 'fixed',

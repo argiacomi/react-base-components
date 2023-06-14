@@ -84,7 +84,7 @@ const IconButton = React.forwardRef((props, ref) => {
     <IconButtonRoot
       className={clsx('IconButton-Root', className)}
       centerRipple
-      focusRipple={!disableFocusRipple}
+      disableFocusRipple={disableFocusRipple}
       disabled={disabled}
       ref={ref}
       ownerState={ownerState}

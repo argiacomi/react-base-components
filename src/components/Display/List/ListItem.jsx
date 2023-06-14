@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import { styled } from '@styles';
 import { useEnhancedEffect, useForkRef } from '@components/lib';
@@ -9,7 +9,6 @@ import ListItemSecondaryAction from './ListItemSecondaryAction';
 
 const listItemClasses = {
   root: 'ListItem-Root',
-  container: 'ListItem-Container',
   focusVisible: 'ListItem-FocusVisible',
   disabled: 'ListItem-Disabled',
   selected: 'ListItem-Selected'
@@ -153,13 +152,22 @@ const ListItem = React.forwardRef((props, ref) => {
     selected
   };
 
+  const classes = {
+    root: clsx(
+      listItemClasses.root,
+      ownerState.disabled && listItemClasses.disabled,
+      ownerState.selected && listItemClasses.selected
+    ),
+    focusVisible: listItemClasses.focusVisible
+  };
+
   const handleRef = useForkRef(listItemRef, ref);
 
   const Root = slots.root || ListItemRoot;
   const rootProps = slotProps.root || {};
 
   const componentProps = {
-    className: clsx(listItemClasses.root, rootProps.className, className),
+    className: clsx(classes.root, rootProps.className, className),
     disabled,
     ...other
   };
@@ -168,10 +176,7 @@ const ListItem = React.forwardRef((props, ref) => {
 
   if (button) {
     componentProps.component = componentProp || 'div';
-    componentProps.focusVisibleClassName = clsx(
-      listItemClasses.focusVisible,
-      focusVisibleClassName
-    );
+    componentProps.focusVisibleClassName = clsx(classes.focusVisible, focusVisibleClassName);
 
     Component = ButtonBase;
   }

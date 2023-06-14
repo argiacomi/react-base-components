@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Box, Popper, Text as Typography, Grid, Button } from '@components';
 
 export default function PopperDemo() {

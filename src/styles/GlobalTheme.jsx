@@ -354,6 +354,13 @@ export const baseTheme = {
       h4: { fontWeight: 400, fontSize: '2.125rem', lineHeight: 1.235, letterSpacing: '0.01562rem' },
       h5: { fontWeight: 400, fontSize: '1.5rem', lineHeight: 1.334, letterSpacing: '0rem' },
       h6: { fontWeight: 500, fontSize: '1.25rem', lineHeight: 1.6, letterSpacing: '0.00938rem' },
+      caption: {
+        fontFamily: 'inherit',
+        fontWeight: 400,
+        fontSize: '0.75rem',
+        lineHeight: 1.66,
+        letterSpacing: '0.0249975rem'
+      },
       inherit: {
         fontFamily: 'inherit',
         lineHeight: 'inherit',

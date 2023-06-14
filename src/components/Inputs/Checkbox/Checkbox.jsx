@@ -1,8 +1,15 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import styled from 'styled-components/macro';
+import { styled } from '@styles';
 import SwitchBase from '../switch/SwitchBase';
 import { Icon } from '@components/display';
+
+export const checkboxClasses = {
+  root: 'Checkbox-Root',
+  checked: 'Checkbox-Checked',
+  disabled: 'Checkbox-Disabled',
+  indeterminate: 'Checkbox-Indeterminate'
+};
 
 const CheckboxRoot = styled(SwitchBase)(({ theme, ownerState }) => ({
   color: theme.color.text.secondary,
@@ -18,10 +25,10 @@ const CheckboxRoot = styled(SwitchBase)(({ theme, ownerState }) => ({
     '&:hover': {
       backgroundColor: theme.alpha.add(theme.color[ownerState.color][500], 0.1)
     },
-    [`&.${ownerState.checkboxClasses.checked}, &.${ownerState.checkboxClasses.indeterminate}`]: {
+    [`&.${checkboxClasses.checked}, &.${checkboxClasses.indeterminate}`]: {
       color: theme.color[ownerState.color][500]
     },
-    [`&.${ownerState.checkboxClasses.disabled}`]: {
+    [`&.${checkboxClasses.disabled}`]: {
       color: theme.color.disabled.body
     }
   })
@@ -40,19 +47,15 @@ const Checkbox = React.forwardRef((props, ref) => {
     ...other
   } = props;
 
-  const checkboxClasses = {
-    root: 'Checkbox-Root',
-    checked: 'Checkbox-Checked',
-    disabled: 'Checkbox-Disabled',
-    indeterminate: indeterminate && 'Checkbox-Indeterminate'
-  };
-
   const ownerState = {
     ...props,
-    checkboxClasses,
     color,
     indeterminate,
     size
+  };
+
+  const classes = {
+    root: [checkboxClasses.root, ownerState.indeterminate && checkboxClasses.indeterminate]
   };
 
   const renderIcon = (icon) => {
@@ -68,7 +71,7 @@ const Checkbox = React.forwardRef((props, ref) => {
 
   return (
     <CheckboxRoot
-      className={clsx(checkboxClasses.root, className)}
+      className={clsx(classes.root, className)}
       type='checkbox'
       inputProps={{
         'data-indeterminate': indeterminate,
@@ -83,7 +86,7 @@ const Checkbox = React.forwardRef((props, ref) => {
       ownerState={ownerState}
       ref={ref}
       classes={{
-        ...checkboxClasses,
+        ...classes,
         root: 'Checkbox-SwitchBase'
       }}
       {...other}

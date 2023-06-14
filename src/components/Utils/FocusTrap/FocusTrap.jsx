@@ -1,5 +1,5 @@
 // Importing necessary modules from React and components library
-import * as React from 'react';
+import React from 'react';
 import { useForkRef, ownerDocument } from '@components/lib';
 
 // Defining a list of selectors for focusable elements

@@ -1,16 +1,16 @@
-import * as React from 'react';
-import styled from 'styled-components/macro';
+import React from 'react';
+import { styled } from '@styles';
 import clsx from 'clsx';
 import SwitchBase from './SwitchBase';
 
 const switchClasses = {
-  input: 'Switch-Input',
-  checked: 'Switch-Checked',
-  disabled: 'Switch-Disabled',
   root: 'Switch-Root',
   switchBase: 'Switch-SwitchBase',
+  input: 'Switch-Input',
   thumb: 'Switch-Thumb',
-  track: 'Switch-Track'
+  track: 'Switch-Track',
+  checked: 'Switch-Checked',
+  disabled: 'Switch-Disabled'
 };
 
 const SwitchRoot = styled('span')(({ ownerState }) => ({
@@ -112,10 +112,22 @@ const Switch = React.forwardRef((props, ref) => {
     switchClasses
   };
 
-  const icon = <SwitchThumb className={switchClasses.thumb} ownerState={ownerState} />;
+  const classes = {
+    root: switchClasses.root,
+    switchBase: [
+      switchClasses.switchBase,
+      ownerState.checked && switchClasses.checked,
+      ownerState.disabled && switchClasses.disabled
+    ],
+    thumb: switchClasses.thumb,
+    track: switchClasses.track,
+    input: switchClasses.input
+  };
+
+  const icon = <SwitchThumb className={classes.thumb} ownerState={ownerState} />;
 
   return (
-    <SwitchRoot className={clsx(switchClasses.root, className)} ownerState={ownerState}>
+    <SwitchRoot className={clsx(classes.root, className)} ownerState={ownerState}>
       <SwitchSwitchBase
         type='checkbox'
         icon={icon}
@@ -123,12 +135,9 @@ const Switch = React.forwardRef((props, ref) => {
         ref={ref}
         ownerState={ownerState}
         {...other}
-        classes={{
-          ...switchClasses,
-          root: 'Switch-SwitchBase'
-        }}
+        classes={classes.switchBase}
       />
-      <SwitchTrack className={switchClasses.track} ownerState={ownerState} />
+      <SwitchTrack className={classes.track} ownerState={ownerState} />
     </SwitchRoot>
   );
 });

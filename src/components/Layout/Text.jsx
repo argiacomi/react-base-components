@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import styled from 'styled-components/macro';
+import { styled } from '@styles';
 
 export const TextRoot = styled('span')(({ theme, ownerState }) => {
   const colorStyles = {
@@ -9,7 +9,9 @@ export const TextRoot = styled('span')(({ theme, ownerState }) => {
     'text.secondary': theme.color.text.secondary
   };
 
-  let color = colorStyles[ownerState.color] || theme.color[ownerState.color][500];
+  let color =
+    colorStyles[ownerState.color] ||
+    (theme.color[ownerState.color] ? theme.color[ownerState.color][500] : undefined);
 
   return {
     margin: 0,
@@ -30,7 +32,7 @@ export const TextRoot = styled('span')(({ theme, ownerState }) => {
     ...(ownerState.paragraph && {
       marginBottom: '1rem'
     }),
-    color: (ownerState.color && theme.color.text[ownerState.color]) || color
+    color: (ownerState.color && color) || ownerState.color
   };
 });
 

@@ -5,6 +5,8 @@ import {
   Box,
   Checkbox,
   Collapse,
+  FormControlLabel,
+  FormGroup,
   Grid,
   List,
   ListItem,
@@ -22,8 +24,6 @@ import {
   Text,
   Tooltip
 } from '@components';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import { FixedSizeList } from 'react-window';
 
 function BasicList() {
@@ -671,15 +671,15 @@ const data = [
 ];
 
 const FireNav = styled(List)({
-  '& .MuiListItemButton-root': {
+  '& .ListItemButton-Root': {
     paddingLeft: 24,
     paddingRight: 24
   },
-  '& .MuiListItemIcon-root': {
+  '& .ListItemIcon-Root': {
     minWidth: 0,
     marginRight: 16
   },
-  '& .MuiSvgIcon-root': {
+  '& .SvgIcon-Root': {
     fontSize: 20
   }
 });
@@ -695,7 +695,7 @@ function CustomizedList() {
             <ListItemText
               css={{ marginTop: 0, marginBottom: 0 }}
               primary='Firebash'
-              primaryTypographyProps={{
+              primaryTextProps={{
                 fontSize: 20,
                 fontWeight: 'medium',
                 letterSpacing: 0
@@ -710,7 +710,7 @@ function CustomizedList() {
               </ListItemIcon>
               <ListItemText
                 primary='Project Overview'
-                primaryTypographyProps={{
+                primaryTextProps={{
                   color: 'primary',
                   fontWeight: 'medium',
                   variant: 'body2'
@@ -772,14 +772,14 @@ function CustomizedList() {
             >
               <ListItemText
                 primary='Build'
-                primaryTypographyProps={{
+                primaryTextProps={{
                   fontSize: 15,
                   fontWeight: 'medium',
                   lineHeight: '20px',
                   marginBottom: '2px'
                 }}
                 secondary='Authentication, Firestore Database, Realtime Database, Storage, Hosting, Functions, and Machine Learning'
-                secondaryTypographyProps={{
+                secondaryTextProps={{
                   noWrap: true,
                   fontSize: 12,
                   lineHeight: '16px',
@@ -811,7 +811,7 @@ function CustomizedList() {
                   <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
                   <ListItemText
                     primary={item.label}
-                    primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
+                    primaryTextProps={{ fontSize: 14, fontWeight: 'medium' }}
                   />
                 </ListItemButton>
               ))}

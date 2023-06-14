@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import styled, { css } from 'styled-components/macro';
+import { styled } from '@styles';
+import { css } from 'styled-components/macro';
 
 const SkeletonRoot = styled('span')(
   ({ theme, ownerState }) => ({

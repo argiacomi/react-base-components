@@ -254,7 +254,7 @@ const Button = React.forwardRef((inProps, ref) => {
       ownerState={ownerState}
       component={component}
       disabled={disabled}
-      focusRipple={!disableFocusRipple}
+      disableRipple={disableFocusRipple}
       focusVisibleClassName={clsx(classes?.focusVisible, focusVisibleClassName)}
       ref={ref}
       type={type}

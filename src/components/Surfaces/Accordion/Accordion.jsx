@@ -1,11 +1,13 @@
 import React from 'react';
 import clsx from 'clsx';
-import styled from 'styled-components/macro';
+import { styled } from '@styles';
 import { Collapse, Paper } from '@components';
 import { useControlled } from '@component/hooks';
 import AccordionContext from './AccordionContext';
 
 const accordionClasses = {
+  root: 'Accordion-Root',
+  region: 'Accordion-Region',
   expanded: 'expanded',
   disabled: 'disabled'
 };
@@ -126,13 +128,18 @@ const Accordion = React.forwardRef((props, ref) => {
     expanded
   };
 
-  const classes = [expanded && accordionClasses.expanded, disabled && accordionClasses.disabled]
-    .filter(Boolean)
-    .join(' ');
+  const classes = {
+    root: [
+      accordionClasses.root,
+      ownerState.expanded && accordionClasses.expanded,
+      ownerState.disabled && accordionClasses.disabled
+    ],
+    region: accordionClasses.region
+  };
 
   return (
     <AccordionRoot
-      className={clsx('Accordion-Root', classes, className)}
+      className={clsx(classes.root, className)}
       ref={ref}
       ownerState={ownerState}
       square={square}
@@ -144,7 +151,7 @@ const Accordion = React.forwardRef((props, ref) => {
           aria-labelledby={summary.props.id}
           id={summary.props['aria-controls']}
           role='region'
-          className={'Accordion-Region'}
+          className={classes.region}
         >
           {children}
         </div>

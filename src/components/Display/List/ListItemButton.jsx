@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import { styled } from '@styles';
 import { ButtonBase } from '@components/inputs';
@@ -125,12 +125,16 @@ const ListItemButton = React.forwardRef((props, ref) => {
     selected
   };
 
-  const handleRef = useForkRef(listItemRef, ref);
+  const classes = {
+    root: [
+      listItemButtonClasses.root,
+      ownerState.disabled && listItemButtonClasses.disabled,
+      ownerState.selected && listItemButtonClasses.selected
+    ],
+    focusVisible: listItemButtonClasses.focusVisible
+  };
 
-  const classes = clsx(
-    ownerState.disabled && listItemButtonClasses.disabled,
-    ownerState.selected && listItemButtonClasses.selected
-  );
+  const handleRef = useForkRef(listItemRef, ref);
 
   return (
     <ListContext.Provider value={childContext}>
@@ -138,9 +142,9 @@ const ListItemButton = React.forwardRef((props, ref) => {
         ref={handleRef}
         href={other.href || other.to}
         component={(other.href || other.to) && component === 'div' ? 'button' : component}
-        focusVisibleClassName={clsx(listItemButtonClasses.focusVisible, focusVisibleClassName)}
+        focusVisibleClassName={clsx(classes.focusVisible, focusVisibleClassName)}
         ownerState={ownerState}
-        className={clsx(listItemButtonClasses.root, classes, className)}
+        className={clsx(classes.root, className)}
         {...other}
         classes={classes}
       >

@@ -32,10 +32,7 @@ const Bull = () => (
   </Box>
 );
 
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
+const ExpandMore = styled(IconButton)(({ theme, expand }) => ({
   transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
   marginLeft: 'auto',
   transition: theme.transition.create('transform', {
@@ -66,7 +63,9 @@ const SubCard = () => (
       </Text>
     </CardContent>
     <CardActions>
-      <Button size='small'>Learn More</Button>
+      <Button size='small' color='primary' variant='colorText'>
+        Learn More
+      </Button>
     </CardActions>
   </React.Fragment>
 );
@@ -79,8 +78,8 @@ export default function CardDemo() {
   };
 
   return (
-    <Stack css={{ margin: '2rem 0' }} direction='column' spacing={2}>
-      <Card css={{ minWidth: 275 }}>
+    <Stack css={{ margin: '2rem 0', maxWidth: '360px' }} direction='column' spacing={2}>
+      <Card css={{ maxWidth: 275 }}>
         <CardContent>
           <Text css={{ fontSize: 14 }} color='secondary' gutterBottom>
             Word of the Day
@@ -102,11 +101,13 @@ export default function CardDemo() {
           </Text>
         </CardContent>
         <CardActions>
-          <Button size='small'>Learn More</Button>
+          <Button size='small' color='primary' variant='colorText'>
+            Learn More
+          </Button>
         </CardActions>
       </Card>
-      <Box css={{ minWidth: 275 }}>
-        <Card variant='outlined'>
+      <Box css={{ maxWidth: 275 }}>
+        <Card outlined>
           <SubCard />
         </Card>
       </Box>
@@ -128,7 +129,7 @@ export default function CardDemo() {
         <CardMedia
           component='img'
           height='194'
-          image='/static/images/cards/paella.jpg'
+          image='static/images/cards/paella.jpg'
           alt='Paella dish'
         />
         <CardContent>
@@ -263,7 +264,7 @@ export default function CardDemo() {
           </Button>
         </CardActions>
       </Card>
-      <Card css={{ display: 'flex' }}>
+      <Card css={{ display: 'flex', justifyContent: 'space-between' }}>
         <Box css={{ display: 'flex', flexDirection: 'column' }}>
           <CardContent css={{ flex: '1 0 auto' }}>
             <Text component='div' variant='h5'>
@@ -285,7 +286,7 @@ export default function CardDemo() {
               <Icon icon='MdSkipPrevious' />
             </IconButton>
             <IconButton aria-label='play/pause'>
-              <Icon icon='MdPlayArrow' scssx={{ height: 38, width: 38 }} />
+              <Icon icon='MdPlayArrow' css={{ height: 38, width: 38 }} />
             </IconButton>
             <IconButton aria-label='next'>
               <Icon icon='MdSkipNext' />

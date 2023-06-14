@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { css, useTheme } from 'styled-components/macro'; //eslint-disable-line
 import { Box, ClickAwayListener, Portal } from '@components';
 

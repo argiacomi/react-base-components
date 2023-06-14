@@ -1,6 +1,13 @@
 import React from 'react';
-import styled from 'styled-components/macro';
+import { styled } from '@styles';
 import clsx from 'clsx';
+
+export const toggleButtonGroupClasses = {
+  root: 'ToggleButtonGroup-Root',
+  grouped: 'ToggleButtonGroup-Button',
+  selected: 'ToggleButtonGroup-selected',
+  disabled: 'ToggleButtonGroup-disabled'
+};
 
 const ToggleButtonGroupRoot = styled('div')(({ ownerState, theme }) => ({
   display: 'inline-flex',
@@ -9,7 +16,7 @@ const ToggleButtonGroupRoot = styled('div')(({ ownerState, theme }) => ({
   ...(ownerState.fullWidth && {
     width: '100%'
   }),
-  [`& .${ownerState.toggleButtonGroupClasses.grouped}`]: {
+  [`& .${toggleButtonGroupClasses.grouped}`]: {
     ...(ownerState.orientation === 'horizontal'
       ? {
           '&:not(:first-of-type)': {
@@ -22,7 +29,7 @@ const ToggleButtonGroupRoot = styled('div')(({ ownerState, theme }) => ({
             borderTopRightRadius: 0,
             borderBottomRightRadius: 0
           },
-          [`&.${ownerState.toggleButtonGroupClasses.selected} + .${ownerState.toggleButtonGroupClasses.grouped}.${ownerState.toggleButtonGroupClasses.selected}`]:
+          [`&.${toggleButtonGroupClasses.selected} + .${toggleButtonGroupClasses.grouped}.${toggleButtonGroupClasses.selected}`]:
             {
               borderLeft: 0,
               marginLeft: 0
@@ -39,7 +46,7 @@ const ToggleButtonGroupRoot = styled('div')(({ ownerState, theme }) => ({
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0
           },
-          [`&.${ownerState.toggleButtonGroupClasses.selected} + .${ownerState.toggleButtonGroupClasses.grouped}}.${ownerState.toggleButtonGroupClasses.selected}`]:
+          [`&.${toggleButtonGroupClasses.selected} + .${toggleButtonGroupClasses.grouped}}.${toggleButtonGroupClasses.selected}`]:
             {
               borderTop: 0,
               marginTop: 0
@@ -76,13 +83,12 @@ const ToggleButtonGroup = React.forwardRef((props, ref) => {
     ...other
   } = props;
 
-  const toggleButtonGroupClasses = {
-    grouped: 'ToggleButtonGroup-Button',
-    selected: 'ToggleButtonGroup-selected',
-    disabled: disabled && 'ToggleButtonGroup-disabled'
-  };
-
   const ownerState = { ...props, disabled, fullWidth, orientation, size, toggleButtonGroupClasses };
+
+  const classes = {
+    root: [toggleButtonGroupClasses.root],
+    grouped: [toggleButtonGroupClasses.grouped, disabled && toggleButtonGroupClasses.disabled]
+  };
 
   const handleChange = (event, buttonValue) => {
     if (!onChange) {
@@ -111,7 +117,7 @@ const ToggleButtonGroup = React.forwardRef((props, ref) => {
   return (
     <ToggleButtonGroupRoot
       role='group'
-      className={clsx('ToggleButtonGroup-Root', className)}
+      className={clsx(classes.root, className)}
       ref={ref}
       ownerState={ownerState}
       {...other}
@@ -121,8 +127,7 @@ const ToggleButtonGroup = React.forwardRef((props, ref) => {
           return null;
         }
         return React.cloneElement(child, {
-          className: clsx(toggleButtonGroupClasses.grouped, child.props.className),
-          classes: toggleButtonGroupClasses,
+          className: clsx(classes.grouped, child.props.className),
           onChange: exclusive ? handleExclusiveChange : handleChange,
           selected:
             child.props.selected === undefined

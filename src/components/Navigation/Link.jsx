@@ -1,5 +1,5 @@
-import * as React from 'react';
-import styled from 'styled-components/macro';
+import React from 'react';
+import { styled } from '@styles';
 import clsx from 'clsx';
 import { useForkRef, useIsFocusVisible } from '@component/hooks';
 import { Text } from '@components/layout';
@@ -81,6 +81,9 @@ const Link = React.forwardRef((props, ref) => {
     ref: focusVisibleRef
   } = useIsFocusVisible();
 
+  const [focusVisible, setFocusVisible] = React.useState(false);
+  const handlerRef = useForkRef(ref, focusVisibleRef);
+
   const ownerState = {
     ...props,
     color,
@@ -89,9 +92,6 @@ const Link = React.forwardRef((props, ref) => {
     underline,
     variant
   };
-
-  const [focusVisible, setFocusVisible] = React.useState(false);
-  const handlerRef = useForkRef(ref, focusVisibleRef);
 
   const handleBlur = (event) => {
     handleBlurVisible(event);

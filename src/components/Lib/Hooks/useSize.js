@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useEnhancedEffect } from '@component/hooks';
 
 export function useSize(element) {

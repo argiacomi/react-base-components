@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useEventCallback, extractEventHandlers } from '@components/lib';
 
 export default function useSnackbar(parameters = {}) {

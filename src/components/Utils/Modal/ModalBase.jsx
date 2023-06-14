@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   ownerDocument,
   useForkRef,
@@ -15,7 +15,7 @@ function getContainer(container) {
 }
 
 function getHasTransition(children) {
-  return children ? Object.prototype.hasOwnProperty.call(children.props, 'in') : false;
+  return children ? Object.prototype.hasOwnProperty.call(children, 'in') : false;
 }
 
 const defaultManager = new ModalManager();

@@ -1,16 +1,14 @@
-import * as React from 'react';
+import React from 'react';
 
-export const FormControlContext = React.createContext(undefined);
+export const FormControlContext = React.createContext();
 
 if (!import.meta.env.PROD) {
   FormControlContext.displayName = 'FormControlContext';
 }
 
-export function useFormControl() {
-  return React.useContext(FormControlContext);
-}
+export const useFormControl = () => React.useContext(FormControlContext);
 
-export function formControlState({ props, states, formControl }) {
+export const formControlState = ({ props, states, formControl }) => {
   return states.reduce((acc, state) => {
     acc[state] = props[state];
 
@@ -22,4 +20,4 @@ export function formControlState({ props, states, formControl }) {
 
     return acc;
   }, {});
-}
+};

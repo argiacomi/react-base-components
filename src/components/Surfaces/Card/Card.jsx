@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import { styled } from '@styles';
 import Paper from '../Paper';

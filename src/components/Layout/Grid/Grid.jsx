@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import styled, { useTheme } from 'styled-components/macro';
+import { styled, useTheme } from '@styles';
 import OverflowContext from './GridContext';
 
 /*

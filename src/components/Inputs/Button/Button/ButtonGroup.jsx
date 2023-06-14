@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import styled from 'styled-components/macro';
+import { styled } from '@styles';
 import ButtonGroupContext, { buttonGroupClasses } from './ButtonGroupContext';
 
 const ButtonGroupRoot = styled('div')(({ theme, ownerState }) => ({

@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import styled from 'styled-components/macro';
+import { styled } from '@styles';
 import * as FiIcons from 'react-icons/fi';
 import * as MdIcons from 'react-icons/md';
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import { useListContext } from './ListContext';
 import { styled } from '@styles';

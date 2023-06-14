@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import clsx from 'clsx';
-import styled from 'styled-components/macro';
+import { styled } from '@styles';
 import { Paper } from '@components';
 
 const AppBarRoot = styled(Paper)(({ theme, ownerState }) => ({

@@ -88,7 +88,7 @@ function handleContainer(containerInfo, props) {
       });
       container.style.paddingRight = `${getPaddingRight(container) + scrollbarSize}px`;
 
-      const fixedElements = ownerDocument(container).querySelectorAll('.mui-fixed');
+      const fixedElements = ownerDocument(container).querySelectorAll('.fixed');
       [].forEach.call(fixedElements, (element) => {
         restoreStyle.push({
           value: element.style.paddingRight,
@@ -219,8 +219,8 @@ export default class ModalManager {
       this.containers,
       (item) => item.modals.indexOf(modal) !== -1
     );
-    const containerInfo = this.containers[containerIndex];
 
+    const containerInfo = this.containers[containerIndex];
     containerInfo.modals.splice(containerInfo.modals.indexOf(modal), 1);
     this.modals.splice(modalIndex, 1);
 
@@ -243,6 +243,7 @@ export default class ModalManager {
         containerInfo.hiddenSiblings,
         false
       );
+
       this.containers.splice(containerIndex, 1);
     } else {
       const nextTop = containerInfo.modals[containerInfo.modals.length - 1];

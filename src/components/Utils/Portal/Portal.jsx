@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import { createPortal } from 'react-dom';
 import { useEnhancedEffect } from '@component/hooks';

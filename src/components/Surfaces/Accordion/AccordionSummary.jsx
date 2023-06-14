@@ -1,10 +1,13 @@
 import React from 'react';
 import clsx from 'clsx';
-import styled from 'styled-components/macro';
+import { styled } from '@styles';
 import { ButtonBase } from '@components';
 import AccordionContext from './AccordionContext';
 
 const accordionSummaryClasses = {
+  root: 'AccordionSummary-Root',
+  content: 'AccordionSummary-Content',
+  iconWrapper: 'AccordionSummary-ExpandedIconWrapper',
   expanded: 'expanded',
   focusVisible: 'focusVisible',
   disabled: 'disabled'
@@ -78,12 +81,21 @@ const AccordionSummary = React.forwardRef((props, ref) => {
     onClick?.(event);
   };
 
-  const classes = [
-    disabled && accordionSummaryClasses.disabled,
-    expanded && accordionSummaryClasses.expanded
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const classes = {
+    root: [
+      accordionSummaryClasses.root,
+      ownerState.disabled && accordionSummaryClasses.disabled,
+      ownerState.expanded && accordionSummaryClasses.expanded
+    ],
+    content: [
+      accordionSummaryClasses.content,
+      ownerState.expanded && accordionSummaryClasses.expanded
+    ],
+    iconWrapper: [
+      accordionSummaryClasses.iconWrapper,
+      ownerState.expanded && accordionSummaryClasses.expanded
+    ]
+  };
 
   return (
     <AccordionSummaryRoot
@@ -92,25 +104,19 @@ const AccordionSummary = React.forwardRef((props, ref) => {
       disabled={disabled}
       component='div'
       aria-expanded={expanded}
-      className={clsx('AccordionSummary-Root', classes, className)}
+      className={clsx(classes.root, className)}
       focusVisibleClassName={clsx(classes.focusVisible, focusVisibleClassName)}
       onClick={handleChange}
       ref={ref}
       ownerState={ownerState}
       {...other}
     >
-      <AccordionSummaryContent
-        className={clsx('AccordionSummary-Content', expanded && accordionSummaryClasses.expanded)}
-        ownerState={ownerState}
-      >
+      <AccordionSummaryContent className={clsx(classes.content)} ownerState={ownerState}>
         {children}
       </AccordionSummaryContent>
       {expandIcon && (
         <AccordionSummaryExpandIconWrapper
-          className={clsx(
-            'AccordionSummary-ExpandedIconWrapper',
-            expanded && accordionSummaryClasses.expanded
-          )}
+          className={clsx(classes.iconWrapper)}
           ownerState={ownerState}
         >
           {expandIcon}

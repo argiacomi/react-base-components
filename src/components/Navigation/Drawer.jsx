@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import { Modal, Slide } from '@components/utils';
 import { Paper } from '@components/surfaces';

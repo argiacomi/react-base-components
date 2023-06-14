@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Backdrop, Button, CircularProgress } from '@components';
 
 export default function BackdropDemo() {

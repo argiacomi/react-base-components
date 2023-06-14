@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import styled from 'styled-components/macro';
+import { styled } from '@styles';
 import { useForkRef } from '@components/lib';
 import useButton from './useButton';
 import TouchRipple from './TouchRipple';
@@ -48,6 +48,7 @@ const ButtonBase = React.forwardRef((props, ref) => {
     component = 'button',
     disabled = false,
     focusableWhenDisabled = false,
+    focusVisibleClassName,
     disableRipple = false,
     disableTouchRipple = false,
     LinkComponent = 'a',
@@ -101,10 +102,8 @@ const ButtonBase = React.forwardRef((props, ref) => {
     React.useEffect(() => {
       if (enableTouchRipple && !rippleRef.current) {
         console.error(
-          [
-            'The `component` prop provided to Button is invalid.',
-            'Please make sure the children prop is rendered in this custom component.'
-          ].join('\n')
+          `The 'component prop provided to Button is invalid.
+          Please make sure the children prop is rendered in this custom component.`
         );
       }
     }, [enableTouchRipple]);
@@ -121,10 +120,12 @@ const ButtonBase = React.forwardRef((props, ref) => {
     type
   };
 
+  const classes = ['ButtonBaseRoot', focusVisible && focusVisibleClassName];
+
   return (
     <ButtonBaseRoot
       as={ComponentProp}
-      className={clsx('ButtonBaseRoot', className)}
+      className={clsx(classes, className)}
       ownerState={ownerState}
       {...getRootProps(getRippleHandlers(props))}
       {...other}

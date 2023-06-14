@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import styled from 'styled-components/macro';
+import { styled } from '@styles';
 
 const AccordionDetailsRoot = styled('div')(({ theme }) => ({
   padding: `${theme.spacing(1)} ${theme.spacing(2)} ${theme.spacing(2)}`

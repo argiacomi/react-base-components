@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Transition } from 'react-transition-group';
 import { useForkRef } from '@component/hooks';
 import { reflow, getTransitionProps, debounce, ownerWindow } from '@component/utils';

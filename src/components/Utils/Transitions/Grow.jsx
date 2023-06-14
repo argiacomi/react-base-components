@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Transition } from 'react-transition-group';
 import { reflow, getTransitionProps } from '@component/utils';
 import { useForkRef } from '@component/hooks';
@@ -175,5 +175,6 @@ const Grow = React.forwardRef((props, ref) => {
   );
 });
 Grow.displayName = 'Grow';
+Grow.supportAuto = true;
 
 export default Grow;

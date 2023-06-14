@@ -1,8 +1,9 @@
 import React from 'react';
-import styled from 'styled-components/macro';
+import { styled } from '@styles';
 import clsx from 'clsx';
 import ButtonBase from '../ButtonBase/ButtonBase';
 import { Icon } from '@components/display';
+import { toggleButtonGroupClasses } from './ToggleButtonGroup';
 
 const ToggleButtonRoot = styled(ButtonBase)(({ theme, ownerState }) => ({
   appearance: 'none',
@@ -18,7 +19,7 @@ const ToggleButtonRoot = styled(ButtonBase)(({ theme, ownerState }) => ({
     large: { padding: '1rem', ...theme.text.size.lg },
     jumbo: { padding: '1.25rem', ...theme.text.size.xl }
   }[ownerState.size],
-  [`&.${ownerState.toggleButtonClasses.selected}`]: {
+  [`&.${toggleButtonGroupClasses.selected}`]: {
     ...(ownerState.color === 'default' && {
       backgroundColor: theme.alpha.add(theme.color.monochrome[200], 0.2),
       '&:hover': {
@@ -58,7 +59,6 @@ const ToggleButton = React.forwardRef((props, ref) => {
   const {
     children,
     className,
-    classes = {},
     color = 'standard',
     disabled = false,
     disableFocusRipple = false,
@@ -71,20 +71,21 @@ const ToggleButton = React.forwardRef((props, ref) => {
     ...other
   } = props;
 
-  const toggleButtonClasses = {
-    grouped: classes.grouped,
-    selected: selected && classes.selected,
-    disabled: classes.disabled
-  };
-
   const ownerState = {
     ...props,
     color,
     disabled,
     disableFocusRipple,
     fullWidth,
-    size,
-    toggleButtonClasses
+    size
+  };
+
+  const classes = {
+    root: [
+      'ToggleButton-Root',
+      ownerState.selected && toggleButtonGroupClasses.selected,
+      ownerState.disabled && toggleButtonGroupClasses.disabled
+    ]
   };
 
   const handleChange = (event) => {
@@ -104,7 +105,7 @@ const ToggleButton = React.forwardRef((props, ref) => {
 
   return (
     <ToggleButtonRoot
-      className={clsx('ToggleButton-Root', Object.values(toggleButtonClasses), className)}
+      className={clsx(classes.root, className)}
       disabled={disabled}
       focusRipple={!disableFocusRipple}
       ref={ref}

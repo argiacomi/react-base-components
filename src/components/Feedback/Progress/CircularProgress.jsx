@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import { keyframes, css } from 'styled-components/macro';
 import { styled } from '@styles';

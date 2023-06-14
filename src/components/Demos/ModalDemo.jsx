@@ -1,7 +1,6 @@
-import * as React from 'react';
-import styled from 'styled-components/macro';
-import { Backdrop, Box, Button, Fade, Modal, Text } from '@components';
-import { Stack } from '@mui/material';
+import React from 'react';
+import { styled } from '@styles';
+import { Backdrop, Box, Button, Fade, Modal, Stack, Text } from '@components';
 
 const StyleBox = styled(Box)(({ theme }) => ({
   position: 'absolute',

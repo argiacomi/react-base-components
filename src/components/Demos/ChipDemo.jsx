@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components/macro'; //eslint-disable-line
+import { styled } from '@styles';
 import { Avatar, Box, Chip, Paper, Stack } from '@components';
 
 const ListItem = styled('li')(({ theme }) => ({

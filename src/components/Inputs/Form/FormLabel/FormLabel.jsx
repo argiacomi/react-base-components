@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { styled } from '@styles';
 import { formControlState, useFormControl } from '../FormControl';
 
-const formLabelClasses = {
+export const formLabelClasses = {
   root: 'FormLabel-Root',
   disabled: 'FormLabel-Disabled',
   error: 'FormLabel-Error',

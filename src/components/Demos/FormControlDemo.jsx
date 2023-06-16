@@ -1,6 +1,5 @@
 import { css } from 'styled-components/macro'; //eslint-disable-line
-import { FormControl, Stack, FormHelperText } from '@components';
-import { Input, InputLabel } from '@mui/material';
+import { , Stack, FormHelperText, Input, InputLabel } from '@components';
 
 export default function FormControlDemo() {
   return (

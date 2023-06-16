@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   Box,
   Button,
@@ -6,6 +6,8 @@ import {
   FormLabel,
   FormControlLabel,
   Grid,
+  Input,
+  InputLabel,
   Paper,
   Popover,
   Stack,
@@ -13,8 +15,6 @@ import {
 } from '@components';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
 
 const inlineStyles = {
   anchorVertical: {

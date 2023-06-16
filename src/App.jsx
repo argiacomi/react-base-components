@@ -11,21 +11,23 @@ import {
   // CardDemo,
   // ChipDemo,
   // ClickAwayListenerDemo,
-  DrawerDemo
+  DrawerDemo,
   // FocusTrapDemo,
   // FormControlDemo,
+  InputDemo,
   // ListDemo,
   // ModalDemo,
   // PopoverDemo,
   // PopperDemo,
   // SnackbarDemo,
+  TextFieldDemo
   // TooltipDemo,
 } from '@components';
 
 const App = () => {
   return (
     <Box css={{ margin: '3rem', height: 2000 }}>
-      <DrawerDemo />
+      <TextFieldDemo />
     </Box>
   );
 };

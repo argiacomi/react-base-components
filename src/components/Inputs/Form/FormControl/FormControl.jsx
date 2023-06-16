@@ -66,7 +66,7 @@ const FormControl = React.forwardRef((props, ref) => {
 
     if (children) {
       React.Children.forEach(children, (child) => {
-        if (isFilled(child.props, true) || isFilled(child.props.inputProps, true)) {
+        if (isFilled(child?.props, true) || isFilled(child?.props?.inputProps, true)) {
           initialFilled = true;
         }
       });

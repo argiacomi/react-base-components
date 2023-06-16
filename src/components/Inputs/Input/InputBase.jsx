@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import { styled, GlobalStyles } from '@styles';
 import useInputBase from './useInputBase';
 import TextareaAutosize from './TextareaAutosize';
-import { FormControlContext, formControlState, useFormControl } from '../Form/FormControl';
-import { useEnhancedEffect, useSlotProps, createChainedFunction } from '@components/lib';
+import { FormControlContext } from '../Form/FormControl';
+import { useSlotProps, createChainedFunction } from '@components/lib';
 
 const inputBaseClasses = {
   root: 'InputBase-Root',
@@ -14,18 +14,6 @@ const inputBaseClasses = {
   focused: 'InputBase-Focused',
   formControl: 'InputBase-FormControl'
 };
-
-function hasValue(value) {
-  return value != null && !(Array.isArray(value) && value.length === 0);
-}
-
-function isFilled(obj, SSR = false) {
-  return (
-    obj &&
-    ((hasValue(obj.value) && obj.value !== '') ||
-      (SSR && hasValue(obj.defaultValue) && obj.defaultValue !== ''))
-  );
-}
 
 export const InputBaseRoot = styled('div')(({ theme, ownerState }) => ({
   ...theme.text.typography.body1,
@@ -187,43 +175,20 @@ const InputBase = React.forwardRef((props, ref) => {
   const onBlur = createChainedFunction([onBlurProp, inputPropsProp.onBlur]);
   const onChange = createChainedFunction([onChangeProp, inputPropsProp.onChange]);
 
-  const formControlContext = useFormControl();
-
-  const fcs = formControlState({
-    props,
-    formControlContext,
-    states: ['color', 'disabled', 'error || error', 'hiddenLabel', 'size', 'required', 'filled']
-  });
-
-  const onFilled = formControlContext && formControlContext.onFilled;
-  const onEmpty = formControlContext && formControlContext.onEmpty;
-
-  const checkDirty = React.useCallback(
-    (obj) => {
-      if (isFilled(obj)) {
-        if (onFilled) {
-          onFilled();
-        }
-      } else if (onEmpty) {
-        onEmpty();
-      }
-    },
-    [onFilled, onEmpty]
-  );
-
   const {
+    color,
     disabled,
     error,
     focused,
     formControl,
     getInputProps,
     getRootProps,
+    hiddenLabel,
     inputRef,
-    isControlled,
     required,
+    size,
     value
   } = useInputBase({
-    checkDirty,
     defaultValue,
     disabled: disabledProp,
     error: errorProp,
@@ -251,19 +216,6 @@ const InputBase = React.forwardRef((props, ref) => {
     }, [formControl]);
   }
 
-  fcs.focused = formControl ? formControl.focused : focused;
-
-  useEnhancedEffect(() => {
-    if (isControlled) {
-      checkDirty({ value });
-    }
-  }, [value, checkDirty, isControlled]);
-
-  React.useEffect(() => {
-    checkDirty(inputRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   let InputComponent = inputComponent;
 
   if (multiline && InputComponent === 'input') {
@@ -287,16 +239,16 @@ const InputBase = React.forwardRef((props, ref) => {
 
   const ownerState = {
     ...props,
-    color: fcs.color || 'primary',
-    disabled: fcs.disabled || disabled,
+    color: color || 'primary',
+    disabled: disabled,
     endAdornment,
-    error: fcs.error || error,
-    focused: fcs.focused || focused,
+    error: error,
+    focused: focused,
     formControl: formControl,
     fullWidth,
-    hiddenLabel: fcs.hiddenLabel,
+    hiddenLabel: hiddenLabel,
     multiline,
-    size: fcs.size,
+    size: size,
     startAdornment,
     type
   };
@@ -372,17 +324,17 @@ const InputBase = React.forwardRef((props, ref) => {
         <FormControlContext.Provider value={null}>
           <Input
             ownerState={ownerState}
-            aria-invalid={fcs.error || error}
+            aria-invalid={error}
             aria-describedby={ariaDescribedby}
             autoComplete={autoComplete}
             autoFocus={autoFocus}
             defaultValue={defaultValue}
-            disabled={fcs.disabled || disabled}
+            disabled={disabled}
             id={id}
             name={name}
             placeholder={placeholder}
             readOnly={readOnly}
-            required={fcs.required || required}
+            required={required}
             rows={rows}
             value={value}
             onKeyDown={onKeyDown}
@@ -400,7 +352,6 @@ const InputBase = React.forwardRef((props, ref) => {
         {endAdornment}
         {renderSuffix
           ? renderSuffix({
-              ...fcs,
               startAdornment
             })
           : null}

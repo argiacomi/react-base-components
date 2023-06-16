@@ -1,10 +1,21 @@
 import React from 'react';
-import { extractEventHandlers, useForkRef } from '@components/lib';
+import { extractEventHandlers, useEnhancedEffect, useForkRef } from '@components/lib';
 import { useFormControl } from '../Form/FormControl';
+
+function hasValue(value) {
+  return value != null && !(Array.isArray(value) && value.length === 0);
+}
+
+function isFilled(obj, SSR = false) {
+  return (
+    obj &&
+    ((hasValue(obj.value) && obj.value !== '') ||
+      (SSR && hasValue(obj.defaultValue) && obj.defaultValue !== ''))
+  );
+}
 
 export default function useInput(parameters) {
   const {
-    checkDirty,
     defaultValue: defaultValueProp,
     disabled: disabledProp = false,
     error: errorProp = false,
@@ -24,6 +35,11 @@ export default function useInput(parameters) {
   let error;
   let required;
   let value;
+  const color = formControl && formControl.color;
+  const hiddenLabel = formControl && formControl.hiddenLabel;
+  const onFilled = formControl && formControl.onFilled;
+  const onEmpty = formControl && formControl.onEmpty;
+  const size = formControl && formControl.size;
 
   if (formControl) {
     defaultValue = undefined;
@@ -84,6 +100,30 @@ export default function useInput(parameters) {
       onBlur?.();
     }
   }, [formControl, disabled, focused, onBlur]);
+
+  const checkDirty = React.useCallback(
+    (obj) => {
+      if (isFilled(obj)) {
+        if (onFilled) {
+          onFilled();
+        }
+      } else if (onEmpty) {
+        onEmpty();
+      }
+    },
+    [onFilled, onEmpty]
+  );
+
+  useEnhancedEffect(() => {
+    if (isControlled) {
+      checkDirty({ value });
+    }
+  }, [value, checkDirty, isControlled]);
+
+  React.useEffect(() => {
+    checkDirty(inputRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleFocus = (otherHandlers) => (event) => {
     if (formControl?.disabled) {
@@ -190,15 +230,20 @@ export default function useInput(parameters) {
   };
 
   return {
+    color,
     disabled,
     error,
     focused,
     formControl,
     getInputProps,
     getRootProps,
+    hiddenLabel,
     inputRef: handleInputRef,
     isControlled,
+    onEmpty,
+    onFilled,
     required,
+    size,
     value
   };
 }

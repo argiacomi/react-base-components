@@ -196,7 +196,7 @@ const InputFilled = React.forwardRef((props, ref) => {
   return (
     <InputBase
       slots={{ root: RootSlot, input: InputSlot }}
-      componentsProps={componentsProps}
+      slotsProps={componentsProps}
       fullWidth={fullWidth}
       inputComponent={inputComponent}
       multiline={multiline}

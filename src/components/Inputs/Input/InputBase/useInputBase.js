@@ -14,15 +14,16 @@ function isFilled(obj, SSR = false) {
   );
 }
 
-export default function useInput(parameters) {
+export default function useInputBase(parameters) {
   const {
-    disabledProp = false,
-    inputPropsProp,
-    inputRefProp,
+    disabled,
+    inputProps: inputPropsProp = {},
+    inputRef: inputRefProp,
     onBlur,
     onChange,
+    onClick,
     onFocus,
-    valueProp
+    value: valueProp
   } = parameters;
 
   const value = inputPropsProp.value != null ? inputPropsProp.value : valueProp;
@@ -33,7 +34,7 @@ export default function useInput(parameters) {
     if (!import.meta.env.PROD) {
       if (instance && instance.nodeName !== 'INPUT' && !instance.focus) {
         console.error(
-          `You have provided an 'inputComponent' to the input component that does not correctly handle the 'ref' prop.
+          `You have provided a 'inputComponent' to the input component that does not correctly handle the 'ref' prop.
           Make sure the 'ref' prop is called with a HTMLInputElement.`
         );
       }
@@ -61,16 +62,16 @@ export default function useInput(parameters) {
     }, [formControl]);
   }
 
-  const handleFocused = formControl ? formControl.focused : focused;
-
+  // The blur won't fire when the disabled state is set on a focused input.
+  // We need to book keep the focused state manually.
   React.useEffect(() => {
-    if (!formControl && disabledProp && focused) {
+    if (!formControl && disabled && focused) {
       setFocused(false);
       if (onBlur) {
         onBlur();
       }
     }
-  }, [formControl, disabledProp, focused, onBlur]);
+  }, [formControl, disabled, focused, onBlur]);
 
   const onFilled = formControl && formControl.onFilled;
   const onEmpty = formControl && formControl.onEmpty;
@@ -103,7 +104,6 @@ export default function useInput(parameters) {
     if (otherHandlers.onFocus) {
       otherHandlers.onFocus(event);
     }
-
     if (inputPropsProp.onFocus) {
       inputPropsProp.onFocus(event);
     }
@@ -117,7 +117,10 @@ export default function useInput(parameters) {
 
   const handleBlur = (otherHandlers) => (event) => {
     if (otherHandlers.onBlur) {
-      otherHandlers.onBlur(event);
+      otherHandlers.onBlur.onBlur(event);
+    }
+    if (inputPropsProp.onBlur) {
+      inputPropsProp.onBlur(event);
     }
 
     if (formControl && formControl.onBlur) {
@@ -147,8 +150,8 @@ export default function useInput(parameters) {
         inputPropsProp.onChange(event, ...args);
       }
 
-      if (formControl && formControl.onChange) {
-        formControl.onChange(event, ...args);
+      if (formControl && formControl.onBlur) {
+        formControl.onChange(event);
       }
 
       if (otherHandlers.onChange) {
@@ -165,7 +168,6 @@ export default function useInput(parameters) {
     if (inputRef.current && event.currentTarget === event.target) {
       inputRef.current.focus();
     }
-
     if (otherHandlers.onClick && !formControl.disabled) {
       otherHandlers.onClick(event);
     }
@@ -200,29 +202,18 @@ export default function useInput(parameters) {
     };
 
     return {
-      ...mergedEventHandlers,
-      'aria-invalid': formControl.error,
-      ref: handleInputRef,
-      value: value,
-      required: formControl.required,
-      disabled: formControl.disabled
+      ...mergedEventHandlers
     };
   };
 
   return {
     checkDirty,
-    color: formControl.color || 'primary',
-    disabled: formControl.disabled,
-    error: formControl.error,
-    filled: formControl.filled,
-    focused: handleFocused,
+    focused,
     formControl,
     getInputProps,
     getRootProps,
     handleInputRef,
-    hiddenLabel: formControl.hiddenLabel,
     inputRef,
-    required: formControl.required,
     value
   };
 }

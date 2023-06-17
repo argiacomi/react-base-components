@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import { styled, GlobalStyles } from '@styles';
 import useInputBase from './useInputBase';
 import TextareaAutosize from '../InputHelpers/TextareaAutosize';
-import { FormControlContext, formControlState, useFormControl } from '@components/Inputs/Form';
-import { useEnhancedEffect, useForkRef } from '@components/lib';
+import { FormControlContext, formControlState } from '@components/Inputs/Form';
+import { useSlotProps } from '@components/lib';
 
 export const inputBaseClasses = {
   root: 'InputBase-Root',
@@ -14,18 +14,6 @@ export const inputBaseClasses = {
   focused: 'InputBase-Focused',
   formControl: 'InputBase-FormControl'
 };
-
-function hasValue(value) {
-  return value != null && !(Array.isArray(value) && value.length === 0);
-}
-
-function isFilled(obj, SSR = false) {
-  return (
-    obj &&
-    ((hasValue(obj.value) && obj.value !== '') ||
-      (SSR && hasValue(obj.defaultValue) && obj.defaultValue !== ''))
-  );
-}
 
 export const InputBaseRoot = styled('div')(({ theme, ownerState }) => ({
   ...theme.text.typography.body1,
@@ -151,7 +139,6 @@ const InputBase = React.forwardRef((props, ref) => {
     classes: classesProp = {},
     className,
     defaultValue,
-    disabled,
     disableInjectingGlobalStyles,
     endAdornment,
     fullWidth = false,
@@ -181,41 +168,16 @@ const InputBase = React.forwardRef((props, ref) => {
     ...other
   } = props;
 
-  const value = inputPropsProp.value != null ? inputPropsProp.value : valueProp;
-  const { current: isControlled } = React.useRef(value != null);
-
-  const inputRef = React.useRef();
-  const handleInputRefWarning = React.useCallback((instance) => {
-    if (!import.meta.env.PROD) {
-      if (instance && instance.nodeName !== 'INPUT' && !instance.focus) {
-        console.error(
-          `You have provided a 'inputComponent' to the input component that does not correctly handle the 'ref' prop.
-          Make sure the 'ref' prop is called with a HTMLInputElement.`
-        );
-      }
-    }
-  }, []);
-
-  const handleInputRef = useForkRef(
+  const {
+    checkDirty,
+    focused,
+    formControl,
+    getInputProps,
+    getRootProps,
+    handleInputRef,
     inputRef,
-    inputRefProp,
-    inputPropsProp.ref,
-    handleInputRefWarning
-  );
-
-  const [focused, setFocused] = React.useState(false);
-  const formControl = useFormControl();
-
-  if (!import.meta.env.PROD) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    React.useEffect(() => {
-      if (formControl) {
-        return formControl.registerEffect();
-      }
-
-      return undefined;
-    }, [formControl]);
-  }
+    value
+  } = useInputBase(props);
 
   const fcs = formControlState({
     props,
@@ -225,115 +187,6 @@ const InputBase = React.forwardRef((props, ref) => {
 
   fcs.focused = formControl ? formControl.focused : focused;
 
-  // The blur won't fire when the disabled state is set on a focused input.
-  // We need to book keep the focused state manually.
-  React.useEffect(() => {
-    if (!formControl && disabled && focused) {
-      setFocused(false);
-      if (onBlur) {
-        onBlur();
-      }
-    }
-  }, [formControl, disabled, focused, onBlur]);
-
-  const onFilled = formControl && formControl.onFilled;
-  const onEmpty = formControl && formControl.onEmpty;
-
-  const checkDirty = React.useCallback(
-    (obj) => {
-      if (isFilled(obj)) {
-        if (onFilled) {
-          onFilled();
-        }
-      } else if (onEmpty) {
-        onEmpty();
-      }
-    },
-    [onFilled, onEmpty]
-  );
-
-  useEnhancedEffect(() => {
-    if (isControlled) {
-      checkDirty({ value });
-    }
-  }, [value, checkDirty, isControlled]);
-
-  const handleFocus = (event) => {
-    // Fix a bug with IE11 where the focus/blur events are triggered
-    // while the component is disabled.
-    if (fcs.disabled) {
-      event.stopPropagation();
-      return;
-    }
-
-    if (onFocus) {
-      onFocus(event);
-    }
-    if (inputPropsProp.onFocus) {
-      inputPropsProp.onFocus(event);
-    }
-
-    if (formControl && formControl.onFocus) {
-      formControl.onFocus(event);
-    } else {
-      setFocused(true);
-    }
-  };
-
-  const handleBlur = (event) => {
-    if (onBlur) {
-      onBlur(event);
-    }
-    if (inputPropsProp.onBlur) {
-      inputPropsProp.onBlur(event);
-    }
-
-    if (formControl && formControl.onBlur) {
-      formControl.onBlur(event);
-    } else {
-      setFocused(false);
-    }
-  };
-
-  const handleChange = (event, ...args) => {
-    if (!isControlled) {
-      const element = event.target || inputRef.current;
-      if (element == null) {
-        console.error(
-          `Expected valid input target. Did you use a custom 'inputComponent' and forget to forward refs?`
-        );
-      }
-
-      checkDirty({
-        value: element.value
-      });
-    }
-
-    if (inputPropsProp.onChange) {
-      inputPropsProp.onChange(event, ...args);
-    }
-
-    // Perform in the willUpdate
-    if (onChange) {
-      onChange(event, ...args);
-    }
-  };
-
-  // Check the input state on mount, in case it was filled by the user
-  // or auto filled by the browser before the hydration (for SSR).
-  React.useEffect(() => {
-    checkDirty(inputRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleClick = (event) => {
-    if (inputRef.current && event.currentTarget === event.target) {
-      inputRef.current.focus();
-    }
-    if (onClick && !fcs.disabled) {
-      onClick(event);
-    }
-  };
   let InputComponent = inputComponent;
   let inputProps = inputPropsProp;
 
@@ -405,10 +258,28 @@ const InputBase = React.forwardRef((props, ref) => {
   };
 
   const Root = slots.root || InputBaseRoot;
-  const rootProps = slotProps.root || {};
+  const rootProps = useSlotProps({
+    elementType: Root,
+    getSlotProps: getRootProps,
+    externalSlotProps: slotProps.root || {},
+    externalForwardedProps: other,
+    ownerState,
+    className: [classes.root, className]
+  });
 
   const Input = slots.input || InputBaseComponent;
-  inputProps = { ...inputProps, ...slotProps.input };
+
+  inputProps = useSlotProps({
+    elementType: InputComponent,
+    getSlotProps: (otherHandlers) => {
+      return getInputProps({
+        ...otherHandlers
+      });
+    },
+    externalSlotProps: { ...inputProps, ...slotProps.input },
+    ownerState,
+    className: classes.input
+  });
 
   return (
     <React.Fragment>
@@ -419,7 +290,6 @@ const InputBase = React.forwardRef((props, ref) => {
           ownerState: { ...ownerState, ...rootProps.ownerState }
         })}
         ref={ref}
-        onClick={handleClick}
         {...other}
         className={clsx(classes.root, rootProps.className, className)}
       >
@@ -451,9 +321,6 @@ const InputBase = React.forwardRef((props, ref) => {
             })}
             ref={handleInputRef}
             className={clsx(classes.input, inputProps.className)}
-            onBlur={handleBlur}
-            onChange={handleChange}
-            onFocus={handleFocus}
           />
         </FormControlContext.Provider>
         {endAdornment}

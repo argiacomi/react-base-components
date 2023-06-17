@@ -1,14 +1,18 @@
 import React from 'react';
 import { styled } from '@styles';
 import { deepmerge } from '@components/lib';
-import InputBase, { InputBaseRoot, InputBaseComponent } from './InputBase';
+import InputBase, {
+  InputBaseRoot,
+  InputBaseComponent,
+  inputBaseClasses
+} from '../InputBase/InputBase';
 
 const inputFilledClasses = {
   root: 'InputFilled-Root',
   input: 'InputFilled-Input',
-  focused: 'InputFilled-Focused',
-  disabled: 'InputFilled-Disabled',
-  error: 'InputFilled-Error'
+  focused: inputBaseClasses.focused,
+  disabled: inputBaseClasses.disabled,
+  error: inputBaseClasses.error
 };
 
 const InputFilledRoot = styled(InputBaseRoot)(({ theme, ownerState }) => {
@@ -196,7 +200,7 @@ const InputFilled = React.forwardRef((props, ref) => {
   return (
     <InputBase
       slots={{ root: RootSlot, input: InputSlot }}
-      slotsProps={componentsProps}
+      slotProps={componentsProps}
       fullWidth={fullWidth}
       inputComponent={inputComponent}
       multiline={multiline}

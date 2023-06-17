@@ -1,6 +1,6 @@
 import React from 'react';
 import { extractEventHandlers, useEnhancedEffect, useForkRef } from '@components/lib';
-import { useFormControl } from '../Form/FormControl';
+import { useFormControl } from '@components/Inputs/Form';
 
 function hasValue(value) {
   return value != null && !(Array.isArray(value) && value.length === 0);
@@ -16,74 +16,30 @@ function isFilled(obj, SSR = false) {
 
 export default function useInput(parameters) {
   const {
-    defaultValue: defaultValueProp,
-    disabled: disabledProp = false,
-    error: errorProp = false,
-    inputProps: inputPropsProp = {},
-    inputRef: inputRefProp,
+    disabledProp = false,
+    inputPropsProp,
+    inputRefProp,
     onBlur,
     onChange,
     onFocus,
-    required: requiredProp = false,
-    value: valueProp
+    valueProp
   } = parameters;
 
-  const formControl = useFormControl();
-
-  let defaultValue;
-  let disabled;
-  let error;
-  let required;
-  let value;
-  const color = formControl && formControl.color;
-  const hiddenLabel = formControl && formControl.hiddenLabel;
-  const onFilled = formControl && formControl.onFilled;
-  const onEmpty = formControl && formControl.onEmpty;
-  const size = formControl && formControl.size;
-
-  if (formControl) {
-    defaultValue = undefined;
-    disabled = formControl.disabled ?? false;
-    error = formControl.error ?? false;
-    required = formControl.required ?? false;
-    value = formControl.value;
-
-    if (!import.meta.env.PROD) {
-      const definedLocalProps = ['defaultValue', 'disabled', 'error', 'required', 'value'].filter(
-        (prop) => parameters[prop] !== undefined
-      );
-
-      if (definedLocalProps.length > 0) {
-        console.warn(
-          `You have set props on an input that is inside a FormControl.
-          Set these props on a FormControl instead. Otherwise they will be ignored.
-          Ignored props: ${definedLocalProps}`
-        );
-      }
-    }
-  } else {
-    defaultValue = defaultValueProp;
-    disabled = disabledProp;
-    error = errorProp;
-    required = requiredProp;
-    value = inputPropsProp.value != null ? inputPropsProp.value : valueProp;
-  }
-
+  const value = inputPropsProp.value != null ? inputPropsProp.value : valueProp;
   const { current: isControlled } = React.useRef(value != null);
 
+  const inputRef = React.useRef();
   const handleInputRefWarning = React.useCallback((instance) => {
     if (!import.meta.env.PROD) {
       if (instance && instance.nodeName !== 'INPUT' && !instance.focus) {
         console.error(
-          `You have provided an 'inputComponent' to the input component
-          that does not correctly handle the 'ref' prop.
-          Make sure the 'ref' prop is called with an HTMLInputElement.`
+          `You have provided an 'inputComponent' to the input component that does not correctly handle the 'ref' prop.
+          Make sure the 'ref' prop is called with a HTMLInputElement.`
         );
       }
     }
   }, []);
 
-  const inputRef = React.useRef();
   const handleInputRef = useForkRef(
     inputRef,
     inputRefProp,
@@ -92,14 +48,32 @@ export default function useInput(parameters) {
   );
 
   const [focused, setFocused] = React.useState(false);
+  const formControl = useFormControl();
+
+  if (!import.meta.env.PROD) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useEffect(() => {
+      if (formControl) {
+        return formControl.registerEffect();
+      }
+
+      return undefined;
+    }, [formControl]);
+  }
+
+  const handleFocused = formControl ? formControl.focused : focused;
 
   React.useEffect(() => {
-    if (!formControl && disabled && focused) {
+    if (!formControl && disabledProp && focused) {
       setFocused(false);
-
-      onBlur?.();
+      if (onBlur) {
+        onBlur();
+      }
     }
-  }, [formControl, disabled, focused, onBlur]);
+  }, [formControl, disabledProp, focused, onBlur]);
+
+  const onFilled = formControl && formControl.onFilled;
+  const onEmpty = formControl && formControl.onEmpty;
 
   const checkDirty = React.useCallback(
     (obj) => {
@@ -120,35 +94,34 @@ export default function useInput(parameters) {
     }
   }, [value, checkDirty, isControlled]);
 
-  React.useEffect(() => {
-    checkDirty(inputRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const handleFocus = (otherHandlers) => (event) => {
-    if (formControl?.disabled) {
+    if (formControl.disabled) {
       event.stopPropagation();
       return;
     }
 
-    otherHandlers.onFocus?.(event);
+    if (otherHandlers.onFocus) {
+      otherHandlers.onFocus(event);
+    }
 
     if (inputPropsProp.onFocus) {
       inputPropsProp.onFocus(event);
     }
 
     if (formControl && formControl.onFocus) {
-      formControl?.onFocus?.();
+      formControl.onFocus(event);
     } else {
       setFocused(true);
     }
   };
 
   const handleBlur = (otherHandlers) => (event) => {
-    otherHandlers.onBlur?.(event);
+    if (otherHandlers.onBlur) {
+      otherHandlers.onBlur(event);
+    }
 
     if (formControl && formControl.onBlur) {
-      formControl.onBlur();
+      formControl.onBlur(event);
     } else {
       setFocused(false);
     }
@@ -161,8 +134,7 @@ export default function useInput(parameters) {
         const element = event.target || inputRef.current;
         if (element == null) {
           console.error(
-            `Expected valid input target.
-            Did you use a custom 'inputComponent and forget to forward refs?`
+            `Expected valid input target. Did you use a custom 'inputComponent' and forget to forward refs?`
           );
         }
 
@@ -170,23 +142,33 @@ export default function useInput(parameters) {
           value: element.value
         });
       }
-      formControl?.onChange?.(event);
 
-      otherHandlers.onChange?.(event, ...args);
+      if (inputPropsProp.onChange) {
+        inputPropsProp.onChange(event, ...args);
+      }
+
+      if (formControl && formControl.onChange) {
+        formControl.onChange(event, ...args);
+      }
+
+      if (otherHandlers.onChange) {
+        otherHandlers.onChange(event, ...args);
+      }
     };
+
+  React.useEffect(() => {
+    checkDirty(inputRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClick = (otherHandlers) => (event) => {
     if (inputRef.current && event.currentTarget === event.target) {
       inputRef.current.focus();
     }
 
-    if (otherHandlers.onClick && !disabled) {
-      otherHandlers.onClick?.(event);
+    if (otherHandlers.onClick && !formControl.disabled) {
+      otherHandlers.onClick(event);
     }
-  };
-
-  const handleAutoFill = (event) => {
-    checkDirty(event.animationName === 'auto-fill-cancel' ? inputRef.current : { value: 'x' });
   };
 
   const getRootProps = (externalProps) => {
@@ -214,36 +196,33 @@ export default function useInput(parameters) {
       ...externalEventHandlers,
       onBlur: handleBlur(externalEventHandlers),
       onChange: handleChange(externalEventHandlers),
-      onFocus: handleFocus(externalEventHandlers),
-      onAnimationStart: handleAutoFill(externalEventHandlers)
+      onFocus: handleFocus(externalEventHandlers)
     };
 
     return {
       ...mergedEventHandlers,
-      'aria-invalid': error || undefined,
-      defaultValue: defaultValue,
+      'aria-invalid': formControl.error,
       ref: handleInputRef,
       value: value,
-      required,
-      disabled
+      required: formControl.required,
+      disabled: formControl.disabled
     };
   };
 
   return {
-    color,
-    disabled,
-    error,
-    focused,
+    checkDirty,
+    color: formControl.color || 'primary',
+    disabled: formControl.disabled,
+    error: formControl.error,
+    filled: formControl.filled,
+    focused: handleFocused,
     formControl,
     getInputProps,
     getRootProps,
-    hiddenLabel,
-    inputRef: handleInputRef,
-    isControlled,
-    onEmpty,
-    onFilled,
-    required,
-    size,
+    handleInputRef,
+    hiddenLabel: formControl.hiddenLabel,
+    inputRef,
+    required: formControl.required,
     value
   };
 }

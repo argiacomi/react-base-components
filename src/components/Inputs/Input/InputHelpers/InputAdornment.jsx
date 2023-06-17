@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { styled } from '@styles';
 import { Text } from '@components/layout';
-import { FormControlContext, useFormControl } from '../Form';
+import { FormControlContext, useFormControl } from '@components/Inputs/Form';
 
 const inputAdornmentClasses = {
   root: 'InputAdornment-Root',

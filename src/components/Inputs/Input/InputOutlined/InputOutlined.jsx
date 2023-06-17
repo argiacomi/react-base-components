@@ -1,21 +1,26 @@
 import * as React from 'react';
 import { styled } from '@styles';
-import { formControlState, useFormControl } from '../Form/FormControl';
+import { formControlState, useFormControl } from '@components/Inputs/Form';
 import NotchedOutline from './NotchedOutline';
-import InputBase, { InputBaseRoot, InputBaseComponent } from './InputBase';
+import InputBase, {
+  InputBaseRoot,
+  InputBaseComponent,
+  inputBaseClasses
+} from '../InputBase/InputBase';
 
 const outlinedInputClasses = {
   root: 'OutlinedInput-Root',
-  focused: 'OutlinedInput-Focused',
-  disabled: 'OutlinedInput-Disabled',
-  error: 'OutlinedInput-Error',
   notchedOutline: 'OutlinedInput-NotchedOutline',
-  input: 'OutlinedInput-Input'
+  input: 'OutlinedInput-Input',
+  focused: inputBaseClasses.focused,
+  disabled: inputBaseClasses.disabled,
+  error: inputBaseClasses.error
 };
 
 const OutlinedInputRoot = styled(InputBaseRoot)(({ theme, ownerState }) => {
   const borderColor =
     theme.color.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
+
   return {
     position: 'relative',
     borderRadius: theme.rounded.md,

@@ -2,11 +2,11 @@ import React from 'react';
 import clsx from 'clsx';
 import { styled, GlobalStyles } from '@styles';
 import useInputBase from './useInputBase';
-import TextareaAutosize from './TextareaAutosize';
-import { FormControlContext } from '../Form/FormControl';
-import { useSlotProps, createChainedFunction } from '@components/lib';
+import TextareaAutosize from '../InputHelpers/TextareaAutosize';
+import { FormControlContext } from '@components/Inputs/Form';
+import { useSlotProps } from '@components/lib';
 
-const inputBaseClasses = {
+export const inputBaseClasses = {
   root: 'InputBase-Root',
   input: 'InputBase-Input',
   disabled: 'InputBase-Disabled',
@@ -139,11 +139,11 @@ const InputBase = React.forwardRef((props, ref) => {
     autoComplete,
     autoFocus,
     className,
-    defaultValue,
+    classes: classesProp = {},
+    defaultValue = false,
     disabled: disabledProp,
     disableInjectingGlobalStyles,
     endAdornment,
-    error: errorProp,
     fullWidth = false,
     id,
     inputComponent = 'input',
@@ -153,16 +153,17 @@ const InputBase = React.forwardRef((props, ref) => {
     minRows,
     multiline = false,
     name,
-    onBlur: onBlurProp,
-    onChange: onChangeProp,
+    onBlur,
+    onChange,
     onClick,
-    onFocus: onFocusProp,
+    onFocus,
     onKeyDown,
     onKeyUp,
     placeholder,
     readOnly,
     renderSuffix,
     rows,
+    size,
     slotProps = {},
     slots = {},
     startAdornment,
@@ -171,65 +172,66 @@ const InputBase = React.forwardRef((props, ref) => {
     ...other
   } = props;
 
-  const onFocus = createChainedFunction([onFocusProp, inputPropsProp.onFocus]);
-  const onBlur = createChainedFunction([onBlurProp, inputPropsProp.onBlur]);
-  const onChange = createChainedFunction([onChangeProp, inputPropsProp.onChange]);
-
   const {
+    checkDirty,
     color,
     disabled,
     error,
+    filled,
     focused,
     formControl,
     getInputProps,
     getRootProps,
+    handleInputRef,
     hiddenLabel,
     inputRef,
     required,
-    size,
     value
-  } = useInputBase({
+  } = useInputBase(
     defaultValue,
-    disabled: disabledProp,
-    error: errorProp,
-    inputProps: inputPropsProp,
-    inputRef: inputRefProp,
+    disabledProp,
+    inputPropsProp,
+    inputRefProp,
     onBlur,
     onChange,
     onClick,
     onFocus,
-    onKeyDown,
-    onKeyUp,
-    slotProps,
-    slots,
-    value: valueProp
-  });
-
-  if (!import.meta.env.PROD) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    React.useEffect(() => {
-      if (formControl) {
-        return formControl.registerEffect();
-      }
-
-      return undefined;
-    }, [formControl]);
-  }
+    valueProp
+  );
 
   let InputComponent = inputComponent;
+  let inputProps = inputPropsProp;
 
   if (multiline && InputComponent === 'input') {
     if (rows) {
       if (!import.meta.env.PROD) {
         if (minRows || maxRows) {
           console.warn(
-            `You can not use the 'minRows' or 'maxRows' props when the input 'rows' prop is set.`
+            `You can not use the 'minRows'' or 'maxRows' props when the input 'rows' prop is set.`
           );
         }
       }
+      inputProps = {
+        type: undefined,
+        minRows: rows,
+        maxRows: rows,
+        ...inputProps
+      };
+    } else {
+      inputProps = {
+        type: undefined,
+        maxRows,
+        minRows,
+        ...inputProps
+      };
     }
+
     InputComponent = TextareaAutosize;
   }
+
+  const handleAutoFill = (event) => {
+    checkDirty(event.animationName === 'mui-auto-fill-cancel' ? inputRef.current : { value: 'x' });
+  };
 
   React.useEffect(() => {
     if (formControl) {
@@ -239,43 +241,32 @@ const InputBase = React.forwardRef((props, ref) => {
 
   const ownerState = {
     ...props,
-    color: color || 'primary',
-    disabled: disabled,
+    color,
+    disabled,
     endAdornment,
-    error: error,
-    focused: focused,
-    formControl: formControl,
+    error,
+    focused,
+    formControl,
     fullWidth,
-    hiddenLabel: hiddenLabel,
+    hiddenLabel,
     multiline,
-    size: size,
+    size,
     startAdornment,
     type
   };
 
   const classes = {
+    ...classesProp,
     root: [
       inputBaseClasses.root,
       ownerState.disabled && inputBaseClasses.disabled,
-      ownerState.formControl && inputBaseClasses.formControl
+      ownerState.error && inputBaseClasses.error,
+      ownerState.focused && inputBaseClasses.focused,
+      ownerState.formControl && inputBaseClasses.formControl,
+      classesProp?.root
     ],
-    input: 'InputBase-Input'
+    input: ['InputBase-Input', classesProp?.input, ownerState.disabled && inputBaseClasses.disabled]
   };
-
-  const Root = slots.root || InputBaseRoot;
-
-  const rootProps = useSlotProps({
-    elementType: Root,
-    getSlotProps: getRootProps,
-    externalSlotProps: slotProps.root,
-    externalForwardedProps: other,
-    additionalProps: {
-      ref: ref
-    },
-    ownerState,
-    className: [classes.root, className]
-  });
-  const Input = slots.input || InputBaseComponent;
 
   const propsToForward = {
     'aria-describedby': ariaDescribedby,
@@ -292,21 +283,51 @@ const InputBase = React.forwardRef((props, ref) => {
     type
   };
 
-  const inputProps = useSlotProps({
+  const Root = slots.root || InputBaseRoot;
+  const rootProps = useSlotProps({
+    elementType: Root,
+    getSlotProps: getRootProps,
+    externalSlotProps: slotProps.root || {},
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: clsx([(classes.root, slotProps.root.className, className)])
+  });
+
+  const Input = slots.input || InputBaseComponent;
+
+  inputProps = useSlotProps({
     elementType: Input,
-    getSlotProps: (otherHandlers) => getInputProps({ ...otherHandlers, ...propsToForward }),
-    externalSlotProps: slotProps.input,
+    getSlotProps: (otherHandlers) => {
+      return getInputProps({
+        ...propsToForward,
+        ...otherHandlers
+      });
+    },
+    externalSlotProps: { ...inputProps, ...slotProps.input },
     additionalProps: {
       rows: multiline ? rows : undefined,
       ...(multiline &&
         !(typeof Input === 'string') && {
-          minRows: rows || minRows,
-          maxRows: rows || maxRows
+          as: InputComponent,
+          ownerState: { ...ownerState, ...inputProps.ownerState }
         })
     },
     ownerState,
-    className: classes.input
+    className: clsx([(classes.input, inputProps.className)])
   });
+
+  const fcs = {
+    color,
+    disabled,
+    error,
+    filled,
+    hiddenLabel,
+    required,
+    size
+  };
 
   return (
     <React.Fragment>
@@ -316,42 +337,28 @@ const InputBase = React.forwardRef((props, ref) => {
         {...(!(typeof Root === 'string') && {
           ownerState: { ...ownerState, ...rootProps.ownerState }
         })}
-        ref={inputRef}
+        ref={ref}
         {...other}
-        className={clsx(classes.root, rootProps.className, className)}
       >
         {startAdornment}
         <FormControlContext.Provider value={null}>
           <Input
             ownerState={ownerState}
             aria-invalid={error}
-            aria-describedby={ariaDescribedby}
-            autoComplete={autoComplete}
-            autoFocus={autoFocus}
             defaultValue={defaultValue}
             disabled={disabled}
-            id={id}
-            name={name}
-            placeholder={placeholder}
-            readOnly={readOnly}
+            onAnimationStart={handleAutoFill}
             required={required}
             rows={rows}
             value={value}
-            onKeyDown={onKeyDown}
-            onKeyUp={onKeyUp}
-            type={type}
+            ref={handleInputRef}
             {...inputProps}
-            {...(!(typeof Input === 'string') && {
-              as: InputComponent,
-              ownerState: { ...ownerState, ...inputProps.ownerState }
-            })}
-            ref={inputRef}
-            className={clsx(classes.input, inputProps.className)}
           />
         </FormControlContext.Provider>
         {endAdornment}
         {renderSuffix
           ? renderSuffix({
+              ...fcs,
               startAdornment
             })
           : null}

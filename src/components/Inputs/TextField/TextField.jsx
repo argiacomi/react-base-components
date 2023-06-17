@@ -1,15 +1,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@styles';
-import { Input, InputLabel, FilledInput, OutlinedInput } from '../Input';
+import { Input, InputFilled, InputOutlined, InputLabel } from '../Input';
 import { FormControl, FormHelperText } from '../Form';
-//import Select from './Select'; //TODO
+// import Select from '../Select'; //TODO
 import { nanoid } from 'nanoid';
 
 const variantComponent = {
   standard: Input,
-  filled: FilledInput,
-  outlined: OutlinedInput
+  filled: InputFilled,
+  outlined: InputOutlined
 };
 
 const TextFieldRoot = styled(FormControl)({});
@@ -27,6 +27,7 @@ const TextField = React.forwardRef((props, ref) => {
     FormHelperTextProps,
     fullWidth = false,
     helperText,
+    id: idOverride,
     InputLabelProps,
     inputProps,
     InputProps,
@@ -66,7 +67,7 @@ const TextField = React.forwardRef((props, ref) => {
 
   if (!import.meta.env.PROD) {
     if (select && !children) {
-      console.error('Children must be passed when using the `TextField` component with `select`.');
+      console.error(`'children' must be passed when using the 'TextField' component with 'select'`);
     }
   }
 
@@ -85,10 +86,11 @@ const TextField = React.forwardRef((props, ref) => {
     InputMore['aria-describedby'] = undefined;
   }
 
-  const id = nanoid();
+  const id = idOverride || nanoid();
   const helperTextId = helperText && id ? `${id}-helper-text` : undefined;
   const inputLabelId = label && id ? `${id}-label` : undefined;
   const InputComponent = variantComponent[variant];
+
   const InputElement = (
     <InputComponent
       aria-describedby={helperTextId}
@@ -134,7 +136,9 @@ const TextField = React.forwardRef((props, ref) => {
           {label}
         </InputLabel>
       )}
-      {/* {select ? (
+
+      {
+        /*select ? (
         <Select
           aria-describedby={helperTextId}
           id={id}
@@ -144,8 +148,12 @@ const TextField = React.forwardRef((props, ref) => {
           {...SelectProps}
         >
           {children}
-        </Select>) :() */}
-      {InputElement}
+        </Select>
+      ) : ( */
+        InputElement
+        /*)*/
+      }
+
       {helperText && (
         <FormHelperText id={helperTextId} {...FormHelperTextProps}>
           {helperText}

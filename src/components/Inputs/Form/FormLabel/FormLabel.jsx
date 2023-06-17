@@ -29,7 +29,7 @@ export const FormLabelRoot = styled('label')(({ theme, ownerState }) => ({
 
 const AsteriskComponent = styled('span')(({ theme }) => ({
   [`&.${formLabelClasses.error}`]: {
-    color: theme.color.error.main
+    color: theme.color.danger.body
   }
 }));
 

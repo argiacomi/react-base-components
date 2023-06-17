@@ -1,15 +1,19 @@
 import * as React from 'react';
-import { deepmerge } from '@components/lib';
-import InputBase, { InputBaseRoot, InputBaseComponent } from './InputBase';
 import { styled } from '@styles';
+import { deepmerge } from '@components/lib';
+import InputBase, {
+  InputBaseRoot,
+  InputBaseComponent,
+  inputBaseClasses
+} from '../InputBase/InputBase';
 
 const inputClasses = {
   root: 'Input-Root',
   input: 'Input-Input',
-  disabled: 'Input-Disabled',
-  error: 'Input-Error',
-  focused: 'Input-Focused',
-  formControl: 'Input-FormControl'
+  formControl: 'Input-FormControl',
+  disabled: inputBaseClasses.disabled,
+  error: inputBaseClasses.error,
+  focused: inputBaseClasses.focused
 };
 
 const InputRoot = styled(InputBaseRoot)(({ theme, ownerState }) => {

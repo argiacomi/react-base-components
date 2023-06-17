@@ -1,4 +1,3 @@
-import React from 'react';
 import { styled } from '@styles';
 
 const NotchedOutlineRoot = styled('fieldset')({
@@ -68,6 +67,7 @@ const NotchedOutline = (props) => {
     notched,
     withLabel
   };
+
   return (
     <NotchedOutlineRoot aria-hidden className={className} ownerState={ownerState} {...other}>
       <NotchedOutlineLegend ownerState={ownerState}>

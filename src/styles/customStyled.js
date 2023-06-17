@@ -2,7 +2,7 @@ import { default as scStyled, useTheme as useStyledTheme } from 'styled-componen
 
 export const styled = (component) =>
   scStyled(component).withConfig({
-    shouldForwardProp: (prop) => !['ownerState'].includes(prop)
+    shouldForwardProp: (prop) => !['ownerState', 'theme', 'as'].includes(prop)
   });
 
 export const useTheme = () => {

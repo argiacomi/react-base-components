@@ -6,6 +6,11 @@ import Grow from '../Transitions/Grow';
 import { Modal } from '../Modal';
 import { Paper } from '@components/surfaces';
 
+const popoverClasses = {
+  root: 'Popover-Root',
+  paper: 'Popover-Paper'
+};
+
 export function getOffsetTop(rect, vertical) {
   let offset = 0;
 
@@ -46,7 +51,7 @@ function resolveAnchorEl(anchorEl) {
 
 export const PopoverRoot = styled(Modal)({});
 
-export const PopoverPaper = styled(Paper)(({ theme }) => ({
+export const PopoverPaper = styled(Paper)(({ theme, css }) => ({
   position: 'absolute',
   overflowY: 'auto',
   overflowX: 'hidden',
@@ -54,7 +59,8 @@ export const PopoverPaper = styled(Paper)(({ theme }) => ({
   minHeight: theme.spacing(2),
   maxWidth: `calc(100% - ${theme.spacing(4)})`,
   maxHeight: `calc(100% - ${theme.spacing(4)})`,
-  outline: 0
+  outline: 0,
+  ...css
 }));
 
 const Popover = React.forwardRef((props, ref) => {
@@ -86,7 +92,11 @@ const Popover = React.forwardRef((props, ref) => {
     ...other
   } = props;
 
-  const externalPaperSlotProps = slotProps?.paper ?? PaperPropsProp;
+  const {
+    css: externalPaperSlotCss,
+    classes: externalPaperSlotClasses,
+    ...externalPaperSlotProps
+  } = slotProps?.paper ?? PaperPropsProp;
 
   const paperRef = React.useRef();
   const handlePaperRef = useForkRef(paperRef, externalPaperSlotProps.ref);
@@ -317,14 +327,19 @@ const Popover = React.forwardRef((props, ref) => {
       ...externalPaperSlotProps,
       style: isPositioned
         ? externalPaperSlotProps.style
-        : { ...externalPaperSlotProps.style, opacity: 0 }
+        : { ...externalPaperSlotProps.style, opacity: 0 },
+      css: externalPaperSlotCss
     },
     additionalProps: {
       elevation,
       ref: handlePaperRef
     },
     ownerState,
-    className: clsx('Popover-Paper', externalPaperSlotProps?.className)
+    className: clsx(
+      popoverClasses.paper,
+      externalPaperSlotClasses?.root,
+      externalPaperSlotProps?.className
+    )
   });
 
   const { slotProps: rootSlotPropsProp, ...rootProps } = useSlotProps({
@@ -338,7 +353,7 @@ const Popover = React.forwardRef((props, ref) => {
       open
     },
     ownerState,
-    className: clsx('Popover-Paper', className)
+    className: clsx(popoverClasses.root, className)
   });
 
   return (

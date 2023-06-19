@@ -4,6 +4,7 @@ import { styled } from '@styles';
 
 const PaperRoot = styled('div')(({ theme, ownerState }) => ({
   backgroundColor: theme.color.background,
+  '&:before': { backgroundColor: theme.color.background },
   color: theme.color.text.primary,
   transition: theme.transition.create('filter'),
   ...(!ownerState.square && {
@@ -19,7 +20,14 @@ const PaperRoot = styled('div')(({ theme, ownerState }) => ({
       backgroundImage: `linear-gradient(${theme.alpha.add(
         theme.color.white,
         theme.alpha[ownerState.elevation]
-      )},${theme.alpha.add(theme.color.white, theme.alpha.overlay(ownerState.elevation))})`
+      )},${theme.alpha.add(theme.color.white, theme.alpha.overlay(ownerState.elevation))})`,
+      '&:before': {
+        backgroundColor: theme.color.background,
+        backgroundImage: `linear-gradient(${theme.alpha.add(
+          theme.color.white,
+          theme.alpha[ownerState.elevation]
+        )},${theme.alpha.add(theme.color.white, theme.alpha.overlay(ownerState.elevation))})`
+      }
     })
   })
 }));

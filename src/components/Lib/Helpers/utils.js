@@ -25,3 +25,8 @@ export function createChainedFunction(funcs, id) {
     () => {}
   );
 }
+
+export function getScrollbarSize(doc) {
+  const documentWidth = doc.documentElement.clientWidth;
+  return Math.abs(window.innerWidth - documentWidth);
+}

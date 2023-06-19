@@ -13,6 +13,7 @@ const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
 const colorThemes = {
   light: {
     color: {
+      active: 'rgba(0, 0, 0, 0.54)',
       mode: 'light',
       background: '#f2f2f2',
       selected: 'rgba(0, 0, 0, 0.08)',
@@ -38,6 +39,7 @@ const colorThemes = {
   },
   dark: {
     color: {
+      active: '#ffffff',
       mode: 'dark',
       background: '#292929',
       selected: 'rgba(255, 255, 255, 0.16)',

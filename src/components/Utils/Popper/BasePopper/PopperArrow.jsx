@@ -1,8 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from 'styled-components/macro';
 
-const PopperArrowRoot = styled('div')(({ theme, ownerState }) => {
+export const PopperArrowRoot = styled('div')(({ theme, ownerState }) => {
   if (!ownerState.disabled) {
     const unitWidth = ownerState.width / 2;
     const innerRadius = Number.parseFloat(theme.rounded.sm) * ownerState.width;

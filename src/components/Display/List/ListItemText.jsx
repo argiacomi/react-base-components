@@ -4,10 +4,11 @@ import { Text } from '@components/layout';
 import { useListContext } from '../List/ListContext';
 import { styled } from '@styles';
 
-export const ListItemTextClasses = {
+export const listItemTextClasses = {
   root: 'ListItemText-Root',
   primary: 'ListItemText-Primary',
-  secondary: 'ListItemText-Secondary'
+  secondary: 'ListItemText-Secondary',
+  inset: 'ListItemText-Inset'
 };
 
 const ListItemTextRoot = styled('div')(({ theme, ownerState }) => ({
@@ -56,8 +57,8 @@ const ListItemText = React.forwardRef((props, ref) => {
     primary = (
       <Text
         variant={dense ? 'body2' : 'body1'}
-        className={ListItemTextClasses.primary}
-        color='primary'
+        className={listItemTextClasses.primary}
+        color='text.primary'
         component={primaryTextProps?.variant ? undefined : 'span'}
         display='block'
         {...primaryTextProps}
@@ -71,8 +72,8 @@ const ListItemText = React.forwardRef((props, ref) => {
     secondary = (
       <Text
         variant='body2'
-        className={ListItemTextClasses.secondary}
-        color='secondary'
+        className={listItemTextClasses.secondary}
+        color='text.secondary'
         display='block'
         {...secondaryTextProps}
       >
@@ -81,9 +82,13 @@ const ListItemText = React.forwardRef((props, ref) => {
     );
   }
 
+  const classes = {
+    root: [listItemTextClasses.root, ownerState.inset && listItemTextClasses.inset]
+  };
+
   return (
     <ListItemTextRoot
-      className={clsx(ListItemTextClasses.root, className)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       ref={ref}
       {...other}

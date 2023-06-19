@@ -11,7 +11,8 @@ const listItemClasses = {
   root: 'ListItem-Root',
   focusVisible: 'ListItem-FocusVisible',
   disabled: 'ListItem-Disabled',
-  selected: 'ListItem-Selected'
+  selected: 'ListItem-Selected',
+  inset: 'ListItem-Inset'
 };
 
 export const ListItemRoot = styled('div')(({ theme, ownerState }) => ({
@@ -156,7 +157,8 @@ const ListItem = React.forwardRef((props, ref) => {
     root: clsx(
       listItemClasses.root,
       ownerState.disabled && listItemClasses.disabled,
-      ownerState.selected && listItemClasses.selected
+      ownerState.selected && listItemClasses.selected,
+      ownerState.inset && listItemClasses.inset
     ),
     focusVisible: listItemClasses.focusVisible
   };

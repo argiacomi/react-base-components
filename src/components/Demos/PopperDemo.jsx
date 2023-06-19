@@ -15,15 +15,7 @@ export default function PopperDemo() {
   return (
     <Box css={{ margin: '1rem', height: 750, width: 500 }}>
       <Box css={{ height: 1000, width: 500 }}>
-        <Popper
-          open={open}
-          anchorEl={anchorEl}
-          placement={placement}
-          transition='Grow'
-          square
-          disableArrow
-          outlined
-        >
+        <Popper open={open} anchorEl={anchorEl} placement={placement} transition='Grow'>
           <Typography css={{ padding: '1rem' }}>The content of the Popper.</Typography>
         </Popper>
         <Grid container css={{ justifyContent: 'center' }}>

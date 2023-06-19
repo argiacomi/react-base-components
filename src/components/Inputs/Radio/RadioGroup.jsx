@@ -47,7 +47,6 @@ const RadioGroup = React.forwardRef((props, ref) => {
     () => ({
       name,
       onChange(event) {
-        console.log(event.target.value);
         setValueState(event.target.value);
 
         if (onChange) {

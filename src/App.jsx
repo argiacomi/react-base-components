@@ -17,8 +17,9 @@ import {
   // FormControlDemo,
   // InputDemo,
   // ListDemo,
+  MenuDemo
   // ModalDemo,
-  NoSsrDemo
+  // NoSsrDemo,
   // PopoverDemo,
   // PopperDemo,
   // ProgressDemo
@@ -31,7 +32,7 @@ import {
 const App = () => {
   return (
     <Box css={{ margin: '3rem', height: 2000 }}>
-      <NoSsrDemo />
+      <MenuDemo />
     </Box>
   );
 };

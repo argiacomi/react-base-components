@@ -2,6 +2,12 @@ import React from 'react';
 import clsx from 'clsx';
 import { styled } from '@styles';
 
+export const dividerClasses = {
+  root: 'Divider-Root',
+  wrapper: 'Divider-Wrapper',
+  inset: 'Divider-Inset'
+};
+
 const DividerRoot = styled('div')(
   ({ theme, ownerState }) => ({
     margin: 0,
@@ -135,14 +141,14 @@ const Divider = React.forwardRef((props, ref) => {
   return (
     <DividerRoot
       as={component}
-      className={clsx('Divider-Root', className)}
+      className={clsx(dividerClasses.root, className)}
       ownerState={ownerState}
       role={role}
       ref={ref}
       {...other}
     >
       {children ? (
-        <DividerWrapper className='Divider-Wrapper' ownerState={ownerState}>
+        <DividerWrapper className={dividerClasses.wrapper} ownerState={ownerState}>
           {children}
         </DividerWrapper>
       ) : null}

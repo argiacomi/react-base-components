@@ -81,12 +81,11 @@ const PopperTooltip = React.forwardRef((props, ref) => {
       arrow: !disableArrow ? { element: arrowElement, padding: arrowPadding } : {},
       offset:
         typeof offsetPadding === 'number' || typeof offsetPadding === 'boolean'
-          ? offsetPadding + ((!disableArrow && (Math.sqrt(2) * arrowWidth) / 2) || 4)
+          ? offsetPadding + (!disableArrow && arrowWidth / 2)
           : typeof offsetPadding === 'string'
-          ? parseInt(offsetPadding.replace(/\D/g, '')) +
-            (!disableArrow && (Math.sqrt(2) * arrowWidth) / 2)
+          ? parseInt(offsetPadding.replace(/\D/g, '')) + (!disableArrow && arrowWidth / 2)
           : {
-              mainAxis: 0 + (!disableArrow && (Math.sqrt(2) * arrowWidth) / 2),
+              mainAxis: 0 + (!disableArrow && arrowWidth / 2),
               ...offsetPadding
             },
       autoPlace:

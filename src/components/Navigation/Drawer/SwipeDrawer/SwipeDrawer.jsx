@@ -9,7 +9,7 @@ import {
   useEnhancedEffect,
   useForkRef
 } from '@components/lib';
-import { NoSsr } from '@mui/base'; //TODO: Build noSSR component
+import { NoSsr } from '@components/utils';
 import Drawer, { getAnchor, isHorizontal } from '../Drawer';
 import SwipeArea from './SwipeArea';
 

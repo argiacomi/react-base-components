@@ -39,7 +39,7 @@ const CircularProgressRoot = styled('span')(
       transition: theme.transition.create('transform')
     }),
     ...(ownerState.color !== 'inherit' && {
-      color: (theme.vars || theme).palette[ownerState.color].main
+      color: theme.color[ownerState.color].body
     })
   }),
   ({ ownerState }) =>
@@ -57,7 +57,7 @@ const CircularProgressCircle = styled('circle')(
   ({ ownerState, theme }) => ({
     stroke: 'currentColor',
     ...(ownerState.variant === 'determinate' && {
-      transition: theme.transitions.create('stroke-dashoffset')
+      transition: theme.transition.create('stroke-dashoffset')
     }),
     ...(ownerState.variant === 'indeterminate' && {
       strokeDasharray: '80px, 200px',

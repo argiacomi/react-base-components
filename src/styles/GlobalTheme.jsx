@@ -251,6 +251,9 @@ export const baseTheme = {
     4: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
     5: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
     6: '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+    fab: '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
+    fabActive:
+      '0px 7px 8px -4px rgba(0,0,0,0.2),0px 12px 17px 2px rgba(0,0,0,0.14),0px 5px 22px 4px rgba(0,0,0,0.12)',
     popper:
       '0 6px 16px 0 rgba(0 0 0 / 0.08), 0 3px 6px -4px rgba(0 0 0 / 0.12), 0 9px 28px 8px rgba(0 0 0 / 0.05)',
     popperArrow: '2px 2px 5px rgba(0 0 0 / 0.05)'

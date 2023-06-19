@@ -21,7 +21,6 @@ export default function useInputBase(parameters) {
     inputRef: inputRefProp,
     onBlur,
     onChange,
-    onClick,
     onFocus,
     value: valueProp
   } = parameters;
@@ -117,7 +116,7 @@ export default function useInputBase(parameters) {
 
   const handleBlur = (otherHandlers) => (event) => {
     if (otherHandlers.onBlur) {
-      otherHandlers.onBlur.onBlur(event);
+      otherHandlers.onBlur(event);
     }
     if (inputPropsProp.onBlur) {
       inputPropsProp.onBlur(event);

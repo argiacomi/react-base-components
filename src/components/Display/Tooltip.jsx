@@ -7,10 +7,10 @@ import {
   useControlled,
   useEventCallback,
   useForkRef,
+  useId,
   useIsFocusVisible
 } from '@components/lib';
 import { Popper, PopperContent } from '@components/utils';
-import { nanoid } from 'nanoid';
 
 export const tooltipClasses = {
   root: 'Tooltip-Root',
@@ -188,7 +188,7 @@ const Tooltip = React.forwardRef((props, ref) => {
     }, [title, childNode, isControlled]);
   }
 
-  const id = nanoid(idProp);
+  const id = useId(idProp);
 
   const prevUserSelect = React.useRef();
 

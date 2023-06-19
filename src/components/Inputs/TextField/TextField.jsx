@@ -1,10 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import { styled } from '@styles';
 import { Input, InputFilled, InputOutlined, InputLabel } from '../Input';
 import { FormControl, FormHelperText } from '../Form';
 // import Select from '../Select'; //TODO
-import { nanoid } from 'nanoid';
+import { useId } from '@components/lib';
 
 const variantComponent = {
   standard: Input,
@@ -86,7 +86,7 @@ const TextField = React.forwardRef((props, ref) => {
     InputMore['aria-describedby'] = undefined;
   }
 
-  const id = idOverride || nanoid();
+  const id = useId(idOverride);
   const helperTextId = helperText && id ? `${id}-helper-text` : undefined;
   const inputLabelId = label && id ? `${id}-label` : undefined;
   const InputComponent = variantComponent[variant];

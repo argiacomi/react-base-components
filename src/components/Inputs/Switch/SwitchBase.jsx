@@ -4,6 +4,13 @@ import { styled } from '@styles';
 import { useControlled } from '@component/hooks';
 import { ButtonBase, useFormControl } from '@components/inputs';
 
+const switchBaseClasses = {
+  root: 'SwitchBase-Root',
+  checked: 'SwitchBase-Checked',
+  disabled: 'SwitchBase-Disabled',
+  input: 'SwitchBase-Input'
+};
+
 const SwitchBaseRoot = styled(ButtonBase)(({ theme, ownerState }) => ({
   padding: '.5rem',
   borderRadius: theme.rounded.full,
@@ -118,21 +125,21 @@ const SwitchBase = React.forwardRef((props, ref) => {
     edge
   };
 
-  const switchBaseClasses = [
-    ownerState.classes?.root,
-    ownerState.classes?.indeterminate,
-    checked && ownerState.classes?.checked,
-    disabled && ownerState.classes?.disabled
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const classes = {
+    root: [
+      switchBaseClasses.root,
+      ownerState.checked && switchBaseClasses.checked,
+      ownerState.sisabled && switchBaseClasses.disabled
+    ],
+    input: switchBaseClasses.input
+  };
 
   return (
     <SwitchBaseRoot
       component='span'
-      className={clsx('SwitchBase-Root', switchBaseClasses, className)}
+      className={clsx(classes.root, props.classes.root, className)}
       centerRipple
-      disableFocusRipple={disableFocusRipple}
+      disableRipple={disableFocusRipple}
       disabled={disabled}
       tabIndex={null}
       role={undefined}
@@ -146,7 +153,7 @@ const SwitchBase = React.forwardRef((props, ref) => {
         autoFocus={autoFocus}
         checked={checkedProp}
         defaultChecked={defaultChecked}
-        className={clsx('SwitchBase-Input', ownerState.classes?.input)}
+        className={clsx(classes.root, props.classes.input)}
         disabled={disabled}
         id={hasLabelFor ? id : undefined}
         name={name}

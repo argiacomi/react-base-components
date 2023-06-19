@@ -35,14 +35,14 @@ const exitKeyframe = keyframes`
   }
 `;
 
-export const TouchRippleRoot = styled('span')`
-  overflow: hidden;
-  pointerevents: none;
-  position: absolute;
-  zindex: 0;
-  inset: 0;
-  borderradius: inherit;
-`;
+export const TouchRippleRoot = styled('span')({
+  overflow: 'hidden',
+  pointerEvents: 'none',
+  position: 'absolute',
+  zIndex: 0,
+  inset: 0,
+  borderRadius: 'inherit'
+});
 
 export const TouchRippleRipple = styled(Ripple)`
   opacity: 0;

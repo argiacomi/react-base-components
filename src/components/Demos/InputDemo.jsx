@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { InputBase as Input } from '@components';
 import { styled } from '@styles';
 

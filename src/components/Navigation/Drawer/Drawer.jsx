@@ -1,6 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
-import { Modal, Slide } from '@components/utils';
+import { Modal } from '@components/utils/Modal';
+import { Slide } from '@components/utils/transitions';
 import { Paper } from '@components/surfaces';
 import { styled, useTheme } from '@styles';
 

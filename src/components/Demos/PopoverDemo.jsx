@@ -10,11 +10,11 @@ import {
   InputLabel,
   Paper,
   Popover,
+  Radio,
+  RadioGroup,
   Stack,
   Text
 } from '@components';
-import RadioGroup from '@mui/material/RadioGroup';
-import Radio from '@mui/material/Radio';
 
 const inlineStyles = {
   anchorVertical: {
@@ -50,8 +50,8 @@ function AnchorPlayground() {
     anchorOriginHorizontal: 'left',
     transformOriginVertical: 'top',
     transformOriginHorizontal: 'left',
-    positionTop: 200, // Just so the popover can be spotted more easily
-    positionLeft: 400, // Same as above
+    positionTop: 200,
+    positionLeft: 400,
     anchorReference: 'anchorEl'
   });
 
@@ -96,7 +96,7 @@ function AnchorPlayground() {
 
   const radioAnchorClasses = {
     color: 'green',
-    '&.checked': {
+    '&.Radio-Checked': {
       color: 'green'
     }
   };

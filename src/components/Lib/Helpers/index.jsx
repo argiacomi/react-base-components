@@ -1,3 +1,4 @@
+export * from './animate';
 export * from './breakpointHelpers';
 export * from './eventHandlerHelpers';
 export * from './inputHelpers';

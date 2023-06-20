@@ -28,7 +28,7 @@ const iconLibraries = {
   }
 };
 
-const IconRoot = styled('span')(({ theme, $ownerState }) => {
+const IconRoot = styled('span')(({ theme, $ownerState, css }) => {
   let fontSize, lineHeight;
   if (typeof $ownerState.size === 'string') {
     const sizeStyle = theme.text.size[sizeMapping[$ownerState.size]] || {};
@@ -59,7 +59,8 @@ const IconRoot = styled('span')(({ theme, $ownerState }) => {
     }),
     fill: fillColor,
     fontSize: fontSize,
-    lineHeight: lineHeight
+    lineHeight: lineHeight,
+    ...css
   };
 });
 

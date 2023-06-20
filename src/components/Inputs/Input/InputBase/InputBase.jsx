@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import clsx from 'clsx';
 import { styled, GlobalStyles } from '@styles';
@@ -18,7 +19,7 @@ export const inputBaseClasses = {
 export const InputBaseRoot = styled('div')(({ theme, ownerState }) => ({
   ...theme.text.typography.body1,
   color: theme.color.text.primary,
-  lineHeight: theme.spacing(23 / 8), // 23px
+  lineHeight: theme.spacing(23 / 8),
   boxSizing: 'border-box',
   position: 'relative',
   cursor: 'text',
@@ -63,40 +64,36 @@ export const InputBaseComponent = styled('input')(({ theme, ownerState }) => {
     border: 0,
     boxSizing: 'content-box',
     background: 'none',
-    height: '1.4375em', // Reset 23pxthe native input line-height
-    margin: 0, // Reset for Safari
+    height: '1.4375em',
+    margin: 0,
     WebkitTapHighlightColor: 'transparent',
     display: 'block',
-    // Make the flex item shrink with Firefox
     minWidth: 0,
-    width: '100%', // Fix IE11 width issue
+    width: '100%',
     animationName: 'auto-fill-cancel',
     animationDuration: '10ms',
     '&::-webkit-input-placeholder': placeholder,
-    '&::-moz-placeholder': placeholder, // Firefox 19+
-    '&:-ms-input-placeholder': placeholder, // IE11
-    '&::-ms-input-placeholder': placeholder, // Edge
+    '&::-moz-placeholder': placeholder,
+    '&:-ms-input-placeholder': placeholder,
+    '&::-ms-input-placeholder': placeholder,
     '&:focus': {
       outline: 0
     },
-    // Reset Firefox invalid required input style
     '&:invalid': {
       boxShadow: 'none'
     },
     '&::-webkit-search-decoration': {
-      // Remove the padding when type=search.
       WebkitAppearance: 'none'
     },
-    // Show and hide the placeholder logic
     [`label[data-shrink=false] + .${inputBaseClasses.formControl} &`]: {
       '&::-webkit-input-placeholder': placeholderHidden,
-      '&::-moz-placeholder': placeholderHidden, // Firefox 19+
-      '&:-ms-input-placeholder': placeholderHidden, // IE11
-      '&::-ms-input-placeholder': placeholderHidden, // Edge
+      '&::-moz-placeholder': placeholderHidden,
+      '&:-ms-input-placeholder': placeholderHidden,
+      '&::-ms-input-placeholder': placeholderHidden,
       '&:focus::-webkit-input-placeholder': placeholderVisible,
-      '&:focus::-moz-placeholder': placeholderVisible, // Firefox 19+
-      '&:focus:-ms-input-placeholder': placeholderVisible, // IE11
-      '&:focus::-ms-input-placeholder': placeholderVisible // Edge
+      '&:focus::-moz-placeholder': placeholderVisible,
+      '&:focus:-ms-input-placeholder': placeholderVisible,
+      '&:focus::-ms-input-placeholder': placeholderVisible
     },
     [`&.${inputBaseClasses.disabled}`]: {
       opacity: 1,
@@ -116,7 +113,6 @@ export const InputBaseComponent = styled('input')(({ theme, ownerState }) => {
       paddingTop: 0
     }),
     ...(ownerState.type === 'search' && {
-      // Improve type search style.
       MozAppearance: 'textfield'
     })
   };

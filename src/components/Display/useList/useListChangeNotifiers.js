@@ -1,5 +1,5 @@
 import * as React from 'react';
-import useMessageBus from '../utils/useMessageBus';
+import { useMessageBus } from '@components/lib';
 
 const SELECTION_CHANGE_TOPIC = 'select:change-selection';
 const HIGHLIGHT_CHANGE_TOPIC = 'select:change-highlight';

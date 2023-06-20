@@ -15,7 +15,6 @@ export const ListActionTypes = {
   textNavigation: 'list:textNavigation'
 };
 
-const EMPTY_OBJECT = {};
 const NOOP = () => {};
 
 const defaultItemComparer = (optionA, optionB) => optionA === optionB;
@@ -29,9 +28,9 @@ const defaultGetInitialState = () => ({
   selectedValues: []
 });
 
-function useList(params) {
+function useList(params = {}) {
   const {
-    controlledProps = EMPTY_OBJECT,
+    controlledProps = {},
     disabledItemsFocusable = false,
     disableListWrap = false,
     focusManagement = 'activeDescendant',
@@ -39,7 +38,7 @@ function useList(params) {
     getItemDomElement,
     getItemId,
     isItemDisabled = defaultIsItemDisabled,
-    rootRef: externalListRef,
+    ref: externalListRef,
     onStateChange = NOOP,
     items,
     itemComparer = defaultItemComparer,
@@ -49,7 +48,7 @@ function useList(params) {
     onItemsChange,
     orientation = 'vertical',
     pageSize = 5,
-    reducerActionContext = EMPTY_OBJECT,
+    reducerActionContext = {},
     selectionMode = 'single',
     stateReducer: externalReducer
   } = params;

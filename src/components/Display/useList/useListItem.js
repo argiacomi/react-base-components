@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useForkRef, useEnhancedEffect, useForcedRerendering } from '@componets/lib';
+import { useForkRef, useEnhancedEffect, useForcedRerendering } from '@components/lib';
+import { ListContext } from './ListProvider';
 import { ListActionTypes } from './useList';
-import { ListContext } from '../List';
 
 export default function useListItem(parameters) {
   const { handlePointerOverEvents = false, item, rootRef: externalRef } = parameters;

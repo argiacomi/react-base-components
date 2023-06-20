@@ -1,5 +1,5 @@
 import { useForkRef } from '@component/hooks';
-import { appendOwnerState, mergeSlotProps, resolveComponentProps } from '@component/utils';
+import { appendOwnerState, mergeSlotProps, resolveComponentProps } from '../helpers';
 
 export function useSlotProps(parameters) {
   const { elementType, externalSlotProps, ownerState, ...rest } = parameters;

@@ -12,6 +12,7 @@ export * from './useIsFocusVisible';
 export * from './useLatest';
 export * from './useLoaded';
 export * from './useMedia';
+export * from './useMessageBus';
 export * from './usePreviousProps';
 export * from './useSize';
 export * from './useSlotProps';

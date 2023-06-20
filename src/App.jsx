@@ -12,11 +12,12 @@ import {
   // ChipDemo,
   // ClickAwayListenerDemo,
   // DrawerDemo,
-  FabDemo
+  // FabDemo
   // FocusTrapDemo,
   // FormControlDemo,
   // InputDemo,
   // ListDemo,
+  NewListDemo
   // MenuDemo,
   // ModalDemo,
   // NoSsrDemo,
@@ -33,7 +34,7 @@ import {
 const App = () => {
   return (
     <Box css={{ margin: '3rem', height: 2000 }}>
-      <FabDemo />
+      <NewListDemo />
     </Box>
   );
 };

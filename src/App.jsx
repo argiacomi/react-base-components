@@ -12,7 +12,7 @@ import {
   // ChipDemo,
   // ClickAwayListenerDemo,
   // DrawerDemo,
-  // FabDemo,
+  FabDemo
   // FocusTrapDemo,
   // FormControlDemo,
   // InputDemo,
@@ -25,7 +25,7 @@ import {
   // ProgressDemo
   // RadioDemo,
   // SnackbarDemo,
-  TabDemo
+  // TabDemo,
   // TextFieldDemo,
   // TooltipDemo,
 } from '@components';
@@ -33,7 +33,7 @@ import {
 const App = () => {
   return (
     <Box css={{ margin: '3rem', height: 2000 }}>
-      <TabDemo />
+      <FabDemo />
     </Box>
   );
 };

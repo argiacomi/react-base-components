@@ -208,7 +208,7 @@ const MenuList = React.forwardRef((props, ref) => {
 
     if (
       activeItemIndex === index &&
-      (child.props.disabled || child.props.muiSkipListHighlight || child.type.muiSkipListHighlight)
+      (child.props.disabled || child.props.skipListHighlight || child.type.skipListHighlight)
     ) {
       activeItemIndex += 1;
       if (activeItemIndex >= children.length) {

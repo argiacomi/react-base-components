@@ -1,8 +1,6 @@
 import React from 'react';
 import { useTheme } from '@styles';
-import { AppBar, Box, Fab, Icon, Stack, Text, Zoom } from '@components';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+import { AppBar, Box, Fab, Icon, Stack, Tab, Tabs, Text, Zoom } from '@components';
 
 function FloatingActionButtons() {
   return (
@@ -94,10 +92,6 @@ function FloatingActionButtonZoom() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
-
-  const handleChangeIndex = (index) => {
-    setValue(index);
   };
 
   const transitionDuration = {

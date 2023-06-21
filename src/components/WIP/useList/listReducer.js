@@ -1,4 +1,4 @@
-import { ListActionTypes } from './useList';
+import { ListActionTypes } from './listActions';
 
 function findValidItemToHighlight(
   currentIndex,
@@ -18,6 +18,7 @@ function findValidItemToHighlight(
   let nextFocus = currentIndex;
 
   for (;;) {
+    // No valid items found
     if (
       (!wrapAround && lookupDirection === 'next' && nextFocus === items.length) ||
       (!wrapAround && lookupDirection === 'previous' && nextFocus === -1)
@@ -316,7 +317,7 @@ function handleTextNavigation(state, searchString, context) {
 function handleItemsChange(items, previousItems, state, context) {
   const { itemComparer, focusManagement } = context;
 
-  let newHighlightedValue = null;
+  let newHighlightedValue;
 
   if (state.highlightedValue != null) {
     newHighlightedValue = items.find((item) => itemComparer(item, state.highlightedValue)) ?? null;
@@ -324,7 +325,6 @@ function handleItemsChange(items, previousItems, state, context) {
     newHighlightedValue = moveHighlight(null, 'reset', context);
   }
 
-  // exclude selected values that are no longer in the items list
   const selectedValues = state.selectedValues ?? [];
   const newSelectedValues = selectedValues.filter((selectedValue) =>
     items.some((item) => itemComparer(item, selectedValue))

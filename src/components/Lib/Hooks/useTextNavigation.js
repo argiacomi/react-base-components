@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-const TEXT_NAVIGATION_RESET_TIMEOUT = 500;
+const TEXT_NAVIGATION_RESET_TIMEOUT = 500; // milliseconds
 
 export function useTextNavigation(callback) {
   const textCriteriaRef = React.useRef({

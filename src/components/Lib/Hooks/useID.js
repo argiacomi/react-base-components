@@ -20,7 +20,6 @@ export function useId(idOverride) {
     const reactId = maybeReactUseId();
     return idOverride ?? reactId;
   }
-
   // eslint-disable-next-line react-hooks/rules-of-hooks
   return useGlobalId(idOverride);
 }

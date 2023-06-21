@@ -1,21 +1,8 @@
 import * as React from 'react';
+import { ListContext } from '../useList/ListContext';
 import { CompoundComponentContext } from '@components/lib';
 
-export const ListContext = React.createContext(null);
-if (!import.meta.env.PROD) {
-  ListContext.displayName = 'ListContext';
-}
-
-export function useListContext() {
-  const context = React.useContext(ListContext);
-  if (context == null) {
-    throw new Error('No ListContext provided');
-  }
-
-  return context;
-}
-
-export default function ListProvider(props) {
+export default function TabsListProvider(props) {
   const { value, children } = props;
   const {
     dispatch,

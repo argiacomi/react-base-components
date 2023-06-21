@@ -1,20 +1,16 @@
-import React from 'react';
-import { areArraysEqual } from '@components/lib';
-import { useControllableReducer, useForkRef, useLatest, useTextNavigation } from '@components/lib';
+import * as React from 'react';
+import {
+  areArraysEqual,
+  useControllableReducer,
+  useForkRef,
+  useLatest,
+  useTextNavigation
+} from '@components/lib';
+import { ListActionTypes } from './listActions';
 import defaultReducer from './listReducer';
 import useListChangeNotifiers from './useListChangeNotifiers';
 
-export const ListActionTypes = {
-  blur: 'list:blur',
-  focus: 'list:focus',
-  itemClick: 'list:itemClick',
-  itemHover: 'list:itemHover',
-  itemsChange: 'list:itemsChange',
-  keyDown: 'list:keyDown',
-  resetHighlight: 'list:resetHighlight',
-  textNavigation: 'list:textNavigation'
-};
-
+const EMPTY_OBJECT = {};
 const NOOP = () => {};
 
 const defaultItemComparer = (optionA, optionB) => optionA === optionB;
@@ -28,9 +24,9 @@ const defaultGetInitialState = () => ({
   selectedValues: []
 });
 
-function useList(params = {}) {
+function useList(params) {
   const {
-    controlledProps = {},
+    controlledProps = EMPTY_OBJECT,
     disabledItemsFocusable = false,
     disableListWrap = false,
     focusManagement = 'activeDescendant',
@@ -38,7 +34,7 @@ function useList(params = {}) {
     getItemDomElement,
     getItemId,
     isItemDisabled = defaultIsItemDisabled,
-    ref: externalListRef,
+    rootRef: externalListRef,
     onStateChange = NOOP,
     items,
     itemComparer = defaultItemComparer,
@@ -48,7 +44,7 @@ function useList(params = {}) {
     onItemsChange,
     orientation = 'vertical',
     pageSize = 5,
-    reducerActionContext = {},
+    reducerActionContext = EMPTY_OBJECT,
     selectionMode = 'single',
     stateReducer: externalReducer
   } = params;
@@ -96,6 +92,7 @@ function useList(params = {}) {
     [itemComparer]
   );
 
+  // This gets called whenever a reducer changes the state.
   const handleStateChange = React.useCallback(
     (event, field, value, reason, state) => {
       onStateChange?.(event, field, value, reason, state);
@@ -114,6 +111,8 @@ function useList(params = {}) {
     [handleHighlightChange, onChange, onStateChange]
   );
 
+  // The following object is added to each action when it's dispatched.
+  // It's accessible in the reducer via the `action.context` field.
   const listActionContext = React.useMemo(() => {
     return {
       disabledItemsFocusable,

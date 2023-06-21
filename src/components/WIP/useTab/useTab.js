@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { useId, useForkRef } from '@components/lib';
-import useButton from '@components/Inputs/ButtonBase/useButton';
-import { useCompoundItem } from '@components/lib/useCompoundItem';
-import { useListItem } from '../useList';
+import { useCompoundItem, useId, useForkRef } from '@components/lib';
 import { useTabsContext } from '../Tabs';
+import { useListItem } from '../useList';
+import { useButton } from '@components/inputs';
 
 function tabValueGenerator(otherTabValues) {
   return otherTabValues.size;

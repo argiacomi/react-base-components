@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
+import React from 'react';
 import { setRef } from '@component/utils';
 
 export function useForkRef(...refs) {
-  return useMemo(() => {
+  return React.useMemo(() => {
     if (refs.every((ref) => ref == null)) {
       return null;
     }

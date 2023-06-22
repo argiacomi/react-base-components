@@ -3,8 +3,6 @@ import { useForkRef, useEnhancedEffect, useForcedRerendering } from '@components
 import { ListActionTypes } from './listActions';
 import { ListContext } from './ListContext';
 
-let counter = 0;
-
 export default function useListItem(parameters) {
   const { handlePointerOverEvents = false, item, rootRef: externalRef } = parameters;
 
@@ -47,7 +45,7 @@ export default function useListItem(parameters) {
     }
 
     return registerSelectionChangeHandler(updateSelectedState);
-  }, [registerSelectionChangeHandler, rerender, selected, item]);
+  });
 
   const createHandleClick = React.useCallback(
     (other) => (event) => {

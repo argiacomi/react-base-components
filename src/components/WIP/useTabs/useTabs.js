@@ -28,7 +28,7 @@ function useTabs(parameters) {
 
   const { subitems: tabPanels, contextValue: compoundComponentContextValue } = useCompoundParent();
 
-  const tabIdLookup = React.useRef(() => undefined);
+  const tabIdLookup = React.useRef();
 
   const getTabPanelId = React.useCallback(
     (tabValue) => {

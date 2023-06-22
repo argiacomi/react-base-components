@@ -1,3 +1,4 @@
-import { useEffect, useLayoutEffect } from 'react';
+import * as React from 'react';
 
-export const useEnhancedEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+export const useEnhancedEffect =
+  typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;

@@ -14,7 +14,6 @@ function getControlledState(internalState, controlledProps) {
       augmentedState[key] = controlledProps[key];
     }
   });
-
   return augmentedState;
 }
 
@@ -81,6 +80,7 @@ export function useControllableReducer(parameters) {
   const reducerWithControlledState = React.useCallback(
     (state, action) => {
       lastActionRef.current = action;
+
       const controlledState = getControlledState(state, controlledProps);
       const newState = reducer(controlledState, action);
       return newState;

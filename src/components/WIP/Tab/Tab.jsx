@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { useForkRef, useSlotProps } from '@components/lib';
 import useTab from '../useTab';
 
@@ -52,7 +53,7 @@ const Tab = React.forwardRef(function Tab(props, forwardedRef) {
       ref: forwardedRef
     },
     ownerState,
-    className: classes.root
+    className: clsx(classes.root, selected)
   });
 
   return <TabRoot {...tabRootProps}>{children}</TabRoot>;

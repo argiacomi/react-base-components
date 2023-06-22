@@ -17,7 +17,7 @@ function useTabPanel(parameters) {
   const { value: selectedTabValue, getTabId } = context;
 
   const id = useId(idParam);
-  const ref = React.useRef(null);
+  const ref = React.useRef();
   const handleRef = useForkRef(ref, externalRef);
   const metadata = React.useMemo(() => ({ id, ref }), [id]);
 

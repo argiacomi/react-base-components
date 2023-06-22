@@ -63,7 +63,7 @@ function useList(params) {
     }
   }
 
-  const listRef = React.useRef(null);
+  const listRef = React.useRef();
   const handleRef = useForkRef(externalListRef, listRef);
 
   const handleHighlightChange = React.useCallback(

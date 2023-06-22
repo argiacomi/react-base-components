@@ -11,7 +11,7 @@ function tabValueGenerator(otherTabValues) {
 function useTab(parameters) {
   const { value: valueParam, rootRef: externalRef, disabled = false, id: idParam } = parameters;
 
-  const tabRef = React.useRef(null);
+  const tabRef = React.useRef();
   const id = useId(idParam);
 
   const { value: selectedValue, selectionFollowsFocus, getTabPanelId } = useTabsContext();

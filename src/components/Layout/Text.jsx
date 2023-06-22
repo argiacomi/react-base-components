@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import { styled, extractStyling } from '@styles';
 
 export const TextRoot = styled('span')(({ theme, ownerState }) => {
   const colorStyles = {
@@ -32,7 +32,8 @@ export const TextRoot = styled('span')(({ theme, ownerState }) => {
     ...(ownerState.paragraph && {
       marginBottom: '1rem'
     }),
-    color: (ownerState.color && color) || ownerState.color
+    color: (ownerState.color && color) || ownerState.color,
+    ...ownerState.cssStyles
   };
 });
 
@@ -61,8 +62,10 @@ const Text = React.forwardRef((props, ref) => {
     paragraph = false,
     variant = 'body1',
     variantMapping = defaultVariantMapping,
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const component =
     componentProp ||
@@ -78,6 +81,7 @@ const Text = React.forwardRef((props, ref) => {
     gutterBottom,
     noWrap,
     paragraph,
+    cssStyles,
     variant,
     variantMapping
   };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Icon, Stack, Text } from '@components';
+import { Box, Icon, Stack, Tab, Tabs, Text } from '@components';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

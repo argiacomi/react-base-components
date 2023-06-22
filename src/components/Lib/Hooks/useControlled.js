@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import * as React from 'react';
 
 export function useControlled({ controlled, default: defaultProp, name, state = 'value' }) {
@@ -15,7 +16,7 @@ export function useControlled({ controlled, default: defaultProp, name, state = 
           Decide between using a controlled or uncontrolled ${name} element for the lifetime of the component.`
         );
       }
-    }, [state, name, controlled]);
+    }, [state, name, controlled, isControlled]);
 
     const { current: defaultValue } = React.useRef(defaultProp);
 
@@ -26,6 +27,7 @@ export function useControlled({ controlled, default: defaultProp, name, state = 
           To suppress this warning opt to use a controlled ${name}.`
         );
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [JSON.stringify(defaultProp)]);
   }
 
@@ -33,6 +35,7 @@ export function useControlled({ controlled, default: defaultProp, name, state = 
     if (!isControlled) {
       setValue(newValue);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return [value, setValueIfUncontrolled];

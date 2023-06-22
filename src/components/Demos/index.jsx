@@ -14,7 +14,6 @@ export { default as FocusTrapDemo } from './FocusTrapDemo';
 export { default as FormControlDemo } from './FormControlDemo';
 export { default as InputDemo } from './InputDemo';
 export { default as ListDemo } from './ListDemo';
-// export { default as NewListDemo } from './NewListDemo';
 export { default as MenuDemo } from './MenuDemo';
 export { default as ModalDemo } from './ModalDemo';
 export { default as NoSsrDemo } from './NoSsrDemo';
@@ -24,6 +23,8 @@ export { default as ProgressDemo } from './ProgressDemo';
 export { default as RadioDemo } from './RadioDemo';
 export { default as SnackbarDemo } from './SnackbarDemo';
 export { default as TabDemo } from './TabDemo';
-export { default as NewTabDemo } from './NewTabDemo';
 export { default as TextFieldDemo } from './TextFieldDemo';
 export { default as TooltipDemo } from './TooltipDemo';
+
+export { default as NewListDemo } from './NewListDemo';
+export { default as NewTabDemo } from './NewTabDemo';

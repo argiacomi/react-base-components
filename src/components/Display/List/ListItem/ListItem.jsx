@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@styles';
@@ -99,7 +98,6 @@ export const ListItemRoot = styled('div')(({ theme, ownerState }) => ({
 
 const ListItem = React.forwardRef((props, ref) => {
   const {
-    action,
     alignItems = 'center',
     button = false,
     autoFocus = false,
@@ -111,13 +109,9 @@ const ListItem = React.forwardRef((props, ref) => {
     disablePadding = false,
     divider = false,
     focusVisibleClassName,
-    onChange,
-    onClick,
-    onFocus,
     secondaryAction,
     slotProps = {},
     slots = {},
-    value: valueProp,
     ...other
   } = props;
 

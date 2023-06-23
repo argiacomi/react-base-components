@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import * as React from 'react';
 import { styled } from '@styles';
 import { useSlotProps } from '@components/lib';

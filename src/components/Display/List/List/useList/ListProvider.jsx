@@ -31,7 +31,7 @@ export default function ListProvider(props) {
     [registerItem, getItemIndex, totalSubitemCount]
   );
 
-  const tabsContextValue = React.useMemo(
+  const ListContextValue = React.useMemo(
     () => ({
       dense,
       direction,
@@ -66,7 +66,7 @@ export default function ListProvider(props) {
 
   return (
     <CompoundComponentContext.Provider value={compoundComponentContextValue}>
-      <ListContext.Provider value={tabsContextValue}>{children}</ListContext.Provider>
+      <ListContext.Provider value={ListContextValue}>{children}</ListContext.Provider>
     </CompoundComponentContext.Provider>
   );
 }

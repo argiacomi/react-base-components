@@ -51,14 +51,14 @@ function useListItem(parameters) {
   const handleRef = useForkRef(itemRef, externalRef, listItemRefHandler, buttonRefHandler);
 
   const getRootProps = (otherHandlers) => {
-    const resolvedTabProps = {
+    const resolvedListProps = {
       ...otherHandlers,
       ...getListItemProps(otherHandlers)
     };
 
     const resolvedButtonProps = {
-      ...resolvedTabProps,
-      ...getButtonProps(resolvedTabProps)
+      ...resolvedListProps,
+      ...getButtonProps(resolvedListProps)
     };
 
     return {

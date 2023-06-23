@@ -1,9 +1,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@styles';
-import { useEnhancedEffect, useForkRef } from '@components/lib';
+import { useEnhancedEffect, useForkRef, useSlotProps } from '@components/lib';
 import {
-  ListContext,
+  useListItem,
+  ListItemContext,
   dividerClasses,
   listItemIconClasses,
   listItemTextClasses
@@ -111,26 +112,31 @@ const MenuItem = React.forwardRef((props, ref) => {
   const {
     autoFocus = false,
     component = 'li',
-    dense = false,
+    dense: denseProp = false,
+    disabled = false,
     divider = false,
     disableGutters = false,
     focusVisibleClassName,
     role = 'menuitem',
     tabIndex: tabIndexProp,
-    className,
     ...other
   } = props;
 
-  const context = React.useContext(ListContext);
+  const menuItemRef = React.useRef();
+  const handleRef = useForkRef(menuItemRef, ref);
+
+  const { active, dense, highlighted, selected, getRootProps } = useListItem({
+    ...props,
+    rootRef: handleRef
+  });
+
   const childContext = React.useMemo(
     () => ({
-      dense: dense || context.dense || false,
+      dense: denseProp || dense || false,
       disableGutters
     }),
-    [context.dense, dense, disableGutters]
+    [denseProp, dense, disableGutters]
   );
-
-  const menuItemRef = React.useRef(null);
   useEnhancedEffect(() => {
     if (autoFocus) {
       if (menuItemRef.current) {
@@ -143,9 +149,14 @@ const MenuItem = React.forwardRef((props, ref) => {
 
   const ownerState = {
     ...props,
+    active,
+    autoFocus,
     dense: childContext.dense,
+    disabled,
+    disableGutters,
     divider,
-    disableGutters
+    highlighted,
+    selected
   };
 
   const classes = {
@@ -157,27 +168,32 @@ const MenuItem = React.forwardRef((props, ref) => {
     focusVisible: menuItemClasses.focusVisible
   };
 
-  const handleRef = useForkRef(menuItemRef, ref);
-
   let tabIndex;
   if (!props.disabled) {
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
   }
 
+  const menuItemRootProps = useSlotProps({
+    elementType: MenuItemRoot,
+    getSlotProps: getRootProps,
+    externalForwardedProps: other,
+    additionalProps: {
+      component: component,
+      ref: handleRef,
+      role: role,
+      tabIndex: tabIndex,
+      disabled: ownerState.disabled,
+      focusVisibleClassName: clsx(classes.focusVisible, focusVisibleClassName),
+      classes: classes
+    },
+    ownerState,
+    className: classes.root
+  });
+
   return (
-    <ListContext.Provider value={childContext}>
-      <MenuItemRoot
-        ref={handleRef}
-        role={role}
-        tabIndex={tabIndex}
-        component={component}
-        focusVisibleClassName={clsx(classes.focusVisible, focusVisibleClassName)}
-        className={clsx(classes.root, className)}
-        {...other}
-        ownerState={ownerState}
-        classes={classes}
-      />
-    </ListContext.Provider>
+    <ListItemContext.Provider value={childContext}>
+      <MenuItemRoot {...menuItemRootProps} />
+    </ListItemContext.Provider>
   );
 });
 

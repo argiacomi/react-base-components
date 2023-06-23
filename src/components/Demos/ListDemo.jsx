@@ -297,6 +297,7 @@ function InteractiveList() {
 }
 
 function SelectedListItem() {
+  // eslint-disable-next-line no-unused-vars
   const [selectedIndex, setSelectedIndex] = React.useState(1);
 
   const handleListItemClick = (event, index) => {
@@ -304,49 +305,39 @@ function SelectedListItem() {
   };
 
   return (
-    <Box
+    <List
+      selectionMode='single'
       css={({ theme }) => ({
+        padding: 0,
         width: '100%',
         maxWidth: 360,
         backgroundColor: theme.color.background
       })}
     >
-      <List component='nav' aria-label='main mailbox folders'>
-        <ListItemButton
-          selected={selectedIndex === 0}
-          onClick={(event) => handleListItemClick(event, 0)}
-        >
+      <Box css={{ padding: '8px 0' }} component='nav' aria-label='main mailbox folders'>
+        <ListItemButton onClick={(event) => handleListItemClick(event, 0)}>
           <ListItemIcon>
             <Icon icon='MdInbox' />
           </ListItemIcon>
           <ListItemText primary='Inbox' />
         </ListItemButton>
-        <ListItemButton
-          selected={selectedIndex === 1}
-          onClick={(event) => handleListItemClick(event, 1)}
-        >
+        <ListItemButton onClick={(event) => handleListItemClick(event, 1)}>
           <ListItemIcon>
             <Icon icon='MdDrafts' />
           </ListItemIcon>
           <ListItemText primary='Drafts' />
         </ListItemButton>
-      </List>
+      </Box>
       <Divider />
-      <List component='nav' aria-label='secondary mailbox folder'>
-        <ListItemButton
-          selected={selectedIndex === 2}
-          onClick={(event) => handleListItemClick(event, 2)}
-        >
+      <Box css={{ padding: '8px 0' }} component='nav' aria-label='secondary mailbox folder'>
+        <ListItemButton onClick={(event) => handleListItemClick(event, 2)}>
           <ListItemText primary='Trash' />
         </ListItemButton>
-        <ListItemButton
-          selected={selectedIndex === 3}
-          onClick={(event) => handleListItemClick(event, 3)}
-        >
+        <ListItemButton onClick={(event) => handleListItemClick(event, 3)}>
           <ListItemText primary='Spam' />
         </ListItemButton>
-      </List>
-    </Box>
+      </Box>
+    </List>
   );
 }
 
@@ -354,7 +345,7 @@ function AlignItemsList() {
   return (
     <List
       css={({ theme }) => ({
-        width: '100%',
+        wvalueth: '100%',
         maxWidth: 360,
         backgroundColor: theme.color.background
       })}
@@ -367,7 +358,12 @@ function AlignItemsList() {
           primary='Brunch this weekend?'
           secondary={
             <React.Fragment>
-              <Text css={{ display: 'inline' }} component='span' variant='body2' color='primary'>
+              <Text
+                css={{ display: 'inline' }}
+                component='span'
+                variant='body2'
+                color='text.primary'
+              >
                 Ali Connors
               </Text>
               {" — I'll be in your neighborhood doing errands this…"}
@@ -384,7 +380,12 @@ function AlignItemsList() {
           primary='Summer BBQ'
           secondary={
             <React.Fragment>
-              <Text css={{ display: 'inline' }} component='span' variant='body2' color='primary'>
+              <Text
+                css={{ display: 'inline' }}
+                component='span'
+                variant='body2'
+                color='text.primary'
+              >
                 to Scott, Alex, Jennifer
               </Text>
               {" — Wish I could come, but I'm out of town this…"}
@@ -401,7 +402,12 @@ function AlignItemsList() {
           primary='Oui Oui'
           secondary={
             <React.Fragment>
-              <Text css={{ display: 'inline' }} component='span' variant='body2' color='primary'>
+              <Text
+                css={{ display: 'inline' }}
+                component='span'
+                variant='body2'
+                color='text.primaryy'
+              >
                 Sandra Adams
               </Text>
               {' — Do you have Paris recommendations? Have you ever…'}
@@ -649,17 +655,18 @@ function renderRow(props) {
 
 function VirtualizedList() {
   return (
-    <Box
+    <List
       css={({ theme }) => ({
         height: 400,
         maxWidth: 360,
+        padding: 0,
         backgroundColor: theme.color.background
       })}
     >
       <FixedSizeList height={400} width={360} itemSize={50} itemCount={500} overscanCount={5}>
         {renderRow}
       </FixedSizeList>
-    </Box>
+    </List>
   );
 }
 
@@ -756,17 +763,17 @@ function CustomizedList() {
           <Box
             css={{
               backgroundColor: open ? 'rgba(71, 98, 130, 0.2)' : null,
-              paddingBottom: open ? 2 : 0
+              paddingBottom: open ? '1rem' : 0
             }}
           >
             <ListItemButton
               alignItems='flex-start'
               onClick={() => setOpen(!open)}
               css={{
-                paddingLeft: 3,
-                paddingRight: 3,
-                paddingTop: 2.5,
-                paddingBottom: open ? 0 : 2.5,
+                paddingLeft: '1.5rem',
+                paddingRight: '1.5rem',
+                paddingTop: '1.25rem',
+                paddingBottom: open ? 0 : '1.25rem',
                 '&:hover, &:focus': { '& svg': { opacity: open ? 1 : 0 } }
               }}
             >

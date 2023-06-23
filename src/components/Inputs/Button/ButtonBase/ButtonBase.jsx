@@ -58,6 +58,7 @@ const ButtonBase = React.forwardRef((props, ref) => {
     type,
     ...other
   } = props;
+
   const buttonRef = React.useRef(null);
   const handleRef = useForkRef(buttonRef, ref);
 
@@ -120,14 +121,14 @@ const ButtonBase = React.forwardRef((props, ref) => {
     type
   };
 
-  const classes = ['ButtonBaseRoot', focusVisible && focusVisibleClassName];
+  const classes = ['ButtonBase-Root', focusVisible && focusVisibleClassName];
 
   return (
     <ButtonBaseRoot
       as={ComponentProp}
       className={clsx(classes, className)}
       ownerState={ownerState}
-      {...getRootProps(getRippleHandlers(props))}
+      {...getRootProps(getRippleHandlers(other))}
       {...other}
     >
       {children}

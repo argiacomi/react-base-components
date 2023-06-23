@@ -1,4 +1,3 @@
-import * as React from 'react';
 import styled from 'styled-components/macro';
 import { Tabs, TabsList, TabPanel, Tab } from '@components/WIP/Tabs';
 import { buttonClasses } from '@mui/base/Button';

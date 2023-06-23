@@ -26,5 +26,4 @@ export { default as TabDemo } from './TabDemo';
 export { default as TextFieldDemo } from './TextFieldDemo';
 export { default as TooltipDemo } from './TooltipDemo';
 
-export { default as NewListDemo } from './NewListDemo';
 export { default as NewTabDemo } from './NewTabDemo';

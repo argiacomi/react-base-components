@@ -1,6 +1,6 @@
 import React from 'react';
 import { InputBase as Input } from '@components';
-import { styled } from '@styles';
+import styled from '@styles';
 
 const CustomInput = React.forwardRef(function CustomInput(props, ref) {
   return <Input slots={{ input: StyledInputElement }} {...props} ref={ref} />;

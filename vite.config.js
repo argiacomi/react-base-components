@@ -19,15 +19,7 @@ export default defineConfig({
   plugins: [
     react({
       babel: {
-        plugins: [
-          [
-            'babel-plugin-styled-components',
-            {
-              meaninglessFileNames: ['index', 'styles']
-            }
-          ],
-          'babel-plugin-macros'
-        ]
+        plugins: ['babel-plugin-styled-components', 'babel-plugin-macros']
       },
       exclude: /\.stories\.(t|j)sx?$/
     }),

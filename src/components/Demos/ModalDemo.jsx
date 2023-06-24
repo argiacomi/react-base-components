@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled } from '@styles';
+import styled from '@styles';
 import { Backdrop, Box, Button, Fade, Modal, Stack, Text } from '@components';
 
 const StyleBox = styled(Box)(({ theme }) => ({

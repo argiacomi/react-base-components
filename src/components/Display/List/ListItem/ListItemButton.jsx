@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import { useEnhancedEffect, useForkRef, useSlotProps } from '@components/lib';
 import { ButtonBase } from '@components/inputs';
 import ListItemContext from './ListItemContext';

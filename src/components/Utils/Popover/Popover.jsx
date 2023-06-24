@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import { debounce, ownerDocument, ownerWindow, useForkRef, useSlotProps } from '@components/lib';
 import Grow from '../Transitions/Grow';
 import { Modal } from '../Modal';

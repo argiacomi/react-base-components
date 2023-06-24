@@ -1,5 +1,12 @@
 import React from 'react';
-import { setRef } from '@component/utils';
+
+export function setRef(ref, value) {
+  if (typeof ref === 'function') {
+    ref(value);
+  } else if (ref) {
+    ref.current = value;
+  }
+}
 
 export function useForkRef(...refs) {
   return React.useMemo(() => {

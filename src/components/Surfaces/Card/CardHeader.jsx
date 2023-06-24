@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { Text } from '@components/layout';
-import { styled } from '@styles';
+import styled from '@styles';
 
 const CardHeaderRoot = styled('div')(({ theme }) => ({
   display: 'flex',

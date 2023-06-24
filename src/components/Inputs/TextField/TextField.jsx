@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import { Input, InputFilled, InputOutlined, InputLabel } from '../Input';
 import { FormControl, FormHelperText } from '../Form';
 // import Select from '../Select'; //TODO

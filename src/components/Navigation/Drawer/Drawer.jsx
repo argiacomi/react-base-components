@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Modal } from '@components/utils/Modal';
 import { Slide } from '@components/utils/transitions';
 import { Paper } from '@components/surfaces';
-import { styled, useTheme } from '@styles';
+import styled, { useTheme } from '@styles';
 
 const DrawerRoot = styled(Modal)(({ theme }) => ({
   zIndex: theme.zIndex.drawer

@@ -6,7 +6,7 @@ const useUtilityClasses = (ownerState) => {
   const { hidden } = ownerState;
 
   return {
-    root: ['MuiTabPanel-root', hidden && 'Mui-hidden']
+    root: ['TabPanel-Root', hidden && 'Hidden']
   };
 };
 

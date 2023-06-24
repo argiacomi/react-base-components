@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import { css } from 'styled-components/macro';
 
 const SkeletonRoot = styled('span')(

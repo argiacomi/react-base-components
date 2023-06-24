@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled } from '@styles';
+import styled from '@styles';
 import clsx from 'clsx';
 import ButtonBase from '../ButtonBase/ButtonBase';
 import { Icon } from '@components/display';

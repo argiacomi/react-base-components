@@ -2,7 +2,7 @@ import React from 'react';
 import { Transition } from 'react-transition-group';
 import { useForkRef } from '@component/hooks';
 import { reflow, getTransitionProps, debounce, ownerWindow } from '@component/utils';
-import { useTheme } from 'styled-components/macro';
+import { useTheme } from '@styles';
 
 const getTranslateValue = (direction, node, resolvedContainer) => {
   const rect = node.getBoundingClientRect();

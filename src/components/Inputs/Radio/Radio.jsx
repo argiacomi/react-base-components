@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
-import { SwitchBase } from '../Switch';
+import styled from '@styles';
+import SwitchBase from '../Switch/SwitchBase';
 import { Icon } from '@components/display';
 import { createChainedFunction } from '@components/lib';
 import { useRadioGroup } from './RadioGroupContext';

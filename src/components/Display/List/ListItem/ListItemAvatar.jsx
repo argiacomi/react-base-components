@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { useListItemContext } from './ListItemContext';
-import { styled } from '@styles';
+import styled from '@styles';
 
 const ListItemAvatarRoot = styled('div')(({ theme, ownerState }) => ({
   minWidth: theme.spacing(7),

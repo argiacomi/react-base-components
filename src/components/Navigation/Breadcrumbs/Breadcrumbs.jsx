@@ -1,7 +1,7 @@
 import React from 'react';
 import { isFragment } from 'react-is';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import { useSlotProps } from '@components/lib';
 import { Text } from '@components/layout';
 import BreadcrumbCollapsed from './BreadcrumbCollapsed';

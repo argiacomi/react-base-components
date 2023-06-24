@@ -2,7 +2,7 @@ import React from 'react';
 import { TransitionGroup } from 'react-transition-group';
 import clsx from 'clsx';
 import { keyframes } from 'styled-components/macro';
-import { styled, useTheme } from '@styles';
+import styled, { useTheme } from '@styles';
 import Ripple from './Ripple';
 
 const touchRippleClasses = {

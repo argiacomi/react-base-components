@@ -7,7 +7,7 @@ const useUtilityClasses = (ownerState) => {
   const { selected, disabled } = ownerState;
 
   return {
-    root: ['MuiTab-root', selected && 'Mui-selected', disabled && 'Mui-disabled']
+    root: ['Tab-root', selected && 'Selected', disabled && 'Disabled']
   };
 };
 

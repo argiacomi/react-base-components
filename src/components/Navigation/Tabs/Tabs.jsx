@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { isFragment } from 'react-is';
 import clsx from 'clsx';
-import { styled, useTheme } from '@styles';
+import styled, { useTheme } from '@styles';
 import {
   animate,
   debounce,

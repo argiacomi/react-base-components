@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import { formControlState, useFormControl } from './FormControlContext';
 import { Text } from '@components/layout';
 
@@ -14,6 +14,7 @@ export const formControlLabelClasses = {
 
 export const FormControlLabelRoot = styled('label')(({ theme, ownerState }) => ({
   display: 'inline-flex',
+  width: 'max-content',
   alignItems: 'center',
   cursor: 'pointer',
   verticalAlign: 'middle',
@@ -69,10 +70,11 @@ const FormControlLabel = React.forwardRef((props, ref) => {
 
   const controlProps = {
     disabled,
-    required
+    required,
+    className: control.props.className
   };
 
-  ['checked', 'name', 'onChange', 'value', 'inputRef'].forEach((key) => {
+  [('checked', 'name', 'onChange', 'value', 'inputRef')].forEach((key) => {
     if (typeof control.props[key] === 'undefined' && typeof props[key] !== 'undefined') {
       controlProps[key] = props[key];
     }
@@ -108,11 +110,7 @@ const FormControlLabel = React.forwardRef((props, ref) => {
   let label = labelProp;
   if (label != null && label.type !== Text && !disableText) {
     label = (
-      <Text
-        component='span'
-        {...textSlotProps}
-        className={clsx(classes.label, textSlotProps?.className)}
-      >
+      <Text {...textSlotProps} className={clsx(classes.label, textSlotProps?.className)}>
         {label}
       </Text>
     );

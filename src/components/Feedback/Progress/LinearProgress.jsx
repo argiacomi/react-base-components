@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled, useTheme } from '@styles';
+import styled, { useTheme } from '@styles';
 import { keyframes, css } from 'styled-components/macro';
 
 const TRANSITION_DURATION = 4; // seconds

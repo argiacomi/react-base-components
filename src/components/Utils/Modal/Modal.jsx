@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import ModalBase from './ModalBase';
 import { resolveComponentProps } from '@components/lib';
-import { styled } from '@styles';
+import styled from '@styles';
 import { Backdrop } from '@components/feedback';
 
 const ModalRoot = styled('div')(({ theme, ownerState }) => ({

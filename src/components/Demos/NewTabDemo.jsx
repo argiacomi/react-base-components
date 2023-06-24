@@ -1,7 +1,5 @@
-import styled from 'styled-components/macro';
+import styled from '@styles';
 import { Tabs, TabsList, TabPanel, Tab } from '@components/WIP/Tabs';
-import { buttonClasses } from '@mui/base/Button';
-import { tabClasses } from '@mui/base/Tab';
 
 export default function UnstyledTabsVertical() {
   return (
@@ -67,17 +65,17 @@ const StyledTab = styled(Tab)`
     outline: 3px solid ${blue[200]};
   }
 
-  &.${buttonClasses.focusVisible} {
+  &.FocusVisible {
     background-color: #fff;
     color: ${blue[600]};
   }
 
-  &.${tabClasses.disabled} {
+  &.Disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  &.${tabClasses.selected} {
+  &.Selected {
     background-color: #fff;
     color: ${blue[600]};
   }

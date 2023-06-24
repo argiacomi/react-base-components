@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled } from '@styles';
+import styled from '@styles';
 import { Icon } from '@components/display';
 import { ButtonBase } from '@components/inputs';
 

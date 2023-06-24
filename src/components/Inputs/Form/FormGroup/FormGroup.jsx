@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import { useFormControl, formControlState } from '../FormControl';
 
 const FormGroupRoot = styled('div')(({ ownerState }) => ({

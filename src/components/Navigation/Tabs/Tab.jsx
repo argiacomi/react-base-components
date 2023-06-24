@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { ButtonBase } from '@components/inputs';
-import { styled } from '@styles';
+import styled from '@styles';
 
 const tabClasses = {
   root: 'Tab-Root',

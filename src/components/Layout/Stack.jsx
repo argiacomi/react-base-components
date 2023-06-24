@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled, { extractStyling } from '@styles';
 
 function joinChildren(children, divider) {
   const childrenArray = React.Children.toArray(children).filter(Boolean);
@@ -51,7 +51,7 @@ const StackRoot = styled('div')(
         }
       });
     });
-    return styles;
+    return { ...styles, ...ownerState.cssStyles };
   }
 );
 
@@ -64,11 +64,14 @@ const Stack = React.forwardRef((props, ref) => {
     children,
     className,
     useFlexGap = false,
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const ownerState = {
     ...props,
+    cssStyles,
     direction,
     spacing,
     useFlexGap

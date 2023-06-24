@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { Text } from '@components/layout';
 import { useListItemContext } from './ListItemContext';
-import { styled } from '@styles';
+import styled from '@styles';
 
 export const listItemTextClasses = {
   root: 'ListItemText-Root',

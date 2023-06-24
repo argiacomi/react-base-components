@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled, useTheme } from '@styles';
+import styled, { useTheme } from '@styles';
 import { useSlotProps } from '@components/lib';
 import { ClickAwayListener } from '@components/utils';
 import useSnackbar from './useSnackbar';

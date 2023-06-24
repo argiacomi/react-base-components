@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import { isHorizontal } from '../Drawer';
 
 const SwipeAreaRoot = styled('div')(({ theme, ownerState }) => ({

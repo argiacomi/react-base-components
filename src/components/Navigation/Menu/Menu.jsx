@@ -3,7 +3,7 @@ import { isFragment } from 'react-is';
 import clsx from 'clsx';
 import MenuList from './MenuList';
 import { Popover, PopoverPaper } from '@components/utils';
-import { styled, useTheme } from '@styles';
+import styled, { useTheme } from '@styles';
 
 const menuClasses = {
   root: 'Menu-Root',

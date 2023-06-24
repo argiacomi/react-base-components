@@ -22,6 +22,7 @@ export { default as PopperDemo } from './PopperDemo';
 export { default as ProgressDemo } from './ProgressDemo';
 export { default as RadioDemo } from './RadioDemo';
 export { default as SnackbarDemo } from './SnackbarDemo';
+export { default as SwitchDemo } from './SwitchDemo';
 export { default as TabDemo } from './TabDemo';
 export { default as TextFieldDemo } from './TextFieldDemo';
 export { default as TooltipDemo } from './TooltipDemo';

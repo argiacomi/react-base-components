@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, useTheme } from '@styles';
+import styled, { useTheme } from '@styles';
 import { ButtonBase } from '@components/inputs';
 import { Icon } from '@components/display';
 import { useSlotProps } from '@components/lib';

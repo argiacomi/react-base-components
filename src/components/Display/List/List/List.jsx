@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@styles';
+import styled from '@styles';
 import { useSlotProps } from '@components/lib';
 import useList from './useList';
 import ListProvider from './useList/ListProvider';

@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled, GlobalStyles } from '@styles';
+import styled, { GlobalStyles } from '@styles';
 import useInputBase from './useInputBase';
 import TextareaAutosize from '../InputHelpers/TextareaAutosize';
 import { FormControlContext, formControlState } from '@components/Inputs/Form';

@@ -17,7 +17,7 @@ import {
   // FormControlDemo,
   // InputDemo,
   // ListDemo
-  MenuDemo
+  // MenuDemo
   // ModalDemo,
   // NoSsrDemo,
   // PopoverDemo,
@@ -25,7 +25,8 @@ import {
   // ProgressDemo
   // RadioDemo,
   // SnackbarDemo,
-  // TabDemo,
+  SwitchDemo
+  // TabDemo
   // TextFieldDemo,
   // TooltipDemo,
   // NewTabDemo,
@@ -34,7 +35,7 @@ import {
 const App = () => {
   return (
     <Box css={{ margin: '3rem', height: 2000 }}>
-      <MenuDemo />
+      <SwitchDemo />
     </Box>
   );
 };

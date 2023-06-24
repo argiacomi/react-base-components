@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from 'styled-components/macro'; //eslint-disable-line
-import { styled } from '@styles';
+import styled from '@styles';
 import {
   Avatar,
   Box,

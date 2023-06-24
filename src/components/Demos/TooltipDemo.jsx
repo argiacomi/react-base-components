@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled } from '@styles';
+import styled from '@styles';
 import {
   Box,
   ClickAwayListener,

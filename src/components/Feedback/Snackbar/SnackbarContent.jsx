@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import { Paper } from '@components/surfaces';
 
 const SnackbarContentRoot = styled(Paper)(({ theme }) => {

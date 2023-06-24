@@ -10,7 +10,7 @@ export function useControlled({ controlled, default: defaultProp, name, state = 
     React.useEffect(() => {
       if (isControlled !== (controlled !== undefined)) {
         console.error(
-          `MUI: A component is changing the ${isControlled ? '' : 'un'}controlled
+          `A component is changing the ${isControlled ? '' : 'un'}controlled
           ${state} state of ${name} to be ${isControlled ? 'un' : ''}controlled.
           Elements should not switch from uncontrolled to controlled (or vice versa).
           Decide between using a controlled or uncontrolled ${name} element for the lifetime of the component.`

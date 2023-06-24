@@ -1,4 +1,7 @@
 import { baseTheme as theme } from '@styles';
+
+//--- Formatting and Calculation Utilities ---//
+
 // Takes a number of milliseconds and returns it formatted as a string with the "ms" suffix.
 function formatMs(milliseconds) {
   return `${Math.round(milliseconds)}ms`;
@@ -12,6 +15,11 @@ export function getAutoHeightDuration(timeout, wrapperSize) {
   return Math.round((4 + 15 * (wrapperSize / 36) ** 0.25 + wrapperSize / 36 / 5) * 10);
 }
 
+function easeInOutSin(time) {
+  return (1 + Math.sin(Math.PI * time - Math.PI / 2)) / 2;
+}
+
+//--- Transition Creation and Management Utilities ---//
 // Creates transition strings for CSS transition properties.
 export function createTransitions(props = ['all'], options = {}) {
   const {
@@ -78,20 +86,47 @@ export function getTransitionProps({ timeout, easing, style = {} }, options) {
   };
 }
 
-// Triggers a reflow on the passed Dom node by accessing its scrollTop property.
-export const reflow = (node) => node.scrollTop;
+//--- Animation Execution Utilities  ---//
 
-export function debounce(func, wait = 166) {
-  let timeout;
-  function debounced(...args) {
-    const later = () => {
-      func.apply(this, args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  }
-  debounced.clear = () => {
-    clearTimeout(timeout);
+export function animate(property, element, to, options = {}, cb = () => {}) {
+  const { ease = easeInOutSin, duration = 300 } = options;
+
+  let start = null;
+  const from = element[property];
+  let cancelled = false;
+
+  const cancel = () => {
+    cancelled = true;
   };
-  return debounced;
+
+  const step = (timestamp) => {
+    if (cancelled) {
+      cb(new Error('Animation cancelled'));
+      return;
+    }
+
+    if (start === null) {
+      start = timestamp;
+    }
+    const time = Math.min(1, (timestamp - start) / duration);
+
+    element[property] = ease(time) * (to - from) + from;
+
+    if (time >= 1) {
+      requestAnimationFrame(() => {
+        cb(null);
+      });
+      return;
+    }
+
+    requestAnimationFrame(step);
+  };
+
+  if (from === to) {
+    cb(new Error('Element already at target position'));
+    return cancel;
+  }
+
+  requestAnimationFrame(step);
+  return cancel;
 }

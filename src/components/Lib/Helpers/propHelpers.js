@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import { extractEventHandlers, omitEventHandlers } from '@component/utils';
 
+//--- Prop Merging and Overriding Utilities ---//
+
 export function appendOwnerState(elementType, otherProps, ownerState) {
   if (elementType === undefined || typeof elementType === 'string') {
     return otherProps;
@@ -120,6 +122,8 @@ export function mergeSlotProps(parameters) {
   };
 }
 
+//--- Component and Prop Resolver Utilities ---//
+
 export function resolveComponentProps(componentProps, ownerState) {
   if (typeof componentProps === 'function') {
     return componentProps(ownerState);
@@ -127,6 +131,8 @@ export function resolveComponentProps(componentProps, ownerState) {
 
   return componentProps;
 }
+
+//--- Object Cloning and Deep Merging ---//
 
 export function isPlainObject(item) {
   return item !== null && typeof item === 'object' && item.constructor === Object;

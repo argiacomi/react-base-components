@@ -7,7 +7,7 @@ const useUtilityClasses = (ownerState) => {
   const { orientation } = ownerState;
 
   return {
-    root: ['MuiTabs-root', `Mui-${orientation}`]
+    root: ['Tabs-Root', `Tabs-${orientation}`]
   };
 };
 

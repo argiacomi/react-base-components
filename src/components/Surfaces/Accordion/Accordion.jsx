@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import { Collapse, Paper } from '@components';
 import { useControlled } from '@component/hooks';
 import AccordionContext from './AccordionContext';

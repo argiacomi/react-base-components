@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled } from '@styles';
+import styled from '@styles';
 import clsx from 'clsx';
 import { mergeProps } from '@component/utils';
 import ButtonBase from '../ButtonBase/ButtonBase';

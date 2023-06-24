@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import { Fade } from '@components/utils';
 
 const BackdropRoot = styled('div')(({ ownerState }) => ({

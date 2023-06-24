@@ -2,7 +2,7 @@ import React from 'react';
 import { Transition } from 'react-transition-group';
 import { reflow, getTransitionProps } from '@component/utils';
 import { useForkRef } from '@component/hooks';
-import { useTheme } from 'styled-components/macro';
+import { useTheme } from '@styles';
 
 const styles = {
   entering: {

@@ -1,3 +1,4 @@
+//--- Breakpoint Creation and Management Utilities ---//
 export function getOverlappingBreakpoints(props) {
   const breakpoints = props.breakpoints;
   const breakpointKeys = Object.keys(breakpoints);

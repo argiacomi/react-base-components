@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import * as FiIcons from 'react-icons/fi';
 import * as MdIcons from 'react-icons/md';
 
@@ -28,22 +28,22 @@ const iconLibraries = {
   }
 };
 
-const IconRoot = styled('span')(({ theme, $ownerState, css }) => {
+const IconRoot = styled('span')(({ theme, ownerState, css }) => {
   let fontSize, lineHeight;
-  if (typeof $ownerState.size === 'string') {
-    const sizeStyle = theme.text.size[sizeMapping[$ownerState.size]] || {};
-    fontSize = sizeStyle.fontSize || $ownerState.size;
+  if (typeof ownerState.size === 'string') {
+    const sizeStyle = theme.text.size[sizeMapping[ownerState.size]] || {};
+    fontSize = sizeStyle.fontSize || ownerState.size;
     lineHeight = sizeStyle.lineHeight || 'normal';
   } else {
-    fontSize = `${$ownerState.size}rem`;
+    fontSize = `${ownerState.size}rem`;
     lineHeight = 'normal';
   }
 
-  const fillColor = ['inherit', 'white'].includes($ownerState.color)
-    ? $ownerState.color === 'inherit'
+  const fillColor = ['inherit', 'white'].includes(ownerState.color)
+    ? ownerState.color === 'inherit'
       ? 'currentColor'
       : theme.color.white
-    : theme.color[$ownerState.color][500];
+    : theme.color[ownerState.color][500];
 
   return {
     userSelect: 'none',
@@ -88,7 +88,7 @@ const Icon = React.forwardRef((props, ref) => {
     <IconRoot
       as={IconComponent}
       className={clsx('Icon-Root', className)}
-      $ownerState={ownerState}
+      ownerState={ownerState}
       data-testid={iconProp}
       focusable='false'
       fill={htmlColor}

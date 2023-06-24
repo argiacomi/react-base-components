@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import { Text } from '@components/layout';
 
 const AlertTitleRoot = styled(Text).withConfig({

@@ -1,16 +1,18 @@
-import React from 'react';
-import { styled } from '@styles';
+// @inheritedComponent IconButton
+import * as React from 'react';
 import clsx from 'clsx';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 import SwitchBase from './SwitchBase';
 
-const switchClasses = {
+export const switchClasses = {
   root: 'Switch-Root',
   switchBase: 'Switch-SwitchBase',
   input: 'Switch-Input',
   thumb: 'Switch-Thumb',
   track: 'Switch-Track',
-  checked: 'Switch-Checked',
-  disabled: 'Switch-Disabled'
+  checked: 'Checked',
+  disabled: 'Disabled'
 };
 
 const SwitchRoot = styled('span')(({ ownerState }) => ({
@@ -25,16 +27,20 @@ const SwitchRoot = styled('span')(({ ownerState }) => ({
   flexShrink: 0,
   zIndex: 0,
   verticalAlign: 'middle',
+  '@media print': {
+    colorAdjust: 'exact'
+  },
   ...(ownerState.edge &&
     (ownerState.edge === 'start' ? { marginLeft: '-0.5rem' } : { marginRight: '-0.5rem' })),
   ...(ownerState.small && {
     width: '2.125rem',
     height: '1.125rem',
-    [`& .${ownerState.switchClasses.thumb}`]: {
+    [`& .${switchClasses.thumb}`]: {
       width: '.875rem',
       height: '.875rem'
     }
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
 const SwitchSwitchBase = styled(SwitchBase)(({ theme, ownerState }) => ({
@@ -44,7 +50,7 @@ const SwitchSwitchBase = styled(SwitchBase)(({ theme, ownerState }) => ({
   top: 0,
   left: 0,
   zIndex: 1,
-  color: theme.color.mode === 'dark' ? theme.color.monochrome[500] : theme.color.white, //may need to change this
+  color: theme.color.mode === 'dark' ? theme.color.monochrome[500] : theme.color.white,
   transition: theme.transition.create(['left', 'transform'], {
     duration: theme.transition.duration.standard,
     delay: '0ms'
@@ -55,23 +61,23 @@ const SwitchSwitchBase = styled(SwitchBase)(({ theme, ownerState }) => ({
       backgroundColor: 'transparent'
     }
   },
-  [`&.${ownerState.switchClasses.checked}`]: {
+  [`&.${switchClasses.checked}`]: {
     transform: 'translate(calc(100% + .125rem))'
   },
-  [`&.${ownerState.switchClasses.disabled}`]: {
+  [`&.${switchClasses.disabled}`]: {
     backgroundColor: theme.color.disabled
   },
-  [`&.${ownerState.switchClasses.disabled} + .${ownerState.switchClasses.track}`]: {
+  [`&.${switchClasses.disabled} + .${switchClasses.track}`]: {
     opacity: theme.color.mode === 'dark' ? 0.5 : 0.3
   },
-  [`&.${ownerState.switchClasses.checked} + .${ownerState.switchClasses.track}`]: {
+  [`&.${switchClasses.checked} + .${switchClasses.track}`]: {
     ...(ownerState.color === 'success' || ownerState.color === 'warning'
       ? { backgroundColor: theme.alpha.add(theme.color[ownerState.color][500], 0.9) }
       : { backgroundColor: theme.color[ownerState.color][500] })
   },
-  [`& .${ownerState.switchClasses.input}`]: {
-    left: '-50%',
-    width: '250%'
+  [`& .${switchClasses.input}`]: {
+    left: '-125%',
+    width: '325%'
   }
 }));
 
@@ -90,10 +96,7 @@ const SwitchTrack = styled('span')(({ theme }) => ({
       : theme.alpha.add(theme.color.black, 0.25)
 }));
 
-const SwitchThumb = styled('span', {
-  name: 'Switch',
-  slot: 'Thumb'
-})(({ theme }) => ({
+const SwitchThumb = styled('span')(({ theme }) => ({
   filter: theme.dropShadow['2xl'],
   backgroundColor: 'currentColor',
   width: theme.spacing(2),
@@ -102,14 +105,24 @@ const SwitchThumb = styled('span', {
 }));
 
 const Switch = React.forwardRef((props, ref) => {
-  const { className, color = 'success', edge = false, small = false, ...other } = props;
+  const {
+    className,
+    color = 'success',
+    edge = false,
+    slotProps = {},
+    slots = {},
+    small = false,
+    ...otherProps
+  } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const ownerState = {
     ...props,
     color,
+    cssStyles,
     edge,
-    small,
-    switchClasses
+    small
   };
 
   const classes = {
@@ -119,25 +132,58 @@ const Switch = React.forwardRef((props, ref) => {
       ownerState.checked && switchClasses.checked,
       ownerState.disabled && switchClasses.disabled
     ],
+    input: switchClasses.input,
     thumb: switchClasses.thumb,
-    track: switchClasses.track,
-    input: switchClasses.input
+    track: switchClasses.track
   };
 
-  const icon = <SwitchThumb className={classes.thumb} ownerState={ownerState} />;
+  const Root = slots.root ?? SwitchRoot;
+  const rootProps = useSlotProps({
+    elementType: Root,
+    externalSlotProps: slotProps.root,
+    ownerState,
+    className: clsx(classes.root, className)
+  });
+
+  const Thumb = slots.thumb ?? 'span';
+  const thumbProps = useSlotProps({
+    elementType: Thumb,
+    externalSlotProps: slotProps.thumb,
+    ownerState,
+    className: classes.thumb
+  });
+
+  const icon = <SwitchThumb {...thumbProps} />;
+
+  const Base = slots.root ?? SwitchSwitchBase;
+  const baseProps = useSlotProps({
+    elementType: Base,
+    externalSlotProps: slotProps.base,
+    externalForwardedProps: other,
+    additionalProps: {
+      checkedIcon: icon,
+      icon: icon,
+      ref: ref,
+      slotProps: { input: { className: classes.input } },
+      type: 'checkbox'
+    },
+    ownerState,
+    className: classes.switchBase
+  });
+
+  const Track = slots.track === null ? () => null : slots.track ?? SwitchTrack;
+
+  const trackProps = useSlotProps({
+    elementType: Track,
+    externalSlotProps: slotProps.track,
+    ownerState,
+    className: classes.track
+  });
 
   return (
-    <SwitchRoot className={clsx(classes.root, className)} ownerState={ownerState}>
-      <SwitchSwitchBase
-        type='checkbox'
-        icon={icon}
-        checkedIcon={icon}
-        ref={ref}
-        ownerState={ownerState}
-        {...other}
-        classes={classes.switchBase}
-      />
-      <SwitchTrack className={classes.track} ownerState={ownerState} />
+    <SwitchRoot {...rootProps}>
+      <SwitchSwitchBase {...baseProps} />
+      <SwitchTrack {...trackProps} />
     </SwitchRoot>
   );
 });

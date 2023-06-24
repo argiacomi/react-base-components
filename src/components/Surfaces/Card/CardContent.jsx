@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 
 const CardContentRoot = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),

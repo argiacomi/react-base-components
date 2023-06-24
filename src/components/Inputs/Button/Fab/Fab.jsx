@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import ButtonBase from '../ButtonBase/ButtonBase';
-import { styled } from '@styles';
+import styled from '@styles';
 
 const fabClasses = {
   root: 'Fab-Root',

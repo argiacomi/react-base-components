@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled, extractStyling } from '@styles';
+import styled, { extractStyling } from '@styles';
 
 export const TextRoot = styled('span')(({ theme, ownerState }) => {
   const colorStyles = {

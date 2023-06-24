@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { styled } from '@styles';
+import styled from '@styles';
 import { default as BaseIcon } from '@components/display/Icon';
 import { IconButton } from '@components/inputs/Button';
 import Paper from '@components/surfaces/Paper';

@@ -663,17 +663,17 @@ function MusicPlayerSlider() {
             defaultValue={30}
             sx={{
               color: theme.color.mode === 'dark' ? '#fff' : 'rgba(0,0,0,0.87)',
-              '& .MuiSlider-track': {
+              [`& .${sliderClasses.track}`]: {
                 border: 'none'
               },
-              '& .MuiSlider-thumb': {
+              [`& .${sliderClasses.thumb}`]: {
                 width: 24,
                 height: 24,
                 backgroundColor: '#fff',
                 '&:before': {
                   boxShadow: '0 4px 8px rgba(0,0,0,0.4)'
                 },
-                '&:hover, &.Mui-focusVisible, &.Mui-active': {
+                [`&:hover, &.${sliderClasses.focusVisible}, &.${sliderClasses.active}`]: {
                   boxShadow: 'none'
                 }
               }

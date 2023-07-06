@@ -9,7 +9,7 @@ export const tableRowClasses = {
 };
 
 const TableRowRoot = styled('tr', {
-  name: 'MuiTableRow',
+  name: 'TableRow',
   slot: 'Root'
 })(({ theme, ownerState }) => ({
   color: 'inherit',

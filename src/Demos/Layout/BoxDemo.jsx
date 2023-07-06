@@ -1,5 +1,5 @@
-import styled from '@styles';
 import { Box, Stack, Text } from '@components';
+import styled from '@styles';
 
 const BoxStyled = styled(Box)(({ theme, ownerState }) => ({
   '&:hover': {

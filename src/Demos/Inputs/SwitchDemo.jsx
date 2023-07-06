@@ -1,16 +1,16 @@
-import React from 'react';
-import styled from '@styles';
 import {
-  FormControlLabel,
   FormControl,
+  FormControlLabel,
   FormGroup,
-  FormLabel,
   FormHelperText,
+  FormLabel,
   Stack,
   Switch,
   switchClasses,
   Text
 } from '@components';
+import React from 'react';
+import styled from '@styles';
 
 let label = { inputProps: { 'aria-label': 'Switch demo' } };
 

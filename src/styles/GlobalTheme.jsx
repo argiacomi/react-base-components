@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { ThemeProvider, keyframes } from 'styled-components/macro';
 import {
-  createTransitions,
   createBreakpoints,
-  traverseBreakpoints,
-  getOverlappingBreakpoints
+  createTransitions,
+  getOverlappingBreakpoints,
+  traverseBreakpoints
 } from '@component/utils';
 import Color from 'color';
+import { keyframes, ThemeProvider } from 'styled-components/macro';
+import { useEffect, useState } from 'react';
 
 const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
 

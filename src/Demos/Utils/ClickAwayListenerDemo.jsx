@@ -1,7 +1,7 @@
-import React from 'react';
-import { css } from 'styled-components/macro'; //eslint-disable-line
-import { useTheme } from '@styles';
 import { Box, ClickAwayListener, Portal } from '@components';
+import { css } from 'styled-components/macro';
+import React from 'react';
+import { useTheme } from '@styles';
 
 export default function ClickAwayDemo() {
   const theme = useTheme();

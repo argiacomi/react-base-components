@@ -1,10 +1,10 @@
+import * as Transitions from '@transitions';
 import React from 'react';
 import styled, { extractStyling, useTheme } from '@styles';
 import { useSlotProps } from '@components/lib';
 import { ClickAwayListener } from '@components/utils';
-import useSnackbar from './useSnackbar';
 import SnackbarContent from './SnackbarContent';
-import * as Transitions from '@transitions';
+import useSnackbar from './useSnackbar';
 
 export const snackbarClasses = {
   root: 'Snackbar-Root'

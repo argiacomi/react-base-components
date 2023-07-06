@@ -1,4 +1,5 @@
 import React from 'react';
+
 export function useLoaded({ crossOrigin, referrerPolicy, src, srcSet }) {
   const [loaded, setLoaded] = React.useState(false);
 

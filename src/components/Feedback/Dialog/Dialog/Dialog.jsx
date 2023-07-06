@@ -2,10 +2,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling, useTheme } from '@styles';
 import { capitalize, useId } from '@components/lib';
-import { Modal, Fade } from '@components/utils';
-import Paper from '@components/Surfaces/Paper';
-import DialogContext from './DialogContext';
 import Backdrop from '@components/Feedback/Backdrop';
+import Paper from '@components/Surfaces/Paper';
+import { Fade, Modal } from '@components/utils';
+import DialogContext from './DialogContext';
 
 export const dialogClasses = {
   root: 'Dialog-Root',

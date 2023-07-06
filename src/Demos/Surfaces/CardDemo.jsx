@@ -1,5 +1,3 @@
-import React from 'react';
-import styled, { useTheme } from '@styles';
 import {
   Avatar,
   Box,
@@ -16,6 +14,8 @@ import {
   Stack,
   Text
 } from '@components';
+import React from 'react';
+import styled, { useTheme } from '@styles';
 
 const bull = (
   <Box component='span' sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components/macro';
+import { useEffect, useState } from 'react';
 
 const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
 

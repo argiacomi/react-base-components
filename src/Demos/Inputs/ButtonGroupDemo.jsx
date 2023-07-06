@@ -1,6 +1,6 @@
-import React from 'react';
-import { css } from 'styled-components/macro'; //eslint-disable-line
 import { Button, ButtonGroup, Icon, Stack, Text } from '@components';
+import { css } from 'styled-components/macro';
+import React from 'react';
 
 const buttons = [
   <Button key='one'>One</Button>,

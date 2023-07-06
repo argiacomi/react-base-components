@@ -1,10 +1,10 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled, { GlobalStyles } from '@styles';
-import useInputBase from './useInputBase';
-import TextareaAutosize from '../InputHelpers/TextareaAutosize';
-import { FormControlContext, formControlState } from '@components/Inputs/Form';
 import { useSlotProps } from '@components/lib';
+import { FormControlContext, formControlState } from '@components/Inputs/Form';
+import TextareaAutosize from '../InputHelpers/TextareaAutosize';
+import useInputBase from './useInputBase';
 
 export const inputBaseClasses = {
   root: 'InputBase-Root',

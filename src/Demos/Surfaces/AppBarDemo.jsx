@@ -1,5 +1,3 @@
-import React from 'react';
-import styled from '@styles';
 import {
   AppBar,
   Avatar,
@@ -20,6 +18,8 @@ import {
   Toolbar,
   Tooltip
 } from '@components';
+import React from 'react';
+import styled from '@styles';
 
 function ButtonAppBar() {
   return (

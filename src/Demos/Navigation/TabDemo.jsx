@@ -1,5 +1,5 @@
+import { Box, Icon, Stack, Tab, TabPanel, Tabs, TabsList, Text } from '@components';
 import React from 'react';
-import { Box, Icon, Stack, Tab, Tabs, TabsList, TabPanel, Text } from '@components';
 
 function BasicTabs() {
   return (

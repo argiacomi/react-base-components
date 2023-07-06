@@ -1,12 +1,13 @@
 {
   "arrowParens": "always",
   "jsxSingleQuote": true,
-  "plugins": [],
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "printWidth": 100,
   "quoteProps": "as-needed",
   "semi": true,
   "singleQuote": true,
   "trailingComma": "none",
   "tabWidth": 2,
-  "useTabs": false
+  "useTabs": false,
+  "importOrder": ["^react", "^clsx", "^@styles", "^@components/lib", "^@components/(.*)$", "^[./]"]
 }

@@ -1,28 +1,29 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
-import { useId, appendOwnerState } from '@components/lib';
-import BaseTablePagination, {
-  tablePaginationClasses as baseTablePaginationClasses
-} from './BaseTablePagination';
-import InputBase from '@components/Inputs/Input/InputBase';
-import MenuItem from '@components/Navigation/Menu/MenuItem';
-import Select from '@components/Inputs/Select';
-import Toolbar from '@components/Surfaces/AppBar/Toolbar';
-import IconButton from '@components/Inputs/Button/IconButton';
-import TableCell from '../TableCell';
-import LastPageIcon from '@components/lib/icons/LastPage';
+import { appendOwnerState, useId } from '@components/lib';
 import FirstPageIcon from '@components/lib/icons/FirstPage';
 import KeyboardArrowLeft from '@components/lib/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@components/lib/icons/KeyboardArrowRight';
+import LastPageIcon from '@components/lib/icons/LastPage';
+import IconButton from '@components/Inputs/Button/IconButton';
+import InputBase from '@components/Inputs/Input/InputBase';
+import Select from '@components/Inputs/Select';
+import MenuItem from '@components/Navigation/Menu/MenuItem';
+import Toolbar from '@components/Surfaces/AppBar/Toolbar';
+import TableCell from '../TableCell';
+import BaseTablePagination, {
+  tablePaginationClasses as baseTablePaginationClasses
+} from './BaseTablePagination';
 
 export const tablePaginationClasses = baseTablePaginationClasses;
 
 const CustomIconButton = React.forwardRef((props, ref) => {
-  // eslint-disable-next-line react/prop-types
   const { ownerState, ...other } = props;
   return <IconButton ref={ref} {...other} />;
 });
+
+CustomIconButton.displayName = 'CustomIconButton';
 
 const TablePaginationRoot = styled('td', {
   name: 'TablePagination',

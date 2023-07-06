@@ -1,5 +1,5 @@
 import React from 'react';
-import { ownerDocument, useForkRef, useEventCallback } from '@components/lib';
+import { ownerDocument, useEventCallback, useForkRef } from '@components/lib';
 
 export const IGNORE_CLASS_NAME = 'ignore-click-away-listener';
 

@@ -1,5 +1,3 @@
-import React from 'react';
-import styled from '@styles';
 import {
   AppBar,
   Box,
@@ -19,6 +17,8 @@ import {
   Text,
   Toolbar
 } from '@components';
+import React from 'react';
+import styled from '@styles';
 
 function SwipeTemporaryDrawer() {
   const [state, setState] = React.useState({

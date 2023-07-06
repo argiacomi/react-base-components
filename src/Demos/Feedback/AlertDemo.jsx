@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Alert,
   AlertTitle,
@@ -10,6 +9,7 @@ import {
   Stack,
   Text
 } from '@components';
+import React from 'react';
 
 function BasicAlerts() {
   const variants = ['standard', 'outlined', 'filled'];

@@ -1,6 +1,6 @@
+import { css } from 'styled-components/macro';
 import React from 'react';
 import styled, { extractStyling } from '@styles';
-import { css } from 'styled-components/macro';
 import { useSlotProps } from '@components/lib';
 
 export const skeletonClasses = {

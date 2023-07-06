@@ -1,8 +1,8 @@
+import * as Transitions from '@transitions';
 import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { ownerDocument, ownerWindow, useForkRef, useSlotProps } from '@components/lib';
-import * as Transitions from '@transitions';
 import Modal from '../Modal';
 import Popper from '../popper';
 

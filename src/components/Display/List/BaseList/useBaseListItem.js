@@ -1,7 +1,7 @@
 import React from 'react';
-import { useForkRef, useEnhancedEffect, useForcedRerendering } from '@components/lib';
-import baseListActions from './baseListActions';
+import { useEnhancedEffect, useForcedRerendering, useForkRef } from '@components/lib';
 import ListContext from './ListContext';
+import baseListActions from './baseListActions';
 
 export default function useBaseListItem(parameters) {
   const { handlePointerOverEvents = false, item, rootRef: externalRef } = parameters;

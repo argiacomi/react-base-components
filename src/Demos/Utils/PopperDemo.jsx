@@ -1,5 +1,3 @@
-import React from 'react';
-import styled from '@styles';
 import {
   Box,
   Button,
@@ -17,6 +15,8 @@ import {
   Text,
   TextField
 } from '@components';
+import React from 'react';
+import styled from '@styles';
 
 function SimplePopper() {
   const [anchorEl, setAnchorEl] = React.useState(null);

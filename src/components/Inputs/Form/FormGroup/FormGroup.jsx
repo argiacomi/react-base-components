@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { extractStyling } from '@styles';
 import { useSlotProps } from '@components/lib';
-import { useFormControl, formControlState } from '../FormControl';
+import { formControlState, useFormControl } from '../FormControl';
 
 export const formGroupClasses = { root: 'FormGroup-Root', row: 'Row', error: 'Error' };
 

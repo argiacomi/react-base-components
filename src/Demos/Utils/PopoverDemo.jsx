@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Button,
@@ -15,6 +14,7 @@ import {
   Stack,
   Text
 } from '@components';
+import React from 'react';
 
 function BasicPopover() {
   const [anchorEl, setAnchorEl] = React.useState(null);

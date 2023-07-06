@@ -2,8 +2,8 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { useForkRef, useSlotProps } from '@components/lib';
-import useTab from './useTab';
 import { ButtonBase } from '@components/inputs/button';
+import useTab from './useTab';
 
 export const tabClasses = {
   root: 'Tab-Root',

@@ -1,6 +1,6 @@
 import React from 'react';
-import TabsContext from '../TabsContext';
 import { CompoundComponentContext } from '@components/lib';
+import TabsContext from '../TabsContext';
 
 export default function TabsProvider(props) {
   const { value: valueProp, children } = props;

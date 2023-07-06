@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { useEnhancedEffect } from '@component/hooks';
+import { useEnhancedEffect } from '@components/lib';
 
 const Ripple = (props) => {
   const {

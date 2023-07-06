@@ -1,5 +1,5 @@
 import React from 'react';
-import { useControlled, useCompoundParent } from '@components/lib';
+import { useCompoundParent, useControlled } from '@components/lib';
 
 function useTabs(parameters) {
   const {

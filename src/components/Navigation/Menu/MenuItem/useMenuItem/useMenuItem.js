@@ -1,7 +1,7 @@
-import React from 'react';
-import { useCompoundItem, useId, useForkRef } from '@components/lib';
-import { useButton } from '@components/Inputs/Button/ButtonBase';
 import { useBaseListItem as useListItem } from '@BaseList';
+import React from 'react';
+import { useCompoundItem, useForkRef, useId } from '@components/lib';
+import { useButton } from '@components/Inputs/Button/ButtonBase';
 
 function idGenerator(existingKeys) {
   return `menu-item-${existingKeys.size}`;

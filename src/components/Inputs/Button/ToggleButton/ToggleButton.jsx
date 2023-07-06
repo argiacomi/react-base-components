@@ -2,8 +2,8 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { useSlotProps } from '@components/lib';
-import ButtonBase from '../ButtonBase/ButtonBase';
 import { Icon } from '@components/display';
+import ButtonBase from '../ButtonBase/ButtonBase';
 import { toggleButtonGroupClasses } from './ToggleButtonGroup';
 
 export const toggleButtonClasses = {

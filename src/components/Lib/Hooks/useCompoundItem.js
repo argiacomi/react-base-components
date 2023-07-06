@@ -1,6 +1,6 @@
 import React from 'react';
-import { useEnhancedEffect } from './useEnhancedEffect';
 import { CompoundComponentContext } from './useCompound';
+import { useEnhancedEffect } from './useEnhancedEffect';
 
 export function useCompoundItem(id, itemMetadata) {
   const context = React.useContext(CompoundComponentContext);

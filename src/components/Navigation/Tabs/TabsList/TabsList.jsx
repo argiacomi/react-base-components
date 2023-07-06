@@ -1,7 +1,7 @@
 import React from 'react';
 import { isFragment } from 'react-is';
-import styled, { extractStyling, useTheme } from '@styles';
 import clsx from 'clsx';
+import styled, { extractStyling, useTheme } from '@styles';
 import {
   animate,
   debounce,
@@ -9,12 +9,12 @@ import {
   getNormalizedScrollLeft,
   ownerWindow,
   useEventCallback,
-  useSlotProps,
-  useScrollbarSize
+  useScrollbarSize,
+  useSlotProps
 } from '@components/lib';
+import TabScrollButton from './TabScrollButton';
 import useTabsList from './useTabsList';
 import TabsListProvider from './useTabsList/TabsListProvider';
-import TabScrollButton from './TabScrollButton';
 
 export const tabsListClasses = {
   root: 'TabsList-Root',

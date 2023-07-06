@@ -1,13 +1,14 @@
-import React from 'react';
-import styled from '@styles';
 import {
   Avatar,
   Box,
   Checkbox,
   Collapse,
+  Divider,
   FormControlLabel,
   FormGroup,
   Grid,
+  Icon,
+  IconButton,
   List,
   ListItem,
   ListItemAvatar,
@@ -15,16 +16,14 @@ import {
   ListItemIcon,
   ListItemText,
   ListSubheader,
-  Divider,
-  Icon,
-  IconButton,
   Paper,
   Stack,
   Switch,
-  Text
-  // Tooltip
+  Text // Tooltip
 } from '@components';
+import React from 'react';
 import { FixedSizeList } from 'react-window';
+import styled from '@styles';
 
 function BasicList() {
   return (

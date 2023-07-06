@@ -1,11 +1,9 @@
-import React from 'react';
-import styled from '@styles';
 import {
   Avatar,
   Box,
   Card,
-  CardHeader,
   CardContent,
+  CardHeader,
   CardMedia,
   Grid,
   IconButton,
@@ -14,6 +12,8 @@ import {
   Switch,
   Text
 } from '@components';
+import React from 'react';
+import styled from '@styles';
 
 function Variants() {
   return (

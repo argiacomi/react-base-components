@@ -1,14 +1,14 @@
-import React from 'react';
 import {
   Alert,
   Button,
-  Snackbar,
-  Stack,
-  IconButton,
   Icon,
+  IconButton,
+  Snackbar,
   SnackbarProvider,
+  Stack,
   useSnackbarQueue
 } from '@components';
+import React from 'react';
 
 function SnackbarQueueDemo() {
   const { addSnackbar, closeSnackbar } = useSnackbarQueue();

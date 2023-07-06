@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEnhancedEffect, useForkRef, setRef } from '@components/lib';
+import { setRef, useEnhancedEffect, useForkRef } from '@components/lib';
 
 function getContainer(element) {
   return typeof element === 'function'

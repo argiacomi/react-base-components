@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled, { shouldForwardProp } from '@styles';
-import { FormLabel, formControlState, useFormControl } from '@components/Inputs/Form';
+import { formControlState, FormLabel, useFormControl } from '@components/Inputs/Form';
 
 export const inputLabelClasses = {
   root: 'InputLabel-Root',

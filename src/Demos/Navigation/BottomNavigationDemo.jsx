@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Avatar,
   BottomNavigation,
@@ -13,6 +12,7 @@ import {
   Stack,
   Text
 } from '@components';
+import React from 'react';
 
 const ArchiveIcon = (props) => <Icon icon='MdArchive' {...props} />;
 const FavoriteIcon = (props) => <Icon icon='MdFavorite' {...props} />;

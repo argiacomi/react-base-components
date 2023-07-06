@@ -1,12 +1,12 @@
 import React from 'react';
 import styled, { shouldForwardProp } from '@styles';
 import { formControlState, useFormControl } from '@components/Inputs/Form';
-import NotchedOutline from './NotchedOutline';
 import InputBase, {
-  InputBaseRoot,
+  inputBaseClasses,
   InputBaseComponent,
-  inputBaseClasses
+  InputBaseRoot
 } from '../InputBase/InputBase';
+import NotchedOutline from './NotchedOutline';
 
 export const outlinedInputClasses = {
   root: 'OutlinedInput-Root',

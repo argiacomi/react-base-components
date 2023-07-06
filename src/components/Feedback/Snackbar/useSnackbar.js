@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEventCallback, extractEventHandlers } from '@components/lib';
+import { extractEventHandlers, useEventCallback } from '@components/lib';
 
 export default function useSnackbar(parameters = {}) {
   const {

@@ -1,6 +1,6 @@
-import React from 'react';
-import { css } from 'styled-components/macro'; //eslint-disable-line
 import { Box, FocusTrap } from '@components';
+import { css } from 'styled-components/macro';
+import React from 'react';
 
 export default function FocusTrapDemo() {
   const [open, setOpen] = React.useState(false);

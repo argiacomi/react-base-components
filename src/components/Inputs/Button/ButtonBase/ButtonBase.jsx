@@ -2,9 +2,9 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { useForkRef, useSlotProps } from '@components/lib';
-import useButton from './useButton';
 // import useTouchRipple from './useTouchRipple';
 import TouchRipple from './TouchRipple';
+import useButton from './useButton';
 
 const buttonBaseClasses = {
   root: 'ButtonBase-Root',

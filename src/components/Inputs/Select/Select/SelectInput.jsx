@@ -12,8 +12,8 @@ import {
 } from '@components/lib';
 import Menu from '@components/Navigation/Menu';
 import {
-  nativeSelectSelectStyles,
-  nativeSelectIconStyles
+  nativeSelectIconStyles,
+  nativeSelectSelectStyles
 } from '../NativeSelect/NativeSelectInput';
 import selectClasses from './selectClasses';
 

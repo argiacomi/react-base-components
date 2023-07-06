@@ -1,5 +1,3 @@
-import React from 'react';
-import styled from '@styles';
 import {
   Avatar,
   Box,
@@ -15,6 +13,8 @@ import {
   Stack,
   Text
 } from '@components';
+import React from 'react';
+import styled from '@styles';
 
 const style = {
   width: '100%',

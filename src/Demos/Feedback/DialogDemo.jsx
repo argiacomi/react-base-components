@@ -1,12 +1,15 @@
-import React from 'react';
-import styled, { useTheme } from '@styles';
-import Draggable from 'react-draggable';
 import {
   AppBar,
+  Avatar,
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
-  Avatar,
+  FormControlLabel,
   Icon,
   IconButton,
   List,
@@ -14,21 +17,18 @@ import {
   ListItemAvatar,
   ListItemButton,
   ListItemText,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Dialog,
-  FormControlLabel,
   Paper,
   Radio,
   RadioGroup,
   Slide,
   Stack,
-  TextField,
   Text,
+  TextField,
   Toolbar
 } from '@components';
+import React from 'react';
+import Draggable from 'react-draggable';
+import styled, { useTheme } from '@styles';
 import { useMedia } from '@components/lib';
 
 const emails = ['username@gmail.com', 'user02@gmail.com'];

@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.4.3",
+    "@floating-ui/dom": "^1.4.4",
     "nanoid": "^4.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -20,16 +20,18 @@
     "react-window": "^1.8.9"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
-    "@vitejs/plugin-legacy": "^4.0.5",
-    "@vitejs/plugin-react": "^4.0.1",
+    "@vitejs/plugin-legacy": "^4.1.0",
+    "@vitejs/plugin-react": "^4.0.2",
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-styled-components": "^2.1.4",
     "clsx": "^1.2.1",
     "color": "^4.2.3",
     "eslint": "^8.44.0",
     "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
@@ -40,6 +42,6 @@
     "react-is": "^18.2.0",
     "react-transition-group": "^4.4.5",
     "styled-components": "6.0.0-rc.6",
-    "vite": "^4.3.9"
+    "vite": "^4.4.0"
   }
 }

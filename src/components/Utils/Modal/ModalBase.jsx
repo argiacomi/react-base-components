@@ -1,14 +1,14 @@
 import React from 'react';
 import {
-  ownerDocument,
-  useForkRef,
   createChainedFunction,
+  ownerDocument,
   useEventCallback,
+  useForkRef,
   useSlotProps
 } from '@components/lib';
+import FocusTrap from '../FocusTrap';
 import Portal from '../Portal';
 import ModalManager, { ariaHidden } from './ModalManager';
-import FocusTrap from '../FocusTrap';
 
 export const modalBaseClasses = {
   root: 'Modal-Root',

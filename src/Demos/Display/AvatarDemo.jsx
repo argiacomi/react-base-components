@@ -1,5 +1,5 @@
-import styled, { css } from 'styled-components/macro'; //eslint-disable-line
 import { Avatar, AvatarGroup, Badge, Icon, Stack, Text } from '@components';
+import styled, { css } from 'styled-components/macro';
 
 function ImageAvatars() {
   return (

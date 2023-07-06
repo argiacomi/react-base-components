@@ -1,6 +1,6 @@
 import React from 'react';
-import { ListContext } from '@components/display/list/baselist';
 import { CompoundComponentContext } from '@components/lib';
+import { ListContext } from '@components/display/list/baselist';
 
 export default function TabsListProvider(props) {
   const { value, children } = props;

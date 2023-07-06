@@ -1,4 +1,4 @@
-import { ownerWindow, ownerDocument } from '@components/lib';
+import { ownerDocument, ownerWindow } from '@components/lib';
 
 function getScrollbarSize(doc) {
   const documentWidth = doc.documentElement.clientWidth;

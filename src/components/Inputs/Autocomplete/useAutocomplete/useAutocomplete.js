@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { setRef, useEventCallback, useControlled, useId, usePreviousProps } from '@components/lib';
+import { setRef, useControlled, useEventCallback, useId, usePreviousProps } from '@components/lib';
 
 function stripDiacritics(string) {
   return typeof string.normalize !== 'undefined'

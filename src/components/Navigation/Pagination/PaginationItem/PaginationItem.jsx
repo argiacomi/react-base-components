@@ -2,11 +2,11 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling, useTheme } from '@styles';
 import { capitalize } from '@components/lib';
-import ButtonBase from '@components/Inputs/Button/ButtonBase';
 import FirstPageIcon from '@components/lib/icons/FirstPage';
 import LastPageIcon from '@components/lib/icons/LastPage';
 import NavigateBeforeIcon from '@components/lib/icons/NavigateBefore';
 import NavigateNextIcon from '@components/lib/icons/NavigateNext';
+import ButtonBase from '@components/Inputs/Button/ButtonBase';
 
 export const paginationItemClasses = {
   root: 'PaginationItem-Root',

@@ -1,8 +1,8 @@
 import React from 'react';
 import styled, { extractStyling } from '@styles';
 import { useSlotProps } from '@components/lib';
-import ButtonBase from '../ButtonBase/ButtonBase';
 import { Icon, iconClasses } from '@components/display';
+import ButtonBase from '../ButtonBase/ButtonBase';
 
 export const iconButtonClasses = {
   root: 'IconButton-Root',

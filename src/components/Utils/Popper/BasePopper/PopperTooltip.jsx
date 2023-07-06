@@ -1,9 +1,9 @@
-import React from 'react';
-import PopperContent from './PopperContent';
-import clsx from 'clsx';
 import * as Floating from '@floating-ui/dom';
-import { useEnhancedEffect, useForkRef } from '@components/lib';
 import * as Transitions from '@transitions';
+import React from 'react';
+import clsx from 'clsx';
+import { useEnhancedEffect, useForkRef } from '@components/lib';
+import PopperContent from './PopperContent';
 
 export const popperTooltipClasses = {
   root: 'Popper-Content',

@@ -1,4 +1,4 @@
-import { usePreviousProps } from '@component/hooks';
+import { usePreviousProps } from '@components/lib';
 
 const useBadge = (parameters) => {
   const {

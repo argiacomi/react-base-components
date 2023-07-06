@@ -1,5 +1,5 @@
-import React from 'react';
 import { ListContext } from '@BaseList';
+import React from 'react';
 import { CompoundComponentContext } from '@components/lib';
 
 export default function SelectProvider(props) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { debounce, useForkRef, useEnhancedEffect, ownerWindow } from '@components/lib';
+import { debounce, ownerWindow, useEnhancedEffect, useForkRef } from '@components/lib';
 
 function getStyleValue(value) {
   return parseInt(value, 10) || 0;

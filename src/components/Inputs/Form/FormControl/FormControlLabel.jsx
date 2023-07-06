@@ -2,8 +2,8 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { useSlotProps } from '@components/lib';
-import { formControlState, useFormControl } from './FormControlContext';
 import { Text } from '@components/display';
+import { formControlState, useFormControl } from './FormControlContext';
 
 export const formControlLabelClasses = {
   root: 'FormControlLabel-Root',

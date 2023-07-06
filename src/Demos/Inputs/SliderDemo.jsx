@@ -1,5 +1,3 @@
-import React from 'react';
-import styled, { useTheme } from '@styles';
 import {
   Box,
   Grid,
@@ -7,12 +5,14 @@ import {
   IconButton,
   Input,
   Slider,
-  SliderThumb,
   sliderClasses,
+  SliderThumb,
   Stack,
   Text,
   Tooltip
 } from '@components';
+import React from 'react';
+import styled, { useTheme } from '@styles';
 
 const PauseRounded = (props) => <Icon icon='MdPause' {...props} />;
 const PlayArrowRounded = (props) => <Icon icon='MdPlayArrow' {...props} />;

@@ -1,7 +1,4 @@
-import React from 'react';
-import styled from '@styles';
 import {
-  Stack,
   Box,
   FilledInput,
   FormControl,
@@ -14,9 +11,12 @@ import {
   InputLabel,
   MenuItem,
   OutlinedInput,
+  Stack,
   Text,
   TextField
 } from '@components';
+import React from 'react';
+import styled from '@styles';
 
 function BasicTextFields() {
   return (

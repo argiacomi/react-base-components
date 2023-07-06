@@ -1,7 +1,6 @@
 import React from 'react';
 import styled, { extractStyling } from '@styles';
-import { useSlotProps } from '@components/lib';
-import { useForkRef, useIsFocusVisible } from '@component/hooks';
+import { useForkRef, useIsFocusVisible, useSlotProps } from '@components/lib';
 import { Text } from '@components/display';
 
 export const linkClasses = {

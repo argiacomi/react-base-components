@@ -2,8 +2,8 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling, shouldForwardProp } from '@styles';
 import { mergeProps, useSlotProps } from '@components/lib';
-import ButtonBase from '../ButtonBase/ButtonBase';
 import { Icon } from '@components/display';
+import ButtonBase from '../ButtonBase/ButtonBase';
 import ButtonGroupContext from './ButtonGroupContext';
 
 export const buttonClasses = {

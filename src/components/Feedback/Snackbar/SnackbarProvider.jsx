@@ -1,11 +1,11 @@
+import { nanoid } from 'nanoid';
 import React from 'react';
-import { mergeProps, createChainedFunction } from '@components/lib';
-import { Portal } from '@components/utils';
 import clsx from 'clsx';
-import { SnackbarContext } from './SnackbarContext';
+import { createChainedFunction, mergeProps } from '@components/lib';
+import { Portal } from '@components/utils';
 import Snackbar from './Snackbar';
 import SnackbarContainer, { componentClasses } from './SnackbarContainer';
-import { nanoid } from 'nanoid';
+import { SnackbarContext } from './SnackbarContext';
 
 const isOptions = (messageOrOptions) => {
   const isMessage = typeof messageOrOptions === 'string' || React.isValidElement(messageOrOptions);

@@ -1,6 +1,6 @@
+import { Box, Fab, Icon, Stack, Text, Zoom } from '@components';
 import React from 'react';
 import { useTheme } from '@styles';
-import { Box, Fab, Icon, Stack, Text, Zoom } from '@components';
 
 function FloatingActionButtons() {
   return (

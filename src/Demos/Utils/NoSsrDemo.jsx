@@ -1,5 +1,5 @@
-import React from 'react';
 import { Box, NoSsr } from '@components';
+import React from 'react';
 
 function LargeTree() {
   return Array.from(new Array(5000)).map((_, index) => <span key={index}>.</span>);

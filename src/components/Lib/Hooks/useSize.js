@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEnhancedEffect } from '@component/hooks';
+import { useEnhancedEffect } from '@components/lib';
 
 export function useSize(element) {
   const [size, setSize] = React.useState(undefined);

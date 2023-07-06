@@ -1,5 +1,5 @@
+import { css, keyframes } from 'styled-components/macro';
 import React from 'react';
-import { keyframes, css } from 'styled-components/macro';
 import styled, { extractStyling } from '@styles';
 import { useSlotProps } from '@components/lib';
 

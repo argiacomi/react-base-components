@@ -1,9 +1,8 @@
+import { useListContext } from '@BaseList/ListContext';
 import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling, shouldForwardProp } from '@styles';
 import { useSlotProps } from '@components/lib';
-import useMenuItem from './useMenuItem';
-import { useListContext } from '@BaseList/ListContext';
 import {
   dividerClasses,
   ListItemContext,
@@ -11,6 +10,7 @@ import {
   listItemTextClasses
 } from '@components/Display';
 import { ButtonBase } from '@components/Inputs/Button';
+import useMenuItem from './useMenuItem';
 
 export const menuItemClasses = {
   root: 'MenuItem-Root',

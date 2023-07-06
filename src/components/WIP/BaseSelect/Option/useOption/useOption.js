@@ -1,6 +1,6 @@
+import { useBaseListItem as useListItem } from '@BaseList';
 import React from 'react';
 import { useCompoundItem, useForkRef, useId } from '@components/lib';
-import { useBaseListItem as useListItem } from '@BaseList';
 
 export default function useOption(parameters) {
   const { value, label, disabled, rootRef: optionRefParam, id: idParam } = parameters;

@@ -1,5 +1,3 @@
-import React from 'react';
-import styled from '@styles';
 import {
   Box,
   Button,
@@ -11,6 +9,8 @@ import {
   Tooltip,
   tooltipClasses
 } from '@components';
+import React from 'react';
+import styled from '@styles';
 
 function BasicTooltip() {
   return (

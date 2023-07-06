@@ -1,6 +1,6 @@
+import { Backdrop, Box, Button, Fade, Modal, Stack, Text } from '@components';
 import React from 'react';
 import styled, { useTheme } from '@styles';
-import { Backdrop, Box, Button, Fade, Modal, Stack, Text } from '@components';
 
 const StyleBox = styled(Box)(({ theme }) => ({
   position: 'absolute',

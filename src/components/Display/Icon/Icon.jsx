@@ -1,9 +1,9 @@
 import React from 'react';
-import styled, { extractStyling } from '@styles';
-import { useSlotProps } from '@components/lib';
 import * as FiIcons from 'react-icons/fi';
 import * as IoIcons from 'react-icons/io5';
 import * as MdIcons from 'react-icons/md';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 
 export const iconClasses = {
   root: 'Icon-Root'

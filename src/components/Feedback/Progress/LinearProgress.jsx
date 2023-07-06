@@ -1,6 +1,6 @@
+import { css, keyframes } from 'styled-components/macro';
 import React from 'react';
 import styled, { extractStyling, useTheme } from '@styles';
-import { keyframes, css } from 'styled-components/macro';
 import { useSlotProps } from '@components/lib';
 
 const linearProgressClasses = {

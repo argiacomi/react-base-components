@@ -1,4 +1,4 @@
-import React from 'react';
+import { baseListActions } from '@BaseList';
 import {
   Avatar,
   Box,
@@ -19,7 +19,7 @@ import {
   Text,
   Tooltip
 } from '@components';
-import { baseListActions } from '@BaseList';
+import React from 'react';
 
 function BasicMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);

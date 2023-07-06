@@ -1,9 +1,9 @@
 import React from 'react';
 import { useForkRef, useSlotProps } from '@components/lib';
-import useSelect from './useSelect';
 import Popper from '@components/utils/popper';
-import defaultOptionStringifier from './useSelect/defaultOptionStringifier';
+import useSelect from './useSelect';
 import SelectProvider from './useSelect/SelectProvider';
+import defaultOptionStringifier from './useSelect/defaultOptionStringifier';
 
 export const selectClasses = {
   root: 'Select-Root',

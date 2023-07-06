@@ -1,16 +1,16 @@
-import React from 'react';
-import { styled, css } from 'styled-components/macro'; //eslint-disable-line
 import {
   Badge,
   Box,
-  ButtonGroup,
   Button,
+  ButtonGroup,
   Icon,
   IconButton,
   Stack,
   Switch,
   Text
 } from '@components';
+import { css, styled } from 'styled-components/macro';
+import React from 'react';
 
 const MailIcon = (props) => <Icon icon='MdMail' {...props} />;
 

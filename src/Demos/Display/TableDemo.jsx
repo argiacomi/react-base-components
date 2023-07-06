@@ -1,25 +1,25 @@
-import * as React from 'react';
 import {
   Box,
+  Checkbox,
+  FormControlLabel,
   Icon,
+  IconButton,
   Paper,
   Stack,
+  Switch,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-  Text,
   TablePagination,
+  TableRow,
   TableSortLabel,
+  Text,
   Toolbar,
-  Checkbox,
-  IconButton,
-  Tooltip,
-  FormControlLabel,
-  Switch
+  Tooltip
 } from '@components';
+import * as React from 'react';
 import { visuallyHidden } from '@components/lib';
 
 const DeleteIcon = (props) => <Icon icon='MdDelete' {...props} />;
@@ -215,8 +215,8 @@ function EnhancedTableToolbar(props) {
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity)
+          backgroundColor: (theme) =>
+            theme.alpha.add(theme.palette.primary.main, theme.palette.action.activatedOpacity)
         })
       }}
     >

@@ -1,5 +1,5 @@
+import { Box, Grid, Paper, Stack, Text } from '@components';
 import styled, { useTheme } from '@styles';
-import { Box, Paper, Grid, Stack, Text } from '@components';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.color.mode === 'dark' ? '#1A2027' : '#fff',

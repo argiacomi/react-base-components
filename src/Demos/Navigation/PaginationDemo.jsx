@@ -1,5 +1,6 @@
-import React from 'react';
 import { Icon, Pagination, PaginationItem, Stack, Text } from '@components';
+import React from 'react';
+
 // import { Link, MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 const ArrowBackIcon = (props) => <Icon icon='MdArrowBack' {...props} />;

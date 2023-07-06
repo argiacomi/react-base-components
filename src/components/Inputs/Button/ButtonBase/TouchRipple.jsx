@@ -1,7 +1,7 @@
+import { keyframes } from 'styled-components/macro';
 import React from 'react';
 import { TransitionGroup } from 'react-transition-group';
 import clsx from 'clsx';
-import { keyframes } from 'styled-components/macro';
 import styled, { shouldForwardProp, useTheme } from '@styles';
 import Ripple from './Ripple';
 

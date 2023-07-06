@@ -1,6 +1,6 @@
+import { Accordion, AccordionDetails, AccordionSummary, Icon, Stack, Text } from '@components';
 import React from 'react';
 import styled from '@styles';
-import { Accordion, AccordionSummary, AccordionDetails, Icon, Stack, Text } from '@components';
 
 const ExpandMoreIcon = (props) => <Icon icon='MdExpandMore' {...props} />;
 

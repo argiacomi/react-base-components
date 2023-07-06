@@ -1,18 +1,18 @@
-import React from 'react';
-import styled, { useTheme } from '@styles';
 import {
   Box,
   Checkbox,
   Chip,
-  OutlinedInput,
+  FormControl,
   InputLabel,
   ListItemText,
   MenuItem,
-  FormControl,
+  OutlinedInput,
   Select,
   Stack,
   Text
 } from '@components';
+import React from 'react';
+import styled, { useTheme } from '@styles';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;

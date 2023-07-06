@@ -3,10 +3,10 @@ import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { useEnhancedEffect, useForkRef, useSlotProps } from '@components/lib';
 import { ButtonBase } from '@components/inputs';
-import ListItemContext from './ListItemContext';
-import useListItem from './useListItem';
 import { listItemButtonClasses } from './ListItemButton';
+import ListItemContext from './ListItemContext';
 import ListItemSecondaryAction from './ListItemSecondaryAction';
+import useListItem from './useListItem';
 
 export const listItemClasses = {
   root: 'ListItem-Root',

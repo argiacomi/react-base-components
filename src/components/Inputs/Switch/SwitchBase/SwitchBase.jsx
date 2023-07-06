@@ -1,8 +1,8 @@
 import React from 'react';
 import styled, { extractStyling } from '@styles';
-import useSwitch from './useSwitch';
 import { useSlotProps } from '@components/lib';
 import { ButtonBase } from '@components/inputs';
+import useSwitch from './useSwitch';
 
 export const switchBaseClasses = {
   root: 'SwitchBase-Root',

@@ -1,10 +1,10 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
-import Input, { FilledInput, OutlinedInput, InputLabel } from '../Input';
-import { FormControl, FormHelperText } from '../Form';
-import Select from '../Select';
 import { useId } from '@components/lib';
+import { FormControl, FormHelperText } from '../Form';
+import Input, { FilledInput, InputLabel, OutlinedInput } from '../Input';
+import Select from '../Select';
 
 const variantComponent = {
   standard: Input,

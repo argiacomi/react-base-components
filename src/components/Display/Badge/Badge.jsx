@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { extractStyling } from '@styles';
-import { usePreviousProps, useSlotProps } from '@component/hooks';
+import { usePreviousProps, useSlotProps } from '@components/lib';
 import useBadge from './useBadge';
 
 const RADIUS_STANDARD = 0.625;

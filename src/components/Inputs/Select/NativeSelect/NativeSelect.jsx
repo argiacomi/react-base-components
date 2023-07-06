@@ -1,9 +1,9 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import NativeSelectInput from './NativeSelectInput';
+import ArrowDropDownIcon from '@components/lib/icons/ArrowDropDown';
 import { formControlState, useFormControl } from '../../Form';
 import Input from '../../Input';
-import ArrowDropDownIcon from '@components/lib/icons/ArrowDropDown';
+import NativeSelectInput from './NativeSelectInput';
 
 export const nativeSelectClasses = {
   root: 'NativeSelect-Root'

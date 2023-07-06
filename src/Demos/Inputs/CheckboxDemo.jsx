@@ -1,5 +1,3 @@
-import React from 'react';
-import styled from '@styles';
 import {
   Box,
   Checkbox,
@@ -12,6 +10,8 @@ import {
   Stack,
   Text
 } from '@components';
+import React from 'react';
+import styled from '@styles';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 

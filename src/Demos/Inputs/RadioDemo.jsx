@@ -1,9 +1,7 @@
-import React from 'react';
-import styled from '@styles';
 import {
   Button,
-  FormControlLabel,
   FormControl,
+  FormControlLabel,
   FormHelperText,
   FormLabel,
   Radio,
@@ -11,6 +9,8 @@ import {
   Stack,
   Text
 } from '@components';
+import React from 'react';
+import styled from '@styles';
 
 function RadioButtonsGroup() {
   return (

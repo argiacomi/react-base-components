@@ -1,5 +1,5 @@
-import React from 'react';
 import { Box, Button, CircularProgress, Fab, Icon, LinearProgress, Stack, Text } from '@components';
+import React from 'react';
 
 function CircularIndeterminate() {
   return (

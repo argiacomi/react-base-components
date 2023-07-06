@@ -1,6 +1,6 @@
+import useList from '@BaseList';
 import React from 'react';
 import { useCompoundParent, useForkRef } from '@components/lib';
-import useList from '@BaseList';
 import menuReducer from './menuReducer';
 
 export default function useMenu(parameters) {

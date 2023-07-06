@@ -9,12 +9,15 @@ module.exports = {
   ],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   settings: { react: { version: '18.2' } },
-  plugins: ['react-refresh', 'prettier'],
+  plugins: ['react-refresh', 'import', 'prettier'],
   rules: {
     'react/prop-types': 'off',
     'react-refresh/only-export-components': 'off',
     'react-hooks/exhaustive-deps': 'warn',
     'prettier/prettier': 'error',
+    'import/first': 'error',
+    'import/newline-after-import': 'error',
+    'import/no-duplicates': 'error',
     'no-restricted-imports': [
       'error',
       {

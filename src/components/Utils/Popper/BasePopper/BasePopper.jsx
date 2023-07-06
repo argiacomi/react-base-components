@@ -1,8 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled from '@styles';
-import PopperTooltip from './PopperTooltip';
 import Portal from '../../Portal';
+import PopperTooltip from './PopperTooltip';
 
 export const basePopperClasses = {
   root: 'BasePopper-Root'

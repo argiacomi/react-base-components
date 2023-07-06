@@ -1,8 +1,7 @@
+import { StyleSheetManager } from 'styled-components/macro';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { shouldForwardProp } from '@styles';
-import { StyleSheetManager } from 'styled-components/macro';
-import { CssBaseline, GlobalStyles, GlobalTheme } from '@styles';
+import { CssBaseline, GlobalStyles, GlobalTheme, shouldForwardProp } from '@styles';
 import App from './App';
 
 ReactDOM.createRoot(document.getElementById('root')).render(

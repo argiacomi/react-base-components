@@ -1,6 +1,6 @@
 import styled from '@styles';
-import RadioButtonUncheckedIcon from '@components/lib/icons/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@components/lib/icons/RadioButtonChecked';
+import RadioButtonUncheckedIcon from '@components/lib/icons/RadioButtonUnchecked';
 
 const RadioButtonIconRoot = styled('span')({
   position: 'relative',

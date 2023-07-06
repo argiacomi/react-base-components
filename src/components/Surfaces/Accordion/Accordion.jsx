@@ -1,8 +1,8 @@
 import React from 'react';
 import styled, { extractStyling } from '@styles';
-import { useSlotProps } from '@components/lib';
-import { Collapse, Paper } from '@components';
-import { useControlled } from '@component/hooks';
+import { useControlled, useSlotProps } from '@components/lib';
+import Paper from '@components/Surfaces/Paper';
+import Collapse from '@components/Utils/Transitions/Collapse';
 import AccordionContext from './AccordionContext';
 
 export const accordionClasses = {

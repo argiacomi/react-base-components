@@ -9,8 +9,7 @@ import {
   // BadgeDemo,
   // BottomNavigationDemo,
   // BoxDemo,
-  BreadcrumbsDemo,
-  // ButtonDemo,
+  BreadcrumbsDemo, // ButtonDemo,
   // ButtonGroupDemo,
   // CardDemo,
   // CheckboxDemo,
@@ -43,8 +42,7 @@ import {
   // SnackbarDemo,
   // SwitchDemo,
   // TabDemo,
-  TableDemo
-  // TextDemo,
+  TableDemo // TextDemo,
   // TextFieldDemo,
   // ToggleButtonDemo,
   // TooltipDemo

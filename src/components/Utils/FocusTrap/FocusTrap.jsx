@@ -1,5 +1,5 @@
 import React from 'react';
-import { useForkRef, ownerDocument } from '@components/lib';
+import { ownerDocument, useForkRef } from '@components/lib';
 
 // Defining a list of selectors for focusable elements
 const candidatesSelector = [

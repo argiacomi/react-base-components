@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { capitalize } from '@components/lib';
 import styled from '@styles';
+import { capitalize } from '@components/lib';
 
 export const nativeSelectClasses = {
   root: 'NativeSelect-Root',

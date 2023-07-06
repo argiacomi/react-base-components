@@ -1,8 +1,8 @@
+import { debounce, getTransitionProps, ownerWindow, reflow } from '@component/utils';
 import React from 'react';
 import { Transition } from 'react-transition-group';
-import { useForkRef } from '@component/hooks';
-import { reflow, getTransitionProps, debounce, ownerWindow } from '@component/utils';
 import { useTheme } from '@styles';
+import { useForkRef } from '@components/lib';
 
 const getTranslateValue = (direction, node, resolvedContainer) => {
   const rect = node.getBoundingClientRect();

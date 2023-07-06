@@ -1,3 +1,4 @@
+import useList from '@BaseList';
 import React from 'react';
 import {
   combineHooksSlotProps,
@@ -7,7 +8,6 @@ import {
   useId
 } from '@components/lib';
 import { useButton } from '@components/Inputs/Button/ButtonBase';
-import useList from '@BaseList';
 import defaultOptionStringifier from './defaultOptionStringifier';
 import selectReducer, { SelectActionTypes } from './selectReducer';
 

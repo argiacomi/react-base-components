@@ -1,10 +1,10 @@
+import { baseListActions } from '@BaseList';
 import React from 'react';
 import styled, { extractStyling, shouldForwardProp, useTheme } from '@styles';
 import { useSlotProps } from '@components/lib';
-import useMenu, { MenuProvider } from './useMenu';
-import Popover, { PopoverPopper } from '@components/Utils/Popover/Popover';
 import List from '@components/Display/List';
-import { baseListActions } from '@BaseList';
+import Popover, { PopoverPopper } from '@components/Utils/Popover/Popover';
+import useMenu, { MenuProvider } from './useMenu';
 
 export const menuClasses = {
   root: 'Menu-Root',

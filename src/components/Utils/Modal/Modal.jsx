@@ -2,8 +2,8 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { isHostComponent, resolveComponentProps } from '@components/lib';
-import ModalBase, { modalBaseClasses } from './ModalBase';
 import Backdrop from '@components/feedback/backdrop';
+import ModalBase, { modalBaseClasses } from './ModalBase';
 
 export const modalClasses = modalBaseClasses;
 

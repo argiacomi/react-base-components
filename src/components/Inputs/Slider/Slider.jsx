@@ -7,8 +7,8 @@ import {
   shouldSpreadAdditionalProps,
   useSlotProps
 } from '@components/lib';
-import useSlider, { valueToPercent } from './useSlider';
 import BaseValueLabel from './SliderValueLabel';
+import useSlider, { valueToPercent } from './useSlider';
 
 export const sliderClasses = {
   root: 'Slider-Root',

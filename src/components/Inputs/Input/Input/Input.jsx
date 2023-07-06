@@ -2,9 +2,9 @@ import React from 'react';
 import styled, { shouldForwardProp } from '@styles';
 import { deepmerge } from '@components/lib';
 import InputBase, {
-  InputBaseRoot,
+  inputBaseClasses,
   InputBaseComponent,
-  inputBaseClasses
+  InputBaseRoot
 } from '../InputBase/InputBase';
 
 export const inputClasses = {

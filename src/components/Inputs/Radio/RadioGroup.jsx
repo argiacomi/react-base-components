@@ -1,6 +1,6 @@
 import React from 'react';
-import FormGroup from '../Form/FormGroup';
 import { useControlled, useForkRef, useId } from '@components/lib';
+import FormGroup from '../Form/FormGroup';
 import RadioGroupContext from './RadioGroupContext';
 
 const RadioGroup = React.forwardRef((props, ref) => {

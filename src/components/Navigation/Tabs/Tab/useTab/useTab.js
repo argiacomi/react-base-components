@@ -1,7 +1,7 @@
 import React from 'react';
-import { useId, useCompoundItem, useForkRef } from '@components/lib';
-import { useTabsContext } from '../../Tabs';
+import { useCompoundItem, useForkRef, useId } from '@components/lib';
 import { useBaseListItem } from '@components/display/list/baselist';
+import { useTabsContext } from '../../Tabs';
 
 function tabValueGenerator(otherTabValues) {
   return otherTabValues.size;

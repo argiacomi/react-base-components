@@ -1,5 +1,5 @@
+import { Breadcrumbs, Chip, Icon, Link, Stack, Text } from '@components';
 import styled from '@styles';
-import { Chip, Icon, Stack, Text, Breadcrumbs, Link } from '@components';
 
 function handleClick(event) {
   event.preventDefault();

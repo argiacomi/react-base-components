@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import Text from '@components/Display/Text';
 import styled, { extractStyling } from '@styles';
+import Text from '@components/Display/Text';
 import { useDialogContext } from '../Dialog/DialogContext';
 
 export const dialogTitleClasses = {

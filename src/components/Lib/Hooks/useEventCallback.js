@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import { useEnhancedEffect } from '@component/hooks';
+import { useEnhancedEffect } from '@components/lib';
 
 export function useEventCallback(fn) {
   // Create a ref using the function passed as an argument

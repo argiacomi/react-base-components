@@ -1,6 +1,6 @@
+import { Avatar, Box, Chip, Paper, Stack } from '@components';
 import React from 'react';
 import styled from '@styles';
-import { Avatar, Box, Chip, Paper, Stack } from '@components';
 
 const ListItem = styled('li')(({ theme }) => ({
   margin: theme.spacing(0.5)

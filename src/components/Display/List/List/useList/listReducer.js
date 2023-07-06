@@ -1,4 +1,4 @@
-import { baseListReducer, baseListActions, moveHighlight } from '../../BaseList';
+import { baseListActions, baseListReducer, moveHighlight } from '../../BaseList';
 
 export default function listReducer(state, action) {
   if (action.type === baseListActions.valueChange) {

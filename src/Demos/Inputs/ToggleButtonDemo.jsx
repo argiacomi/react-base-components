@@ -1,6 +1,6 @@
-import React from 'react';
+import { Divider, Paper, Stack, Text, ToggleButton, ToggleButtonGroup } from '@components';
 import styled from 'styled-components/macro';
-import { Divider, Paper, Stack, ToggleButton, ToggleButtonGroup, Text } from '@components';
+import React from 'react';
 
 function ToggleButtons() {
   const [alignment, setAlignment] = React.useState('left');

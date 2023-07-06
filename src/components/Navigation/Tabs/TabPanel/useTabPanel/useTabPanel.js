@@ -1,5 +1,5 @@
 import React from 'react';
-import { useId, useCompoundItem, useForkRef } from '@components/lib';
+import { useCompoundItem, useForkRef, useId } from '@components/lib';
 import { useTabsContext } from '../../Tabs';
 
 function tabPanelValueGenerator(otherTabPanelValues) {

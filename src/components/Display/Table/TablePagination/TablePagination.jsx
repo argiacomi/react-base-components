@@ -1,11 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { appendOwnerState, useId } from '@components/lib';
-import FirstPageIcon from '@components/lib/icons/FirstPage';
-import KeyboardArrowLeft from '@components/lib/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@components/lib/icons/KeyboardArrowRight';
-import LastPageIcon from '@components/lib/icons/LastPage';
 import IconButton from '@components/Inputs/Button/IconButton';
 import InputBase from '@components/Inputs/Input/InputBase';
 import Select from '@components/Inputs/Select';
@@ -15,6 +11,10 @@ import TableCell from '../TableCell';
 import BaseTablePagination, {
   tablePaginationClasses as baseTablePaginationClasses
 } from './BaseTablePagination';
+import FirstPageIcon from '@icons/FirstPage';
+import KeyboardArrowLeft from '@icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@icons/KeyboardArrowRight';
+import LastPageIcon from '@icons/LastPage';
 
 export const tablePaginationClasses = baseTablePaginationClasses;
 

@@ -10,8 +10,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
       '@components': path.resolve(__dirname, './src/components'),
       '@demos': path.resolve(__dirname, './src/demos'),
-      '@component/hooks': path.resolve(__dirname, './src/components/lib/hooks'),
-      '@component/utils': path.resolve(__dirname, './src/components/lib/helpers'),
+      '@icons': path.resolve(__dirname, './src/components/lib/icons'),
+      '@components/lib': path.resolve(__dirname, './src/components/lib/helpers'),
       '@styles': path.resolve(__dirname, './src/styles'),
       '@transitions': path.resolve(__dirname, './src/components/utils/transitions'),
       '@BaseList': path.resolve(__dirname, './src/Components/Display/List/BaseList')

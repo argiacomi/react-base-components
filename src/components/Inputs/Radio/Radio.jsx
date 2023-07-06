@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled, { extractStyling, shouldForwardProp } from '@styles';
 import { areEqualValues, createChainedFunction, useSlotProps } from '@components/lib';
 import SwitchBase from '../Switch/SwitchBase';

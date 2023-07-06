@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { setRef, useControlled, useEventCallback, useId, usePreviousProps } from '@components/lib';
 
 function stripDiacritics(string) {

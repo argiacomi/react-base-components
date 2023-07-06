@@ -2,8 +2,8 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { useForkRef, useSlotProps } from '@components/lib';
-import CancelIcon from '@components/lib/icons/Cancel';
 import { ButtonBase } from '@components/inputs';
+import CancelIcon from '@icons/Cancel';
 
 export const chipClasses = {
   root: 'Chip-Root',

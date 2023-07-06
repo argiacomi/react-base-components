@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import Tablelvl2Context from '../Table/Tablelvl2Context';

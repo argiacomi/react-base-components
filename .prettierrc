@@ -9,5 +9,13 @@
   "trailingComma": "none",
   "tabWidth": 2,
   "useTabs": false,
-  "importOrder": ["^react", "^clsx", "^@styles", "^@components/lib", "^@components/(.*)$", "^[./]"]
+  "importOrder": [
+    "^react",
+    "^clsx",
+    "^@styles",
+    "^@components/lib",
+    "^@components/(.*)$",
+    "^[./]",
+    "^@icons"
+  ]
 }

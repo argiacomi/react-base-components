@@ -1,12 +1,12 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling, shouldForwardProp } from '@styles';
 import { deepmerge, useForkRef } from '@components/lib';
-import ArrowDropDownIcon from '@components/lib/icons/ArrowDropDown';
 import { formControlState, useFormControl } from '../../Form';
 import Input, { FilledInput, OutlinedInput } from '../../Input';
 import { NativeSelectInput } from '../NativeSelect';
 import SelectInput from './SelectInput';
+import ArrowDropDownIcon from '@icons/ArrowDropDown';
 
 const StyledInput = styled(Input, {
   name: 'Select',

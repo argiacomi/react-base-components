@@ -1,14 +1,14 @@
 import React from 'react';
 import styled, { extractStyling } from '@styles';
 import { useSlotProps } from '@components/lib';
-import CloseIcon from '@components/lib/icons/Close';
-import DangerOutlineIcon from '@components/lib/icons/DangerOutline';
-import InfoOutlinedIcon from '@components/lib/icons/InfoOutlined';
-import ReportProblemOutlinedIcon from '@components/lib/icons/ReportProblemOutlined';
-import SuccessOutlinedIcon from '@components/lib/icons/SuccessOutlined';
 import { default as BaseIcon } from '@components/display/Icon';
 import { IconButton } from '@components/inputs/Button';
 import Paper from '@components/surfaces/Paper';
+import CloseIcon from '@icons/Close';
+import DangerOutlineIcon from '@icons/DangerOutline';
+import InfoOutlinedIcon from '@icons/InfoOutlined';
+import ReportProblemOutlinedIcon from '@icons/ReportProblemOutlined';
+import SuccessOutlinedIcon from '@icons/SuccessOutlined';
 
 export const alertClasses = {
   root: 'Alert-Root',

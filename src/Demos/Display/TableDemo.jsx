@@ -19,7 +19,7 @@ import {
   Toolbar,
   Tooltip
 } from '@components';
-import * as React from 'react';
+import React from 'react';
 import { visuallyHidden } from '@components/lib';
 
 const DeleteIcon = (props) => <Icon icon='MdDelete' {...props} />;

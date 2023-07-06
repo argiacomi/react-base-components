@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { extractStyling } from '@styles';
 import { useLoaded, useSlotProps } from '@components/lib';
-import Person from '@components/lib/icons/Person';
+import Person from '@icons/Person';
 
 export const avatarClasses = {
   root: 'Avatar-Root',

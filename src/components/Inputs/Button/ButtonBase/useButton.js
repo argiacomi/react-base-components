@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { extractEventHandlers, useForkRef, useIsFocusVisible } from '@components/lib';
 import useTouchRipple from './useTouchRipple';
 

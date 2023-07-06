@@ -1,9 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { capitalize, useForkRef } from '@components/lib';
-import ArrowDropDownIcon from '@components/lib/icons/ArrowDropDown';
-import ClearIcon from '@components/lib/icons/Close';
 import Chip from '@components/Display/Chip';
 import { ListSubheader } from '@components/Display/List';
 import Paper from '@components/Surfaces/Paper';
@@ -11,6 +9,8 @@ import Popper from '@components/Utils/Popper';
 import IconButton from '../Button/IconButton/IconButton';
 import { filledInputClasses, inputBaseClasses, inputClasses, outlinedInputClasses } from '../Input';
 import useAutocomplete, { createFilterOptions } from './useAutocomplete';
+import ArrowDropDownIcon from '@icons/ArrowDropDown';
+import ClearIcon from '@icons/Close';
 
 export const autocompleteClasses = {
   root: 'Autocomplete-Root',

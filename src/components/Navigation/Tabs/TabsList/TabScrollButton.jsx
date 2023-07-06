@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from '@styles';
 import { useSlotProps } from '@components/lib';
-import KeyboardArrowLeft from '@components/lib/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@components/lib/icons/KeyboardArrowRight';
 import ButtonBase from '@components/inputs/Button/ButtonBase';
+import KeyboardArrowLeft from '@icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@icons/KeyboardArrowRight';
 
 const tabScrollButtonClasses = {
   root: 'TabScrollButton-Root',

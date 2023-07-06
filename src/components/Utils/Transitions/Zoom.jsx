@@ -1,7 +1,7 @@
-import { getTransitionProps, reflow } from '@component/utils';
 import React from 'react';
 import { Transition } from 'react-transition-group';
 import { useTheme } from '@styles';
+import { getTransitionProps, reflow } from '@components/lib';
 import { useForkRef } from '@components/lib';
 
 const styles = {

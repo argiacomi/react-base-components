@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 function defaultTrigger(store, options) {
   const { disableHysteresis = false, threshold = 100, target } = options;

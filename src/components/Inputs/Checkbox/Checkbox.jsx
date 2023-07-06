@@ -1,11 +1,11 @@
 import React from 'react';
 import styled, { extractStyling, shouldForwardProp } from '@styles';
 import { useSlotProps } from '@components/lib';
-import CheckBoxIcon from '@components/lib/icons/CheckBox';
-import CheckBoxOutlineBlankIcon from '@components/lib/icons/CheckBoxOutlineBlank';
-import IndeterminateCheckBoxIcon from '@components/lib/icons/IndeterminateCheckBox';
 import Icon from '@components/Display/Icon';
 import SwitchBase from '../switch/SwitchBase';
+import CheckBoxIcon from '@icons/CheckBox';
+import CheckBoxOutlineBlankIcon from '@icons/CheckBoxOutlineBlank';
+import IndeterminateCheckBoxIcon from '@icons/IndeterminateCheckBox';
 
 export const checkboxClasses = {
   root: 'Checkbox-Root',

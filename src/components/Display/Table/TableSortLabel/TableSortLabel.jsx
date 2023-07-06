@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { capitalize } from '@components/lib';
-import ArrowDownwardIcon from '@components/lib/icons/ArrowDownward';
 import ButtonBase from '@components/Inputs/Button/ButtonBase';
+import ArrowDownwardIcon from '@icons/ArrowDownward';
 
 export const tableSortLabelClasses = {
   root: 'TableSortLabel-Root',

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { isHostComponent, useId, useSlotProps } from '@components/lib';
 import TablePaginationActions from './TablePaginationActions';
 

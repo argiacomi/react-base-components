@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useEventCallback } from '@components/lib';
 
 const useTouchRipple = (props) => {

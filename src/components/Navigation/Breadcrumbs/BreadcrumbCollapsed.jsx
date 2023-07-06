@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@styles';
-import MoreHorizIcon from '@components/lib/icons/MoreHoriz';
 import { ButtonBase } from '@components/inputs';
+import MoreHorizIcon from '@icons/MoreHoriz';
 
 const BreadcrumbCollapsedButton = styled(ButtonBase)(({ theme }) => ({
   display: 'flex',

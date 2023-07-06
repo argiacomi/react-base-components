@@ -1,10 +1,14 @@
 import React from 'react';
-import styled, { useTheme } from '@styles';
+import styled, { extractStyling, useTheme } from '@styles';
 import { useSlotProps } from '@components/lib';
 import { ClickAwayListener } from '@components/utils';
 import useSnackbar from './useSnackbar';
 import SnackbarContent from './SnackbarContent';
 import * as Transitions from '@transitions';
+
+export const snackbarClasses = {
+  root: 'Snackbar-Root'
+};
 
 const getDirection = (vertical, horizontal) => {
   if (horizontal === 'left') return 'right';
@@ -47,7 +51,8 @@ const SnackbarRoot = styled('div')(
           right: theme.spacing(3),
           left: 'auto'
         })
-      }
+      },
+      ...ownerState.cssStyles
     };
   },
   ({ theme, ownerState }) => ({
@@ -72,20 +77,23 @@ const Snackbar = React.forwardRef((props, ref) => {
     anchorOrigin: { vertical, horizontal } = { vertical: 'bottom', horizontal: 'left' },
     autoHideDuration = null,
     children,
-    className,
     ClickAwayListenerProps,
-    Component,
+    component: componentProp = 'div',
     ContentProps,
     disableWindowBlurListener = false,
     id,
     message,
     open,
     queue = false,
+    slots = {},
+    slotProps = {},
     transition = 'Slide',
     transitionDuration = defaultTransitionDuration,
     TransitionProps: { onEnter, onExited, ...TransitionProps } = {},
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const TransitionComponent =
     typeof transition === 'string'
@@ -98,6 +106,7 @@ const Snackbar = React.forwardRef((props, ref) => {
     ...props,
     anchorOrigin: { vertical, horizontal },
     autoHideDuration,
+    cssStyles,
     disableWindowBlurListener,
     id,
     queue,
@@ -111,16 +120,18 @@ const Snackbar = React.forwardRef((props, ref) => {
   const [exited, setExited] = React.useState(true);
   const [collapsed, setCollapsed] = React.useState(true);
 
+  const component = componentProp || 'div';
+  const SnackbarComponent = slots.root || SnackbarRoot;
   const rootProps = useSlotProps({
-    as: Component || 'div',
-    elementType: SnackbarRoot,
+    elementType: SnackbarComponent,
+    externalSlotProps: slotProps.root,
     getSlotProps: getRootProps,
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
-      ref
+      ref: ref
     },
-    className: ['Snackbar-Root', className]
+    className: snackbarClasses.root
   });
 
   const handleExited = (node) => {
@@ -159,7 +170,7 @@ const Snackbar = React.forwardRef((props, ref) => {
         eventTypes={['onTouchEnd']}
         {...ClickAwayListenerProps}
       >
-        <SnackbarRoot {...rootProps}>
+        <SnackbarComponent as={component} {...rootProps}>
           <TransitionComponent
             appear
             in={open}
@@ -171,7 +182,7 @@ const Snackbar = React.forwardRef((props, ref) => {
           >
             {children || <SnackbarContent message={message} action={action} {...ContentProps} />}
           </TransitionComponent>
-        </SnackbarRoot>
+        </SnackbarComponent>
       </ClickAwayListener>
     </QueueTransition>
   ) : (

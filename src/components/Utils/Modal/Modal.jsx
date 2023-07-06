@@ -1,9 +1,11 @@
 import React from 'react';
 import clsx from 'clsx';
-import ModalBase from './ModalBase';
-import { resolveComponentProps } from '@components/lib';
-import styled from '@styles';
-import { Backdrop } from '@components/feedback';
+import styled, { extractStyling } from '@styles';
+import { isHostComponent, resolveComponentProps } from '@components/lib';
+import ModalBase, { modalBaseClasses } from './ModalBase';
+import Backdrop from '@components/feedback/backdrop';
+
+export const modalClasses = modalBaseClasses;
 
 const ModalRoot = styled('div')(({ theme, ownerState }) => ({
   position: 'fixed',
@@ -15,7 +17,8 @@ const ModalRoot = styled('div')(({ theme, ownerState }) => ({
   ...(!ownerState.open &&
     ownerState.exited && {
       visibility: 'hidden'
-    })
+    }),
+  ...ownerState.cssStyles
 }));
 
 const ModalBackdrop = styled(Backdrop)({
@@ -46,8 +49,10 @@ const Modal = React.forwardRef((props, ref) => {
     slotProps,
     slots,
     theme,
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const [exited, setExited] = React.useState(true);
 
@@ -70,11 +75,15 @@ const Modal = React.forwardRef((props, ref) => {
   const ownerState = {
     ...props,
     ...commonProps,
+    cssStyles,
     exited
   };
 
   const RootSlot = slots?.root ?? ModalRoot;
   const BackdropSlot = slots?.backdrop ?? BackdropComponent;
+
+  const rootSlotProps = slotProps?.root;
+  const backdropSlotProps = slotProps?.backdrop;
 
   return (
     <ModalBase
@@ -84,25 +93,19 @@ const Modal = React.forwardRef((props, ref) => {
       }}
       slotProps={{
         root: () => ({
-          ...resolveComponentProps(slotProps?.root, ownerState),
-          ...(!(typeof RootSlot === 'string') && { as: component, theme }),
+          ...resolveComponentProps(rootSlotProps, ownerState),
+          ...(!isHostComponent(RootSlot) && { as: component, theme }),
           className: clsx(
-            'Modal-Root',
             className,
-            slotProps?.root?.className,
+            rootSlotProps?.className,
             classes?.root,
             !ownerState.open && ownerState.exited && classes?.hidden
           )
         }),
         backdrop: () => ({
           ...BackdropProps,
-          ...resolveComponentProps(slotProps?.backdrop, ownerState),
-          className: clsx(
-            'Modal-Backdrop',
-            slotProps?.backdrop?.className,
-            BackdropProps?.className,
-            classes?.backdrop
-          )
+          ...resolveComponentProps(backdropSlotProps, ownerState),
+          className: clsx(backdropSlotProps?.className, BackdropProps?.className, classes?.backdrop)
         })
       }}
       onTransitionEnter={() => setExited(false)}
@@ -110,6 +113,7 @@ const Modal = React.forwardRef((props, ref) => {
       ref={ref}
       {...other}
       {...commonProps}
+      css={cssStyles}
     >
       {children}
     </ModalBase>

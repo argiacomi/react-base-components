@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useMessageBus } from '@components/lib';
 
 const SELECTION_CHANGE_TOPIC = 'select:change-selection';

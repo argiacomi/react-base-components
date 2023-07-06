@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 const ListItemContext = React.createContext(null);
 if (!import.meta.env.PROD) {

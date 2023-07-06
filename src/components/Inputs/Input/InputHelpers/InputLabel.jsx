@@ -1,9 +1,18 @@
 import React from 'react';
 import clsx from 'clsx';
-import styled from '@styles';
+import styled, { shouldForwardProp } from '@styles';
 import { FormLabel, formControlState, useFormControl } from '@components/Inputs/Form';
 
-const InputLabelRoot = styled(FormLabel)(({ theme, ownerState }) => ({
+export const inputLabelClasses = {
+  root: 'InputLabel-Root',
+  required: 'InputLabel-Asterisk'
+};
+
+const InputLabelRoot = styled(FormLabel, {
+  shouldForwardProp: (prop) => shouldForwardProp(prop) || prop === 'classes',
+  name: 'InputLabel',
+  slot: 'Root'
+})(({ theme, ownerState }) => ({
   display: 'block',
   transformOrigin: 'top left',
   whiteSpace: 'nowrap',
@@ -94,8 +103,8 @@ const InputLabel = React.forwardRef((props, ref) => {
   };
 
   const classes = {
-    root: 'InputLabel-Root',
-    asterisk: [ownerState.required && 'InputLabel-Asterisk']
+    root: inputLabelClasses.root,
+    asterisk: [ownerState.required && inputLabelClasses.required]
   };
 
   return (

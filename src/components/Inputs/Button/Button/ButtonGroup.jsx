@@ -1,24 +1,31 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
-import ButtonGroupContext, { buttonGroupClasses } from './ButtonGroupContext';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
+import ButtonGroupContext from './ButtonGroupContext';
+
+export const buttonGroupClasses = {
+  root: 'ButtonGroup-Root',
+  grouped: 'ButtonGroup-Grouped',
+  disableElevation: 'DisableElevation',
+  disabled: 'Disabled',
+  fullWidth: 'FullWidth'
+};
 
 const ButtonGroupRoot = styled('div')(({ theme, ownerState }) => ({
   display: 'inline-flex',
+  height: 'fit-content',
+  width: 'fit-content',
   borderRadius: theme.rounded.base,
   flexDirection: ownerState.orientation === 'vertical' ? 'column' : 'row',
-  ...(ownerState.variant === 'outlined'
-    ? { boxShadow: theme.boxShadow[4] }
-    : { filter: theme.dropShadow[4] }),
+  boxShadow: ownerState.variant !== 'text' && theme.boxShadow[3],
+  filter: ownerState.variant === 'filled' && theme.dropShadow[3],
   ...(ownerState.disabled && {
     borderStyle: 'none',
     backgroundColor: theme.color.disabled.body,
-    boxShadow: 'none',
-    filter: 'none'
+    boxShadow: 'none'
   }),
   ...(ownerState.disableElevation && {
-    boxShadow: 'none',
-    filter: 'none'
+    boxShadow: 'none'
   }),
   ...(ownerState.fullWidth && {
     width: '100%'
@@ -106,18 +113,19 @@ const ButtonGroupRoot = styled('div')(({ theme, ownerState }) => ({
       }[ownerState.orientation][ownerState.variant],
       ...(ownerState.variant === 'colorText' &&
         ownerState.color !== 'default' && {
-          borderColor: theme.alpha.add(theme.color[ownerState.color][500], 0.5)
+          borderColor: theme.alpha.add(theme.color[ownerState.color].body, 0.5)
         }),
       ...(ownerState.variant === 'text' &&
         ownerState.color !== 'default' && {
           borderColor:
             ownerState.color === 'monochrome'
-              ? theme.alpha.add(theme.color[ownerState.color][500], 0.5)
+              ? theme.alpha.add(theme.color[ownerState.color].body, 0.5)
               : theme.color.divider
         }),
       ...(ownerState.variant === 'filled' &&
         ownerState.color !== 'default' && {
-          borderColor: theme.color[ownerState.color][600]
+          borderColor: theme.color[ownerState.color]?.[600],
+          ...(ownerState.color === 'monochrome' && { borderColor: theme.color.black })
         })
     },
     '&:hover': {
@@ -130,36 +138,36 @@ const ButtonGroupRoot = styled('div')(({ theme, ownerState }) => ({
         }
       }[ownerState.orientation][ownerState.variant]
     }
-  }
+  },
+  ...ownerState.cssStyles
 }));
 
 const ButtonGroup = React.forwardRef((props, ref) => {
   const {
     children,
-    className,
     color = 'primary',
-    colorText = false,
-    component = 'div',
+    component: componentProp = 'div',
     disabled = false,
     disableElevation = false,
     disableFocusRipple = false,
-    disableRipple = false,
     fullWidth = false,
     orientation = 'horizontal',
     size = 'medium',
+    slots = {},
+    slotProps = {},
     variant = 'outlined',
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const ownerState = {
     ...props,
     color,
-    colorText,
-    component,
+    cssStyles,
     disabled,
     disableElevation,
     disableFocusRipple,
-    disableRipple,
     fullWidth,
     orientation,
     size,
@@ -168,50 +176,58 @@ const ButtonGroup = React.forwardRef((props, ref) => {
 
   const classes = React.useMemo(
     () => ({
-      grouped: buttonGroupClasses.grouped,
-      disabled: disabled && buttonGroupClasses.disabled
+      root: [
+        buttonGroupClasses.root,
+        ownerState.fullWidth && buttonGroupClasses.fullWidth,
+        ownerState.disableElevation && buttonGroupClasses.disableElevation
+      ],
+      grouped: [buttonGroupClasses.grouped, ownerState.disabled && buttonGroupClasses.disabled]
     }),
-    [disabled]
+    [ownerState.fullWidth, ownerState.disableElevation, ownerState.disabled]
   );
 
   const context = React.useMemo(
     () => ({
-      className: Object.values(classes),
+      className: classes.grouped,
       color,
-      colorText,
       disabled,
       disableElevation,
       disableFocusRipple,
-      disableRipple,
       fullWidth,
       size,
       variant
     }),
     [
-      classes,
+      classes.grouped,
       color,
-      colorText,
       disabled,
       disableElevation,
       disableFocusRipple,
-      disableRipple,
       fullWidth,
       size,
       variant
     ]
   );
 
+  const component = componentProp || 'div';
+  const ButtonGroupComponent = slots.root || ButtonGroupRoot;
+
+  const buttonGroupRootProps = useSlotProps({
+    elementType: ButtonGroupComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      role: 'group',
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
   return (
-    <ButtonGroupRoot
-      as={component}
-      role='group'
-      className={clsx('ButtonGroup-Root', className)}
-      ref={ref}
-      ownerState={ownerState}
-      {...other}
-    >
+    <ButtonGroupComponent as={component} {...buttonGroupRootProps}>
       <ButtonGroupContext.Provider value={context}>{children}</ButtonGroupContext.Provider>
-    </ButtonGroupRoot>
+    </ButtonGroupComponent>
   );
 });
 ButtonGroup.displayName = 'ButtonGroup';

@@ -2,6 +2,8 @@ import React from 'react';
 import clsx from 'clsx';
 import styled from '@styles';
 
+export const accordionDetailsClasses = { root: 'AccordionDetails-Root' };
+
 const AccordionDetailsRoot = styled('div')(({ theme }) => ({
   padding: `${theme.spacing(1)} ${theme.spacing(2)} ${theme.spacing(2)}`
 }));
@@ -11,7 +13,7 @@ const AccordionDetails = React.forwardRef((props, ref) => {
 
   return (
     <AccordionDetailsRoot
-      className={clsx('AccordionDetails-Root', className)}
+      className={clsx(accordionDetailsClasses.root, className)}
       ref={ref}
       {...other}
     />

@@ -2,13 +2,19 @@ import React from 'react';
 import {
   ownerDocument,
   useForkRef,
-  useSlotProps,
   createChainedFunction,
-  useEventCallback
+  useEventCallback,
+  useSlotProps
 } from '@components/lib';
-import Portal from '../Portal/Portal';
+import Portal from '../Portal';
 import ModalManager, { ariaHidden } from './ModalManager';
-import FocusTrap from '../FocusTrap/FocusTrap';
+import FocusTrap from '../FocusTrap';
+
+export const modalBaseClasses = {
+  root: 'Modal-Root',
+  hidden: 'Hidden',
+  backdrop: 'Modal-Backdrop'
+};
 
 function getContainer(container) {
   return typeof container === 'function' ? container() : container;
@@ -128,6 +134,11 @@ const Modal = React.forwardRef((props, ref) => {
     keepMounted
   };
 
+  const classes = {
+    root: [modalBaseClasses.root, !open && exited && modalBaseClasses.hidden],
+    backdrop: modalBaseClasses.backdrop
+  };
+
   const handleEnter = () => {
     setExited(false);
 
@@ -200,7 +211,7 @@ const Modal = React.forwardRef((props, ref) => {
       role: 'presentation',
       onKeyDown: handleKeyDown
     },
-    className: 'ModalBase-Root',
+    className: classes.root,
     ownerState
   });
 
@@ -213,7 +224,7 @@ const Modal = React.forwardRef((props, ref) => {
       onClick: handleBackdropClick,
       open
     },
-    className: 'ModalBase-Backdrop',
+    className: classes.backdrop,
     ownerState
   });
 

@@ -1,10 +1,11 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 import { useListItemContext } from './ListItemContext';
 
 export const listItemIconClasses = {
-  root: 'ListItemIcon-Root'
+  root: 'ListItemIcon-Root',
+  flexStart: 'AlignItemsFlexStart'
 };
 
 const ListItemIconRoot = styled('div')(({ theme, ownerState }) => ({
@@ -14,22 +15,39 @@ const ListItemIconRoot = styled('div')(({ theme, ownerState }) => ({
   display: 'inline-flex',
   ...(ownerState.alignItems === 'flex-start' && {
     marginTop: theme.spacing(1)
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
 const ListItemIcon = React.forwardRef((props, ref) => {
-  const { className, ...other } = props;
-  const context = useListItemContext();
-  const ownerState = { ...props, alignItems: context.alignItems };
+  const { component: componentProp = 'div', slots = {}, slotProps = {}, ...otherProps } = props;
 
-  return (
-    <ListItemIconRoot
-      className={clsx(listItemIconClasses.root, className)}
-      ownerState={ownerState}
-      ref={ref}
-      {...other}
-    />
-  );
+  const { cssStyles, other } = extractStyling(otherProps);
+
+  const context = useListItemContext();
+  const ownerState = { ...props, cssStyles, alignItems: context.alignItems };
+
+  const classes = {
+    root: [
+      listItemIconClasses.root,
+      ownerState.alignItems === 'flex-start' && listItemIconClasses.flexStart
+    ]
+  };
+
+  const component = componentProp || 'div';
+  const ListItemIconRootComponent = slots.root || ListItemIconRoot;
+  const listItemIconRootProps = useSlotProps({
+    elementType: ListItemIconRootComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
+  return <ListItemIconRootComponent as={component} {...listItemIconRootProps} />;
 });
 
 ListItemIcon.displayName = 'ListItemIcon';

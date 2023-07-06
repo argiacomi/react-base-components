@@ -1,1 +1,2 @@
-export { default as NoSsr } from './NoSsr';
+export { default } from './NoSsr';
+export * from './NoSsr';

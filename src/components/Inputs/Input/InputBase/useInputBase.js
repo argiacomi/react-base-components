@@ -1,18 +1,6 @@
 import React from 'react';
-import { extractEventHandlers, useEnhancedEffect, useForkRef } from '@components/lib';
+import { extractEventHandlers, isFilled, useEnhancedEffect, useForkRef } from '@components/lib';
 import { useFormControl } from '@components/Inputs/Form';
-
-function hasValue(value) {
-  return value != null && !(Array.isArray(value) && value.length === 0);
-}
-
-function isFilled(obj, SSR = false) {
-  return (
-    obj &&
-    ((hasValue(obj.value) && obj.value !== '') ||
-      (SSR && hasValue(obj.defaultValue) && obj.defaultValue !== ''))
-  );
-}
 
 export default function useInputBase(parameters) {
   const {
@@ -95,7 +83,7 @@ export default function useInputBase(parameters) {
   }, [value, checkDirty, isControlled]);
 
   const handleFocus = (otherHandlers) => (event) => {
-    if (formControl.disabled) {
+    if (formControl?.disabled) {
       event.stopPropagation();
       return;
     }
@@ -147,10 +135,6 @@ export default function useInputBase(parameters) {
 
       if (inputPropsProp.onChange) {
         inputPropsProp.onChange(event, ...args);
-      }
-
-      if (formControl && formControl.onBlur) {
-        formControl.onChange(event);
       }
 
       if (otherHandlers.onChange) {

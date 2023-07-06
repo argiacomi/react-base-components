@@ -2,15 +2,15 @@ import React from 'react';
 import { TransitionGroup } from 'react-transition-group';
 import clsx from 'clsx';
 import { keyframes } from 'styled-components/macro';
-import styled, { useTheme } from '@styles';
+import styled, { shouldForwardProp, useTheme } from '@styles';
 import Ripple from './Ripple';
 
 const touchRippleClasses = {
-  root: 'root',
-  ripple: 'ripple',
-  rippleVisible: 'rippleVisible',
-  ripplePulsate: 'ripplePulsate',
-  child: 'child',
+  root: 'TouchRipple-Root',
+  ripple: 'TouchRipple-Ripple',
+  rippleVisible: 'RippleVisible',
+  ripplePulsate: 'RipplePulsate',
+  child: 'TouchRipple-Child',
   childLeaving: 'childLeaving',
   childPulsate: 'childPulsate'
 };
@@ -35,7 +35,24 @@ const exitKeyframe = keyframes`
   }
 `;
 
-export const TouchRippleRoot = styled('span')({
+const pulsateKeyframe = keyframes`
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.75);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+`;
+
+export const TouchRippleRoot = styled('span', {
+  name: 'PrivateTouchRipple',
+  slot: 'Root'
+})({
   overflow: 'hidden',
   pointerEvents: 'none',
   position: 'absolute',
@@ -44,7 +61,11 @@ export const TouchRippleRoot = styled('span')({
   borderRadius: 'inherit'
 });
 
-export const TouchRippleRipple = styled(Ripple)`
+export const TouchRippleRipple = styled(Ripple, {
+  shouldForwardProp: (prop) => shouldForwardProp(prop) || prop === 'classes',
+  name: 'PrivateTouchRipple',
+  slot: 'Ripple'
+})`
   opacity: 0;
   position: absolute;
   &.${touchRippleClasses.rippleVisible} {
@@ -53,6 +74,9 @@ export const TouchRippleRipple = styled(Ripple)`
     animation-name: ${enterKeyframe};
     animation-duration: ${({ theme }) => theme.transition.duration.ripple}ms;
     animation-timing-function: ${({ theme }) => theme.transition.easing.easeInOut};
+  }
+  &.${touchRippleClasses.ripplePulsate} {
+    animation-duration: ${({ theme }) => theme.transition.duration.shorter}ms;
   }
   & .${touchRippleClasses.child} {
     opacity: 1;
@@ -68,10 +92,20 @@ export const TouchRippleRipple = styled(Ripple)`
     animation-duration: ${({ theme }) => theme.transition.duration.ripple}ms;
     animation-timing-function: ${({ theme }) => theme.transition.easing.easeInOut};
   }
+  & .${touchRippleClasses.childPulsate} {
+    position: absolute;
+    left: 0px;
+    top: 0;
+    animation-name: ${pulsateKeyframe};
+    animation-duration: 2500ms;
+    animation-timing-function: ${({ theme }) => theme.transition.easing.easeInOut};
+    animation-iteration-count: infinite;
+    animation-delay: 200ms;
+  }
 `;
 
 const TouchRipple = React.forwardRef((props, ref) => {
-  const { center: centerProp = false, classes = {}, className, ...other } = props;
+  const { center: centerProp = false, classes = {}, ...other } = props;
   const [ripples, setRipples] = React.useState([]);
   const nextKey = React.useRef(0);
   const rippleCallback = React.useRef();
@@ -97,20 +131,22 @@ const TouchRipple = React.forwardRef((props, ref) => {
 
   const startCommit = React.useCallback(
     (params) => {
-      const { rippleX, rippleY, rippleSize, cb } = params;
+      const { pulsate, rippleX, rippleY, rippleSize, cb } = params;
 
       setRipples((oldRipples) => [
         ...oldRipples,
         <TouchRippleRipple
           key={nextKey.current}
-          className={'TouchRipple-ripple'}
           classes={{
             ripple: clsx(classes.ripple, touchRippleClasses.ripple),
             rippleVisible: clsx(classes.rippleVisible, touchRippleClasses.rippleVisible),
+            ripplePulsate: clsx(classes.ripplePulsate, touchRippleClasses.ripplePulsate),
             child: clsx(classes.child, touchRippleClasses.child),
-            childLeaving: clsx(classes.childLeaving, touchRippleClasses.childLeaving)
+            childLeaving: clsx(classes.childLeaving, touchRippleClasses.childLeaving),
+            childPulsate: clsx(classes.childPulsate, touchRippleClasses.childPulsate)
           }}
           timeout={theme.transition.duration.ripple}
+          pulsate={pulsate}
           rippleX={rippleX}
           rippleY={rippleY}
           rippleSize={rippleSize}
@@ -124,7 +160,11 @@ const TouchRipple = React.forwardRef((props, ref) => {
 
   const start = React.useCallback(
     (event, options = {}, cb = () => {}) => {
-      const { center = centerProp, fakeElement = false } = options;
+      const {
+        pulsate = false,
+        center = centerProp || options.pulsate,
+        fakeElement = false // For test purposes
+      } = options;
 
       if (event?.type === 'mousedown' && ignoringMouseDown.current) {
         ignoringMouseDown.current = false;
@@ -181,7 +221,7 @@ const TouchRipple = React.forwardRef((props, ref) => {
       if (event?.touches) {
         if (startTimerCommit.current === null) {
           startTimerCommit.current = () => {
-            startCommit({ rippleX, rippleY, rippleSize, cb });
+            startCommit({ pulsate, rippleX, rippleY, rippleSize, cb });
           };
           startTimer.current = setTimeout(() => {
             if (startTimerCommit.current) {
@@ -191,11 +231,15 @@ const TouchRipple = React.forwardRef((props, ref) => {
           }, theme.transition.duration.duration75);
         }
       } else {
-        startCommit({ rippleX, rippleY, rippleSize, cb });
+        startCommit({ pulsate, rippleX, rippleY, rippleSize, cb });
       }
     },
     [centerProp, startCommit, theme.transition.duration.duration75]
   );
+
+  const pulsate = React.useCallback(() => {
+    start({}, { pulsate: true });
+  }, [start]);
 
   const stop = React.useCallback((event, cb) => {
     clearTimeout(startTimer.current);
@@ -223,15 +267,16 @@ const TouchRipple = React.forwardRef((props, ref) => {
   React.useImperativeHandle(
     ref,
     () => ({
+      pulsate,
       start,
       stop
     }),
-    [start, stop]
+    [pulsate, start, stop]
   );
 
   return (
     <TouchRippleRoot
-      className={clsx('TouchRipple-Root', classes.root, touchRippleClasses.root, className)}
+      className={clsx(classes.root, touchRippleClasses.root)}
       {...other}
       ref={container}
     >

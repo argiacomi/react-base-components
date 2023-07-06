@@ -1,9 +1,16 @@
 import { forwardRef } from 'react';
 import clsx from 'clsx';
-import styled from '@styles';
-import { Paper } from '@components';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 
-const ToolbarRoot = styled(Paper)(
+export const toolbarClasses = {
+  root: 'Toolbar-Root',
+  regular: 'Regular',
+  dense: 'Dense',
+  disableGutters: 'DisableGutters'
+};
+
+const ToolbarRoot = styled('div')(
   ({ theme, ownerState }) => ({
     position: 'relative',
     display: 'flex',
@@ -22,43 +29,61 @@ const ToolbarRoot = styled(Paper)(
   }),
   ({ theme, ownerState }) =>
     ownerState.variant === 'regular' && {
-      minHeight: theme.spacing(8),
+      minHeight: 56,
       [theme.breakpoints.up('xs')]: {
         '@media (orientation: landscape)': {
-          minHeight: theme.spacing(6)
+          minHeight: 48
         }
       },
       [theme.breakpoints.up('sm')]: {
-        minHeight: theme.spacing(8)
+        minHeight: 64
       }
-    }
+    },
+  ({ ownerState }) => ownerState.cssStyles
 );
 
-const Toolbar = forwardRef(function Toolbar(props, ref) {
+const Toolbar = forwardRef((props, ref) => {
   const {
-    className,
-    component = 'div',
+    component: componentProp = 'div',
     disableGutters = false,
+    slots = {},
+    slotProps = {},
     variant = 'regular',
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const ownerState = {
     ...props,
-    component,
+    cssStyles,
     disableGutters,
     variant
   };
 
-  return (
-    <ToolbarRoot
-      as={component}
-      className={clsx('Toolbar-Root', className)}
-      ownerState={ownerState}
-      ref={ref}
-      {...other}
-    />
-  );
+  const classes = {
+    root: [
+      toolbarClasses.root,
+      !ownerState.disableGutters && toolbarClasses.gutters,
+      toolbarClasses[ownerState.variant]
+    ]
+  };
+
+  const component = componentProp || 'div';
+
+  const ToolbarComponent = slots.root || ToolbarRoot;
+  const toolbarRootProps = useSlotProps({
+    elementType: ToolbarComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
+  return <ToolbarComponent as={component} {...toolbarRootProps} />;
 });
 
 Toolbar.displayName = 'Toolbar';

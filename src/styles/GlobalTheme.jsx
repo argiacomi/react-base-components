@@ -13,10 +13,18 @@ const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
 const colorThemes = {
   light: {
     color: {
-      active: 'rgba(0, 0, 0, 0.54)',
       mode: 'light',
-      background: '#f2f2f2',
+      active: 'rgba(0, 0, 0, 0.54)',
+      hover: 'rgba(0, 0, 0, 0.04)',
+      hoverOpacity: 0.12,
       selected: 'rgba(0, 0, 0, 0.08)',
+      selectedOpacity: 0.08,
+      disabledBackground: 'rgba(0, 0, 0, 0.12)',
+      disabledOpacity: 0.38,
+      focus: 'rgba(0, 0, 0, 0.12)',
+      focusOpacity: 0.12,
+      activatedOpacity: 0.12,
+      background: '#f2f2f2',
       disabled: {
         body: '#cdcdcd',
         text: '#8F8F8F'
@@ -39,10 +47,17 @@ const colorThemes = {
   },
   dark: {
     color: {
-      active: '#ffffff',
       mode: 'dark',
-      background: '#292929',
+      active: '#ffffff',
+      hover: 'rgba(255, 255, 255, 0.08)',
+      hoverOpacity: 0.24,
       selected: 'rgba(255, 255, 255, 0.16)',
+      selectedOpacity: 0.16,
+      disabledOpacity: 0.38,
+      focus: 'rgba(255, 255, 255, 0.12)',
+      focusOpacity: 0.12,
+      activatedOpacity: 0.24,
+      background: '#101010',
       disabled: {
         body: 'rgba(255, 255, 255, 0.25)',
         text: '#616161'
@@ -66,7 +81,19 @@ const colorThemes = {
 };
 
 export const baseTheme = {
-  spacing: (space) => `${space * 0.5}rem`,
+  spacing: (...spaces) => spaces.map((space) => `${space * 0.5}rem`).join(' '),
+  pxToRem: (...px) => {
+    return px
+      .map((value) => {
+        let int;
+        if (typeof value === 'string') int = px.match(/(\d+)px/);
+        if (typeof value === 'string') {
+          return `${int(int.group(1)) / 16}rem`;
+        }
+        return `${value / 16}rem`;
+      })
+      .join(' ');
+  },
   alpha: {
     overlay: (elevation = 0) => {
       const alphaValue = 4.5 * Math.log(elevation + 1) + 2;
@@ -94,6 +121,28 @@ export const baseTheme = {
       return Color(color).contrast(Color('rgba(0, 0, 0, 0.89)')) >= 3
         ? 'rgba(0, 0, 0, 0.89)'
         : '#ffffff';
+    },
+    getColorFromPath: (obj, path) => {
+      if (typeof path === 'string') {
+        const parts = path.split('.');
+        let currentPart = obj.color;
+
+        for (const part of parts) {
+          if (currentPart[part] !== undefined) {
+            currentPart = currentPart[part];
+          } else {
+            return undefined;
+          }
+        }
+
+        if (typeof currentPart === 'object') {
+          return currentPart[500];
+        }
+
+        return currentPart;
+      } else if (typeof path === 'function') {
+        return path(obj);
+      }
     }
   },
   breakpoints: {
@@ -238,21 +287,38 @@ export const baseTheme = {
   },
   dropShadow: {
     0: 'drop-shadow(0 0 #0000)',
-    1: 'drop-shadow(0 1px 1px rgb(0 0 0 / 0.05))',
-    2: 'drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06))',
-    3: 'drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06))',
-    4: 'drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1))',
-    5: 'drop-shadow(0 20px 13px rgb(0 0 0 / 0.03)) drop-shadow(0 8px 5px rgb(0 0 0 / 0.08))',
-    6: 'drop-shadow(0 25px 25px rgb(0 0 0 / 0.15))'
+    1: 'drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06))',
+    2: 'drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06))',
+    3: 'drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1))',
+    4: 'drop-shadow(0 20px 13px rgb(0 0 0 / 0.03)) drop-shadow(0 8px 5px rgb(0 0 0 / 0.08))',
+    5: 'drop-shadow(0 25px 25px rgb(0 0 0 / 0.15))'
   },
   boxShadow: {
-    0: '0 0 #0000',
+    0: 'none',
     1: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
     2: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
     3: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-    4: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-    5: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
-    6: '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+    4: '0px 2px 4px -1px rgb(0 0 0 / 0.2), 0px 4px 5px 0px rgb(0 0 0 / 0.14), 0px 1px 10px 0px rgb(0 0 0 / 0.12)',
+    5: '0px 3px 5px -1px rgb(0 0 0 / 0.2), 0px 5px 8px 0px rgb(0 0 0 / 0.14), 0px 1px 14px 0px rgb(0 0 0 / 0.12)',
+    6: '0px 3px 5px -1px rgb(0 0 0 / 0.2), 0px 6px 10px 0px rgb(0 0 0 / 0.14), 0px 1px 18px 0px rgb(0 0 0 / 0.12)',
+    7: '0px 4px 5px -2px rgb(0 0 0 / 0.2), 0px 7px 10px 1px rgb(0 0 0 / 0.14), 0px 2px 16px 1px rgb(0 0 0 / 0.12)',
+    8: '0px 5px 5px -3px rgb(0 0 0 / 0.2), 0px 8px 10px 1px rgb(0 0 0 / 0.14), 0px 3px 14px 2px rgb(0 0 0 / 0.12)',
+    9: '0px 5px 6px -3px rgb(0 0 0 / 0.2), 0px 9px 12px 1px rgb(0 0 0 / 0.14), 0px 3px 16px 2px rgb(0 0 0 / 0.12)',
+    10: '0px 6px 6px -3px rgb(0 0 0 / 0.2), 0px 10px 14px 1px rgb(0 0 0 / 0.14), 0px 4px 18px 3px rgb(0 0 0 / 0.12)',
+    11: '0px 6px 7px -4px rgb(0 0 0 / 0.2), 0px 11px 15px 1px rgb(0 0 0 / 0.14), 0px 4px 20px 3px rgb(0 0 0 / 0.12)',
+    12: '0px 7px 8px -4px rgb(0 0 0 / 0.2), 0px 12px 17px 2px rgb(0 0 0 / 0.14), 0px 5px 22px 4px rgb(0 0 0 / 0.12)',
+    13: '0px 7px 8px -4px rgb(0 0 0 / 0.2), 0px 13px 19px 2px rgb(0 0 0 / 0.14), 0px 5px 24px 4px rgb(0 0 0 / 0.12)',
+    14: '0px 7px 9px -4px rgb(0 0 0 / 0.2), 0px 14px 21px 2px rgb(0 0 0 / 0.14), 0px 5px 26px 4px rgb(0 0 0 / 0.12)',
+    15: '0px 8px 9px -5px rgb(0 0 0 / 0.2), 0px 15px 22px 2px rgb(0 0 0 / 0.14), 0px 6px 28px 5px rgb(0 0 0 / 0.12)',
+    16: '0px 8px 10px -5px rgb(0 0 0 / 0.2), 0px 16px 24px 2px rgb(0 0 0 / 0.14), 0px 6px 30px 5px rgb(0 0 0 / 0.12)',
+    17: '0px 8px 11px -5px rgb(0 0 0 / 0.2), 0px 17px 26px 2px rgb(0 0 0 / 0.14), 0px 6px 32px 5px rgb(0 0 0 / 0.12)',
+    18: '0px 9px 11px -5px rgb(0 0 0 / 0.2), 0px 18px 28px 2px rgb(0 0 0 / 0.14), 0px 7px 34px 6px rgb(0 0 0 / 0.12)',
+    19: '0px 9px 12px -6px rgb(0 0 0 / 0.2), 0px 19px 29px 2px rgb(0 0 0 / 0.14), 0px 7px 36px 6px rgb(0 0 0 / 0.12)',
+    20: '0px 10px 13px -6px rgb(0 0 0 / 0.2), 0px 20px 31px 3px rgb(0 0 0 / 0.14), 0px 8px 38px 7px rgb(0 0 0 / 0.12)',
+    21: '0px 10px 13px -6px rgb(0 0 0 / 0.2), 0px 21px 33px 3px rgb(0 0 0 / 0.14), 0px 8px 40px 7px rgb(0 0 0 / 0.12)',
+    22: '0px 10px 14px -6px rgb(0 0 0 / 0.2), 0px 22px 35px 3px rgb(0 0 0 / 0.14), 0px 8px 42px 7px rgb(0 0 0 / 0.12)',
+    23: '0px 11px 14px -7px rgb(0 0 0 / 0.2), 0px 23px 36px 3px rgb(0 0 0 / 0.14), 0px 9px 44px 8px rgb(0 0 0 / 0.12)',
+    24: '0px 11px 15px -7px rgb(0 0 0 / 0.2), 0px 24px 38px 3px rgb(0 0 0 / 0.14), 0px 9px 46px 8px rgb(0 0 0 / 0.12)',
     fab: '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
     fabActive:
       '0px 7px 8px -4px rgba(0,0,0,0.2),0px 12px 17px 2px rgba(0,0,0,0.14),0px 5px 22px 4px rgba(0,0,0,0.12)',
@@ -346,43 +412,61 @@ export const baseTheme = {
       black: '900'
     },
     typography: {
-      body1: { fontWeight: 400, fontSize: '1rem', lineHeight: 1.5, letterSpacing: '0.00938rem' },
+      htmlFontSize: 16,
+      fontFamily:
+        "'Source Sans Pro', 'Schibsted Grotesk', 'Lato', 'Montserrat', 'Poppins', sans-serif",
+      fontSize: 14,
+      body1: { fontWeight: 400, fontSize: '1rem', lineHeight: 1.5, letterSpacing: '0.00938em' },
       body2: {
         fontWeight: 400,
         fontSize: '0.875rem',
         lineHeight: 1.43,
-        letterSpacing: '0.00937rem'
+        letterSpacing: '0.01071em'
       },
-      h1: { fontWeight: 300, fontSize: '6rem', lineHeight: 1.167, letterSpacing: '-0.09372rem' },
-      h2: { fontWeight: 300, fontSize: '3.75rem', lineHeight: 1.2, letterSpacing: '-0.03124rem' },
-      h3: { fontWeight: 400, fontSize: '3rem', lineHeight: 1.167, letterSpacing: '0rem' },
-      h4: { fontWeight: 400, fontSize: '2.125rem', lineHeight: 1.235, letterSpacing: '0.01562rem' },
-      h5: { fontWeight: 400, fontSize: '1.5rem', lineHeight: 1.334, letterSpacing: '0rem' },
-      h6: { fontWeight: 500, fontSize: '1.25rem', lineHeight: 1.6, letterSpacing: '0.00938rem' },
+      button: {
+        fontWeight: 700,
+        fontSize: '0.875rem',
+        lineHeight: 1.75,
+        letterSpacing: '0.02857em',
+        textTransform: 'uppercase'
+      },
       caption: {
-        fontFamily: 'inherit',
         fontWeight: 400,
         fontSize: '0.75rem',
         lineHeight: 1.66,
-        letterSpacing: '0.0249975rem'
+        letterSpacing: '0.03333em'
       },
+      h1: { fontWeight: 300, fontSize: '6rem', lineHeight: 1.167, letterSpacing: '-0.01562em' },
+      h2: { fontWeight: 300, fontSize: '3.75rem', lineHeight: 1.2, letterSpacing: '-0.00833em' },
+      h3: { fontWeight: 400, fontSize: '3rem', lineHeight: 1.167, letterSpacing: '0em' },
+      h4: { fontWeight: 400, fontSize: '2.125rem', lineHeight: 1.235, letterSpacing: '0.00735em' },
+      h5: { fontWeight: 400, fontSize: '1.5rem', lineHeight: 1.334, letterSpacing: '0em' },
+      h6: { fontWeight: 500, fontSize: '1.25rem', lineHeight: 1.6, letterSpacing: '0.0075em' },
       inherit: {
         fontFamily: 'inherit',
+        fontWeight: 'inherit',
+        fontSize: 'inherit',
         lineHeight: 'inherit',
-        letterSpacing: 'inherit',
-        color: 'inherit'
+        letterSpacing: 'inherit'
+      },
+      overline: {
+        fontWeight: 400,
+        fontSize: '0.75rem',
+        lineHeight: 2.66,
+        letterSpacing: '0.08333em',
+        textTransform: 'uppercase'
       },
       subtitle1: {
         fontWeight: 400,
         fontSize: '1rem',
         lineHeight: 1.75,
-        letterSpacing: '0.00938rem'
+        letterSpacing: '0.00938em'
       },
       subtitle2: {
         fontWeight: 500,
         fontSize: '0.875rem',
         lineHeight: 1.57,
-        letterSpacing: '0.00625rem'
+        letterSpacing: '0.00714em'
       }
     }
   },

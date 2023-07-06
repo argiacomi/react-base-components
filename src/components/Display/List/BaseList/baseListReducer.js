@@ -1,4 +1,4 @@
-import { BaseListActionTypes } from './baseListActions';
+import baseListActions from './baseListActions';
 
 function findValidItemToHighlight(
   currentIndex,
@@ -348,17 +348,17 @@ export default function baseListReducer(state, action) {
   const { type, context } = action;
 
   switch (type) {
-    case BaseListActionTypes.keyDown:
+    case baseListActions.keyDown:
       return handleKeyDown(action.key, state, context);
-    case BaseListActionTypes.itemClick:
+    case baseListActions.itemClick:
       return handleItemSelection(action.item, state, context);
-    case BaseListActionTypes.blur:
+    case baseListActions.blur:
       return handleBlur(state, context);
-    case BaseListActionTypes.textNavigation:
+    case baseListActions.textNavigation:
       return handleTextNavigation(state, action.searchString, context);
-    case BaseListActionTypes.itemsChange:
+    case baseListActions.itemsChange:
       return handleItemsChange(action.items, action.previousItems, state, context);
-    case BaseListActionTypes.resetHighlight:
+    case baseListActions.resetHighlight:
       return handleResetHighlight(state, context);
     default:
       return state;

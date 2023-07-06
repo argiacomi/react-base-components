@@ -1,32 +1,41 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
-import { Text } from '@components/layout';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
+import { Text } from '@components/display';
 
-const AlertTitleRoot = styled(Text).withConfig({
-  shouldForwardProp: (prop) => !['ownerState'].includes(prop)
-})(({ theme }) => {
-  return {
-    fontWeight: theme.text.weight.medium,
-    marginTop: -2
-  };
-});
+export const alertTitleClasses = {
+  root: 'AlertTitle-Root'
+};
+
+const AlertTitleRoot = styled(Text)(({ theme, ownerState }) => ({
+  fontWeight: theme.text.weight.medium,
+  marginTop: -2,
+  ...ownerState.cssStyles
+}));
 
 const AlertTitle = React.forwardRef((props, ref) => {
-  const { className, ...other } = props;
+  const { component: componentProp = Text, slots = {}, slotProps = {}, ...otherProps } = props;
 
-  const ownerState = props;
+  const { cssStyles, other } = extractStyling(otherProps);
 
-  return (
-    <AlertTitleRoot
-      gutterBottom
-      component='div'
-      ownerState={ownerState}
-      ref={ref}
-      className={clsx('AlertTitle-Root', className)}
-      {...other}
-    />
-  );
+  const ownerState = { ...props, cssStyles };
+
+  const component = componentProp || Text;
+  const AlertTitleComponent = slots.root || AlertTitleRoot;
+  const alertTitleRootProps = useSlotProps({
+    elementType: AlertTitleComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      component: 'div',
+      gutterBottom: true,
+      ref: ref
+    },
+    ownerState,
+    className: alertTitleClasses.root
+  });
+
+  return <AlertTitleComponent as={component} {...alertTitleRootProps} />;
 });
 AlertTitle.displayName = 'AlertTitle';
 

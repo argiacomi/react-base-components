@@ -21,11 +21,11 @@ const getInitialState = (query, defaultState) => {
 };
 
 export function useMedia(query, defaultState) {
-  const [state, setState] = useState(getInitialState(query, defaultState));
+  const [state, setState] = useState(getInitialState(query.replace('@media ', ''), defaultState));
 
   useEffect(() => {
     let mounted = true;
-    const mql = window.matchMedia(query);
+    const mql = window.matchMedia(query.replace('@media ', ''));
     const onChange = () => {
       if (!mounted) {
         return;

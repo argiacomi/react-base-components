@@ -1,7 +1,11 @@
-import { forwardRef } from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
-import { Paper } from '@components';
+import React from 'react';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
+import Paper from '../Paper';
+
+export const appBarClasses = {
+  root: 'AppBar-Root'
+};
 
 const AppBarRoot = styled(Paper)(({ theme, ownerState }) => ({
   display: 'flex',
@@ -13,7 +17,7 @@ const AppBarRoot = styled(Paper)(({ theme, ownerState }) => ({
   ...{
     fixed: {
       position: 'fixed',
-      zIndex: '100 ',
+      zIndex: theme.zIndex.appBar,
       top: 0,
       left: 'auto',
       right: 0,
@@ -23,69 +27,80 @@ const AppBarRoot = styled(Paper)(({ theme, ownerState }) => ({
     },
     absolute: {
       position: 'absolute',
-      zIndex: '100 ',
+      zIndex: theme.zIndex.appBar,
       top: 0,
-      right: 0,
-      left: 'auto'
+      left: 'auto',
+      right: 0
     },
     sticky: {
       position: 'sticky',
-      zIndex: '100 ',
+      zIndex: theme.zIndex.appBar,
       top: 0,
-      right: 0,
-      left: 'auto'
-    },
-    relative: {
-      position: 'relative'
+      left: 'auto',
+      right: 0
     },
     static: {
       position: 'static'
+    },
+    relative: {
+      position: 'relative'
     }
   }[ownerState.position],
-  color: theme.color.text.primary,
-  backgroundColor: theme.color[ownerState.color]
-    ? theme.color[ownerState.color][500]
-    : theme.color.gray[500],
+  color: theme.color[ownerState.color]?.text || theme.color.text.primary,
+  backgroundColor: theme.color[ownerState.color]?.body || theme.color.gray[500],
   ...(ownerState.color === 'inherit' && {
     color: 'inherit',
     backgroundColor: 'inherit'
   }),
   ...(ownerState.color === 'transparent' && {
-    color: 'inherit',
-    backgroundColor: 'transparent'
+    backgroundImage: 'none',
+    backgroundColor: 'transparent',
+    color: 'inherit'
   }),
   ...(ownerState.color === 'monochrome' && {
     border: `1px solid ${theme.color.mode === 'dark' ? theme.color.white : theme.color.black}`
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
-const AppBar = forwardRef((props, ref) => {
-  const { className, color = 'primary', position = 'fixed', ...other } = props;
-
-  // Paper props
+const AppBar = React.forwardRef((props, ref) => {
   const {
+    color = 'primary',
+    elevation = 4,
     component = 'header',
-    elevation = ['default', 'inherit', 'monochrome'].includes(color) ? 0 : 4,
-    square = true
+    position = 'fixed',
+    slots = {},
+    slotProps = {},
+    square = true,
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const ownerState = {
     ...props,
     component,
-    elevation,
-    square,
+    cssStyles,
     color,
     position
   };
 
-  return (
-    <AppBarRoot
-      className={clsx('AppBar-Root', className)}
-      ownerState={ownerState}
-      ref={ref}
-      {...other}
-    />
-  );
+  const AppBarComponent = slots.root || AppBarRoot;
+  const appBarRootProps = useSlotProps({
+    elementType: AppBarComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      square,
+      component: component || 'header',
+      elevation,
+      ref: ref
+    },
+    ownerState,
+    className: appBarClasses.root
+  });
+
+  return <AppBarComponent {...appBarRootProps} />;
 });
 AppBar.displayName = 'AppBar';
 

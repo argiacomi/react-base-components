@@ -1,12 +1,22 @@
 import React from 'react';
-import clsx from 'clsx';
-import { Text } from '@components/layout';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
+import { Text } from '@components/display';
 
-const CardHeaderRoot = styled('div')(({ theme }) => ({
+export const cardHeaderClasses = {
+  root: 'CardHeader-Root',
+  action: 'CardHeader-Action',
+  avatar: 'CardHeader-Avatar',
+  content: 'CardHeader-Content',
+  subheader: 'CardHeader-Subheader',
+  title: 'CardHeader-Title'
+};
+
+const CardHeaderRoot = styled('div')(({ theme, ownerState }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(2)
+  padding: theme.spacing(2),
+  ...ownerState.cssStyles
 }));
 
 const CardHeaderAvatar = styled('div')(({ theme }) => ({
@@ -31,78 +41,87 @@ const CardHeader = React.forwardRef((props, ref) => {
   const {
     action,
     avatar,
-    className,
     component = 'div',
     disableText = false,
+    slots = {},
+    slotProps = {},
     subheader: subheaderProp,
     subheaderTextProps,
     title: titleProp,
     titleTextProps,
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const ownerState = {
     ...props,
-    component,
+    cssStyles,
     disableText
   };
 
-  let title = titleProp;
+  const cardHeaderTitleProps = useSlotProps({
+    externalSlotProps: { ...slotProps.title, ...titleTextProps },
+    additionalProps: {
+      variant: avatar ? 'body2' : 'h5',
+      color: 'title.primary',
+      component: 'span',
+      display: 'block'
+    },
+    className: cardHeaderClasses.title
+  });
+
+  let title = slots.title || titleProp;
   if (title != null && title.type !== Text && !disableText) {
-    title = (
-      <Text
-        variant={avatar ? 'body2' : 'h5'}
-        className={'CardHeader-Title'}
-        color='primary'
-        component='span'
-        display='block'
-        {...titleTextProps}
-      >
-        {title}
-      </Text>
-    );
+    title = <Text {...cardHeaderTitleProps}>{title}</Text>;
   }
 
-  let subheader = subheaderProp;
+  const cardHeaderSubheaderProps = useSlotProps({
+    externalSlotProps: { ...slotProps.subheader, ...subheaderTextProps },
+    additionalProps: {
+      variant: avatar ? 'body2' : 'body1',
+      color: 'text.secondary',
+      component: 'span',
+      display: 'block'
+    },
+    className: cardHeaderClasses.subheader
+  });
+
+  let subheader = slots.subheaderProp || subheaderProp;
   if (subheader != null && subheader.type !== Text && !disableText) {
-    subheader = (
-      <Text
-        variant={avatar ? 'body2' : 'body1'}
-        className={'CardHeader-Subheader'}
-        color='secondary'
-        component='span'
-        display='block'
-        {...subheaderTextProps}
-      >
-        {subheader}
-      </Text>
-    );
+    subheader = <Text {...cardHeaderSubheaderProps}>{subheader}</Text>;
   }
+
+  const CardHeaderComponent = slots.root || CardHeaderRoot;
+  const cardHeaderRootProps = useSlotProps({
+    elementType: CardHeaderComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: cardHeaderClasses.root
+  });
 
   return (
-    <CardHeaderRoot
-      className={clsx('CardHeader-Root', className)}
-      as={component}
-      ref={ref}
-      ownerState={ownerState}
-      {...other}
-    >
+    <CardHeaderComponent as={component} {...cardHeaderRootProps}>
       {avatar && (
-        <CardHeaderAvatar className={'CardHeader-Avatar'} ownerState={ownerState}>
+        <CardHeaderAvatar className={cardHeaderClasses.avatar} ownerState={ownerState}>
           {avatar}
         </CardHeaderAvatar>
       )}
 
-      <CardHeaderContent className={'CardHeader-Content'} ownerState={ownerState}>
+      <CardHeaderContent className={cardHeaderClasses.content} ownerState={ownerState}>
         {title}
         {subheader}
       </CardHeaderContent>
       {action && (
-        <CardHeaderAction className={'CardHeader-Action'} ownerState={ownerState}>
+        <CardHeaderAction className={cardHeaderClasses.action} ownerState={ownerState}>
           {action}
         </CardHeaderAction>
       )}
-    </CardHeaderRoot>
+    </CardHeaderComponent>
   );
 });
 

@@ -1,90 +1,27 @@
-import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import * as React from 'react';
+import styled, { extractStyling, shouldForwardProp } from '@styles';
+import { areEqualValues, createChainedFunction, useSlotProps } from '@components/lib';
 import SwitchBase from '../Switch/SwitchBase';
-import { Icon } from '@components/display';
-import { createChainedFunction } from '@components/lib';
+import RadioButtonIcon from './RadioButtonIcon';
 import { useRadioGroup } from './RadioGroupContext';
 
-const radioClasses = {
+export const radioClasses = {
   root: 'Radio-Root',
-  checked: 'Radio-Checked',
-  disabled: 'Radio-Disabled'
+  checked: 'Checked',
+  disabled: 'Disabled'
 };
 
-const RadioButtonUncheckedIcon = (props) => {
-  const { fontSize, className, ownerState } = props;
-  return (
-    <Icon
-      fontSize={fontSize}
-      className={className}
-      ownerState={ownerState}
-      icon='MdRadioButtonUnchecked'
-    />
-  );
-};
-const RadioButtonCheckedIcon = (props) => {
-  const { fontSize, className, ownerState } = props;
-  return (
-    <Icon
-      fontSize={fontSize}
-      className={className}
-      ownerState={ownerState}
-      icon='MdRadioButtonChecked'
-    />
-  );
-};
-
-const RadioButtonIconRoot = styled('span')({
-  position: 'relative',
-  display: 'flex'
-});
-
-const RadioButtonIconBackground = styled(RadioButtonUncheckedIcon)({
-  transform: 'scale(1)'
-});
-
-const RadioButtonIconDot = styled(RadioButtonCheckedIcon)(({ theme, ownerState }) => ({
-  left: 0,
-  position: 'absolute',
-  transform: 'scale(0)',
-  transition: theme.transition.create('transform', {
-    easing: theme.transition.easing.easeIn,
-    duration: theme.transition.duration.shortest
-  }),
-  ...(ownerState.checked && {
-    transform: 'scale(1)',
-    transition: theme.transition.create('transform', {
-      easing: theme.transition.easing.easeOut,
-      duration: theme.transition.duration.shortest
-    })
-  })
-}));
-
-function RadioButtonIcon(props) {
-  const { checked = false, classes = {}, fontSize } = props;
-
-  const ownerState = { ...props, checked };
-
-  return (
-    <RadioButtonIconRoot className={classes.root} ownerState={ownerState}>
-      <RadioButtonIconBackground
-        fontSize={fontSize}
-        className={classes.background}
-        ownerState={ownerState}
-      />
-      <RadioButtonIconDot fontSize={fontSize} className={classes.dot} ownerState={ownerState} />
-    </RadioButtonIconRoot>
-  );
-}
-
-const RadioRoot = styled(SwitchBase)(({ theme, ownerState }) => ({
+const RadioRoot = styled(SwitchBase, {
+  shouldForwardProp: (prop) => shouldForwardProp(prop) || prop === 'classes',
+  name: 'Radio',
+  slot: 'Root'
+})(({ theme, ownerState }) => ({
   color: theme.color.text.secondary,
   ...(!ownerState.disableRipple && {
     '&:hover': {
       backgroundColor: theme.alpha.add(
-        theme.color[ownerState.color].body,
-        theme.color.mode === 'light' ? 0.06 : 0.1
+        ownerState.color === 'default' ? theme.color.active : theme.color[ownerState.color].body,
+        theme.color.hoverOpacity
       ),
       '@media (hover: none)': {
         backgroundColor: 'transparent'
@@ -101,13 +38,6 @@ const RadioRoot = styled(SwitchBase)(({ theme, ownerState }) => ({
   }
 }));
 
-function areEqualValues(a, b) {
-  if (typeof b === 'object' && b !== null) {
-    return a === b;
-  }
-  return String(a) === String(b);
-}
-
 const defaultCheckedIcon = <RadioButtonIcon checked />;
 const defaultIcon = <RadioButtonIcon />;
 
@@ -116,19 +46,29 @@ const Radio = React.forwardRef((props, ref) => {
     checked: checkedProp,
     checkedIcon = defaultCheckedIcon,
     color = 'primary',
+    component: componentProp = SwitchBase,
     icon = defaultIcon,
     name: nameProp,
     onChange: onChangeProp,
     size = 'medium',
-    className,
-    ...other
+    slots = {},
+    slotProps = {},
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
+
   const ownerState = {
     ...props,
+    cssStyles,
     color,
     size
   };
 
+  const classes = {
+    ...ownerState.classes,
+    root: radioClasses.root
+  };
   const radioGroup = useRadioGroup();
 
   let checked = checkedProp;
@@ -144,32 +84,36 @@ const Radio = React.forwardRef((props, ref) => {
     }
   }
 
-  const classes = {
-    root: clsx([
-      radioClasses.root,
-      checked && radioClasses.checked,
-      ownerState.disabled && radioClasses.disabled
-    ])
-  };
+  const component = componentProp ?? SwitchBase;
+  const RadioRootComponent = slots.root ?? RadioRoot;
+  const radioRootprops = useSlotProps({
+    elementType: RadioRootComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      checked,
+      classes: classes,
+      name,
+      onChange,
+      ref: ref,
+      type: 'radio'
+    },
+    ownerState,
+    className: classes.root
+  });
 
   return (
-    <RadioRoot
-      type='radio'
-      icon={React.cloneElement(icon, { fontSize: defaultIcon.props.fontSize ?? size })}
+    <RadioRootComponent
+      as={component}
+      icon={React.cloneElement(icon, { size: defaultIcon.props.size ?? size })}
       checkedIcon={React.cloneElement(checkedIcon, {
-        fontSize: defaultCheckedIcon.props.fontSize ?? size
+        size: defaultCheckedIcon.props.size ?? size
       })}
-      ownerState={ownerState}
-      classes={classes}
-      name={name}
-      checked={checked}
-      onChange={onChange}
-      ref={ref}
-      className={clsx(classes.root, className)}
-      {...other}
+      {...radioRootprops}
     />
   );
 });
 
 Radio.displayName = 'Radio';
+
 export default Radio;

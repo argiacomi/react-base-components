@@ -1,6 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 
-const RadioGroupContext = React.createContext();
+const RadioGroupContext = React.createContext(undefined);
 
 if (!import.meta.env.PROD) {
   RadioGroupContext.displayName = 'RadioGroupContext';

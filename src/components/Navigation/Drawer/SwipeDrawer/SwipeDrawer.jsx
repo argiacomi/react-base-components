@@ -131,7 +131,7 @@ const SwipeDrawer = React.forwardRef((props, ref) => {
     onClose,
     onOpen,
     open = false,
-    PaperProps = {},
+    slotProps = {},
     SwipeAreaProps,
     swipeAreaWidth = 20,
     transitionDuration = transitionDurationDefault,
@@ -148,7 +148,7 @@ const SwipeDrawer = React.forwardRef((props, ref) => {
   const backdropRef = React.useRef();
   const paperRef = React.useRef();
 
-  const handleRef = useForkRef(PaperProps.ref, paperRef);
+  const handleRef = useForkRef(slotProps.paper?.ref, paperRef);
 
   const touchDetected = React.useRef(false);
 
@@ -547,13 +547,16 @@ const SwipeDrawer = React.forwardRef((props, ref) => {
           ...ModalPropsProp
         }}
         hideBackdrop={hideBackdrop}
-        PaperProps={{
-          ...PaperProps,
-          style: {
-            pointerEvents: variant === 'temporary' && !open && !allowSwipeInChildren ? 'none' : '',
-            ...PaperProps.style
-          },
-          ref: handleRef
+        slotProps={{
+          paper: {
+            ...slotProps.paper,
+            style: {
+              pointerEvents:
+                variant === 'temporary' && !open && !allowSwipeInChildren ? 'none' : '',
+              ...slotProps.paper?.style
+            },
+            ref: handleRef
+          }
         }}
         anchor={anchor}
         transitionDuration={calculatedDurationRef.current || transitionDuration}

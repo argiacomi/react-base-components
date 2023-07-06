@@ -1,10 +1,10 @@
-import * as React from 'react';
-import styled from '@styles';
+import React from 'react';
+import styled, { extractStyling } from '@styles';
 import useSwitch from './useSwitch';
 import { useSlotProps } from '@components/lib';
 import { ButtonBase } from '@components/inputs';
 
-const switchBaseClasses = {
+export const switchBaseClasses = {
   root: 'SwitchBase-Root',
   input: 'SwitchBase-Input',
   checked: 'Checked',
@@ -19,7 +19,8 @@ const SwitchBaseRoot = styled(ButtonBase)(({ ownerState }) => ({
   }),
   ...(ownerState.edge === 'end' && {
     marginRight: ownerState.size === 'small' ? -3 : -12
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
 const SwitchBaseInput = styled('input')({
@@ -44,8 +45,10 @@ const SwitchBase = React.forwardRef((props, ref) => {
     required = false,
     slotProps = {},
     slots = {},
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const { getInputProps, checked, disabled, focusVisible, readOnly } = useSwitch({
     ...props,
@@ -54,6 +57,7 @@ const SwitchBase = React.forwardRef((props, ref) => {
 
   const ownerState = {
     ...props,
+    cssStyles,
     checked,
     disabled,
     edge,

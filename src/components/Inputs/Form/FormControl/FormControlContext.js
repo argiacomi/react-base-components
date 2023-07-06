@@ -1,6 +1,8 @@
 import React from 'react';
 
-export const FormControlContext = React.createContext();
+const FormControlContext = React.createContext();
+
+export default FormControlContext;
 
 if (!import.meta.env.PROD) {
   FormControlContext.displayName = 'FormControlContext';

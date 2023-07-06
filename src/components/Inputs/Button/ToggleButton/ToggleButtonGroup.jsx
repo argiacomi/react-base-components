@@ -1,16 +1,17 @@
 import React from 'react';
-import styled from '@styles';
 import clsx from 'clsx';
+import styled, { extractStyling } from '@styles';
 
 export const toggleButtonGroupClasses = {
   root: 'ToggleButtonGroup-Root',
   grouped: 'ToggleButtonGroup-Button',
-  selected: 'ToggleButtonGroup-selected',
-  disabled: 'ToggleButtonGroup-disabled'
+  selected: 'Selected',
+  disabled: 'Disabled'
 };
 
 const ToggleButtonGroupRoot = styled('div')(({ ownerState, theme }) => ({
   display: 'inline-flex',
+  width: 'fit-content',
   borderRadius: theme.rounded.base,
   flexDirection: ownerState.orientation === 'vertical' ? 'column' : 'row',
   ...(ownerState.fullWidth && {
@@ -52,7 +53,8 @@ const ToggleButtonGroupRoot = styled('div')(({ ownerState, theme }) => ({
               marginTop: 0
             }
         })
-  }
+  },
+  ...ownerState.cssStyles
 }));
 
 function isValueSelected(value, candidate) {
@@ -80,10 +82,20 @@ const ToggleButtonGroup = React.forwardRef((props, ref) => {
     orientation = 'horizontal',
     size = 'medium',
     value,
-    ...other
+    ...otherProps
   } = props;
 
-  const ownerState = { ...props, disabled, fullWidth, orientation, size, toggleButtonGroupClasses };
+  const { cssStyles, other } = extractStyling(otherProps);
+
+  const ownerState = {
+    ...props,
+    cssStyles,
+    disabled,
+    fullWidth,
+    orientation,
+    size,
+    toggleButtonGroupClasses
+  };
 
   const classes = {
     root: [toggleButtonGroupClasses.root],

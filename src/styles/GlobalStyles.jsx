@@ -9,7 +9,7 @@ const themes = {
     text: '#0f0f0f'
   },
   dark: {
-    background: '#0f0f0f',
+    background: '#000000',
     text: '#ffffff'
   }
 };

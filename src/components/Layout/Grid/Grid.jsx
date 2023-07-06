@@ -1,7 +1,13 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled, { useTheme } from '@styles';
+import styled, { extractStyling, useTheme } from '@styles';
+import { useSlotProps } from '@components/lib';
 import OverflowContext from './GridContext';
+
+export const gridClasses = {
+  root: 'Grid-Root',
+  container: 'Container',
+  item: 'Item'
+};
 
 /*
 All variables must be lower case + kebab-case + single hyphen when declared vs double hyphen when used
@@ -182,24 +188,26 @@ const GridRoot = styled('div')(
   ({ ownerState, theme }) => generateSizeStyles(ownerState, theme),
   ({ ownerState, theme }) => generateDirectionStyles(ownerState, theme),
   ({ ownerState }) => generateGridStyles(ownerState),
-  ({ ownerState, theme }) => generateOffsetStyles(ownerState, theme)
+  ({ ownerState, theme }) => generateOffsetStyles(ownerState, theme),
+  ({ ownerState }) => ownerState.cssStyles
 );
 
 const Grid = React.forwardRef((props, ref) => {
   const overflow = React.useContext(OverflowContext);
   const {
-    className,
     children,
     columns: columnsProp = 12,
+    component: componentProp = 'div',
     container = false,
-    component = 'div',
     direction = 'row',
-    wrap = 'wrap',
-    spacing: spacingProp = 0,
-    rowSpacing: rowSpacingProp = spacingProp,
-    columnSpacing: columnSpacingProp = spacingProp,
     disableEqualOverflow = false,
     level = 0,
+    slots = {},
+    slotProps = {},
+    spacing: spacingProp = 0,
+    columnSpacing: columnSpacingProp = spacingProp,
+    rowSpacing: rowSpacingProp = spacingProp,
+    wrap = 'wrap',
     ...rest
   } = props;
 
@@ -208,7 +216,7 @@ const Grid = React.forwardRef((props, ref) => {
 
   const gridSize = {};
   const gridOffset = {};
-  const other = {};
+  const otherProps = {};
 
   Object.entries(rest).forEach(([key, val]) => {
     if (breakpoints.values[key] !== undefined) {
@@ -216,7 +224,7 @@ const Grid = React.forwardRef((props, ref) => {
     } else if (breakpoints.values[key.replace('Offset', '')] !== undefined) {
       gridOffset[key.replace('Offset', '')] = val;
     } else {
-      other[key] = val;
+      otherProps[key] = val;
     }
   });
 
@@ -227,9 +235,12 @@ const Grid = React.forwardRef((props, ref) => {
   const columnSpacing =
     props.columnSpacing ?? props.spacing ?? (levelZero ? columnSpacingProp : undefined);
 
+  const { cssStyles, other } = extractStyling(otherProps);
+
   const ownerState = {
     ...props,
     breakpoints,
+    cssStyles,
     container,
     level,
     columns,
@@ -253,17 +264,28 @@ const Grid = React.forwardRef((props, ref) => {
     return child;
   });
 
+  const classes = {
+    root: [gridClasses.root, container ? gridClasses.container : gridClasses.item]
+  };
+
+  const component = componentProp || 'div';
+  const GridComponent = slots.root || GridRoot;
+  const gridRootProps = useSlotProps({
+    elementType: GridComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
   return (
     <OverflowContext.Provider value={disableEqualOverflow ?? overflow}>
-      <GridRoot
-        as={component}
-        ref={ref}
-        className={clsx('Grid-Root', className)}
-        ownerState={ownerState}
-        {...other}
-      >
+      <GridComponent as={component} {...gridRootProps}>
         {childrenWithLevels}
-      </GridRoot>
+      </GridComponent>
     </OverflowContext.Provider>
   );
 });

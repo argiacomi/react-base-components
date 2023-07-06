@@ -1,15 +1,20 @@
 import React from 'react';
 import clsx from 'clsx';
+import styled, { extractStyling, shouldForwardProp } from '@styles';
+import { useSlotProps } from '@components/lib';
 import ButtonBase from '../ButtonBase/ButtonBase';
-import styled from '@styles';
 
-const fabClasses = {
+export const fabClasses = {
   root: 'Fab-Root',
-  focusVisible: 'Fab-FocusVisible',
-  disabled: 'Fab-Disabled'
+  focusVisible: 'FocusVisible',
+  disabled: 'Disabled'
 };
 
-const FabRoot = styled(ButtonBase)(
+const FabRoot = styled(ButtonBase, {
+  shouldForwardProp: (prop) => shouldForwardProp(prop) || prop === 'classes',
+  name: 'Fab',
+  slot: 'Root'
+})(
   ({ theme, ownerState }) => ({
     ...theme.text.typography.button,
     minHeight: 36,
@@ -95,27 +100,31 @@ const FabRoot = styled(ButtonBase)(
       boxShadow: theme.boxShadow[0],
       backgroundColor: theme.color.disabled.body
     }
-  })
+  }),
+  ({ ownerState }) => ownerState.cssStyles
 );
 
 const Fab = React.forwardRef((props, ref) => {
   const {
     children,
-    className,
     color = 'default',
-    component = 'button',
+    component: componentProp = 'button',
     disabled = false,
     disableFocusRipple = false,
     focusVisibleClassName,
     size = 'large',
+    slots = {},
+    slotProps = {},
     variant = 'circular',
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const ownerState = {
     ...props,
     color,
-    component,
+    cssStyles,
     disabled,
     disableFocusRipple,
     size,
@@ -127,20 +136,28 @@ const Fab = React.forwardRef((props, ref) => {
     focusVisible: fabClasses.focusVisible
   };
 
+  const component = componentProp || 'button';
+  const FabComponent = slots.root || FabRoot;
+
+  const fabRootProps = useSlotProps({
+    elementType: FabComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      classes: classes,
+      disabled: disabled,
+      disableFocusRipple: disableFocusRipple,
+      focusVisibleClassName: clsx(slotProps?.focusVisible, focusVisibleClassName),
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
   return (
-    <FabRoot
-      className={clsx(classes.root, className)}
-      component={component}
-      disabled={disabled}
-      disableRipple={disableFocusRipple}
-      focusVisibleClassName={clsx(classes.focusVisible, focusVisibleClassName)}
-      ownerState={ownerState}
-      ref={ref}
-      {...other}
-      classes={classes}
-    >
+    <FabComponent component={component} {...fabRootProps}>
       {children}
-    </FabRoot>
+    </FabComponent>
   );
 });
 

@@ -1,16 +1,61 @@
 import clsx from 'clsx';
-import { extractEventHandlers, omitEventHandlers } from '@component/utils';
+
+//--- Event Handler Utilities ---//
+
+export function extractEventHandlers(object, excludeKeys = []) {
+  if (object === undefined) {
+    return {};
+  }
+
+  const result = {};
+
+  Object.keys(object)
+    .filter(
+      (prop) =>
+        prop.match(/^on[A-Z]/) && typeof object[prop] === 'function' && !excludeKeys.includes(prop)
+    )
+
+    .forEach((prop) => {
+      result[prop] = object[prop];
+    });
+
+  return result;
+}
+
+export function omitEventHandlers(object) {
+  if (object === undefined) {
+    return {};
+  }
+
+  const result = {};
+
+  Object.keys(object)
+    .filter((prop) => !(prop.match(/^on[A-Z]/) && typeof object[prop] === 'function'))
+    .forEach((prop) => {
+      result[prop] = object[prop];
+    });
+
+  return result;
+}
 
 //--- Prop Merging and Overriding Utilities ---//
 
+export function isHostComponent(element) {
+  return typeof element === 'string';
+}
+
+export const shouldSpreadAdditionalProps = (Slot) => {
+  return !Slot || !isHostComponent(Slot);
+};
+
 export function appendOwnerState(elementType, otherProps, ownerState) {
-  if (elementType === undefined || typeof elementType === 'string') {
+  if (elementType === undefined || isHostComponent(elementType)) {
     return otherProps;
   }
 
   return {
     ...otherProps,
-    ownerState: { ...otherProps.ownerState, ...ownerState }
+    ownerState: { ...otherProps?.ownerState, ...ownerState }
   };
 }
 
@@ -119,6 +164,22 @@ export function mergeSlotProps(parameters) {
   return {
     props,
     internalRef: internalSlotProps.ref
+  };
+}
+
+export function combineHooksSlotProps(getFirstProps, getSecondProps) {
+  return (external) => {
+    const firstResult = {
+      ...external,
+      ...getFirstProps(external)
+    };
+
+    const result = {
+      ...firstResult,
+      ...getSecondProps(firstResult)
+    };
+
+    return result;
   };
 }
 

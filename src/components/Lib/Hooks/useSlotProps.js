@@ -5,6 +5,7 @@ export function useSlotProps(parameters) {
   const { elementType, externalSlotProps, ownerState, ...rest } = parameters;
 
   const resolvedComponentsProps = resolveComponentProps(externalSlotProps, ownerState);
+
   const { props: mergedProps, internalRef } = mergeSlotProps({
     ...rest,
     externalSlotProps: resolvedComponentsProps

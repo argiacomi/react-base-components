@@ -1,10 +1,13 @@
-import React from 'react';
-import { useForkRef, useIsFocusVisible } from '@components/lib';
-import { extractEventHandlers } from '@components/lib';
+import * as React from 'react';
+import { extractEventHandlers, useForkRef, useIsFocusVisible } from '@components/lib';
+import useTouchRipple from './useTouchRipple';
 
-function useButton(parameters = {}) {
+export default function useButton(parameters) {
   const {
     disabled = false,
+    disableFocusRipple = false,
+    disableRipple = false,
+    disableTouchRipple = false,
     focusableWhenDisabled,
     href,
     rootRef: externalRef,
@@ -13,13 +16,11 @@ function useButton(parameters = {}) {
     type
   } = parameters;
 
-  // Ref to the button element
   const buttonRef = React.useRef();
+  const rippleRef = React.useRef(null);
 
-  // State to track if button is active
   const [active, setActive] = React.useState(false);
 
-  // Using the useIsFocusVisible hook
   const {
     isFocusVisibleRef,
     onFocus: handleFocusVisible,
@@ -27,52 +28,52 @@ function useButton(parameters = {}) {
     ref: focusVisibleRef
   } = useIsFocusVisible();
 
-  // State to track if focus is visible
   const [focusVisible, setFocusVisible] = React.useState(false);
-
-  // If the button is disabled and not focusable when disabled, and focus is visible, set focusVisible to false
   if (disabled && !focusableWhenDisabled && focusVisible) {
     setFocusVisible(false);
   }
 
-  // Update isFocusVisibleRef.current whenever focusVisible changes
   React.useEffect(() => {
     isFocusVisibleRef.current = focusVisible;
   }, [focusVisible, isFocusVisibleRef]);
 
-  // State to store the name of the host element
   const [hostElementName, setHostElementName] = React.useState('');
 
-  const handleMouseLeave = (otherHandlers) => (event) => {
+  const createHandleMouseLeave = (otherHandlers) => (event) => {
     if (focusVisible) {
       event.preventDefault();
     }
+
     otherHandlers.onMouseLeave?.(event);
   };
 
-  const handleBlur = (otherHandlers) => (event) => {
+  const createHandleBlur = (otherHandlers) => (event) => {
     handleBlurVisible(event);
+
     if (isFocusVisibleRef.current === false) {
       setFocusVisible(false);
     }
+
     otherHandlers.onBlur?.(event);
   };
 
-  const handleFocus = (otherHandlers) => (event) => {
+  const createHandleFocus = (otherHandlers) => (event) => {
     if (!buttonRef.current) {
       buttonRef.current = event.currentTarget;
     }
+
     handleFocusVisible(event);
     if (isFocusVisibleRef.current === true) {
       setFocusVisible(true);
       otherHandlers.onFocusVisible?.(event);
     }
+
     otherHandlers.onFocus?.(event);
   };
 
-  // Function to check if the button is a native button
   const isNativeButton = () => {
     const button = buttonRef.current;
+
     return (
       hostElementName === 'BUTTON' ||
       (hostElementName === 'INPUT' && ['button', 'submit', 'reset'].includes(button?.type)) ||
@@ -80,13 +81,13 @@ function useButton(parameters = {}) {
     );
   };
 
-  const handleClick = (otherHandlers) => (event) => {
+  const createHandleClick = (otherHandlers) => (event) => {
     if (!disabled) {
       otherHandlers.onClick?.(event);
     }
   };
 
-  const handleMouseDown = (otherHandlers) => (event) => {
+  const createHandleMouseDown = (otherHandlers) => (event) => {
     if (!disabled) {
       setActive(true);
       document.addEventListener(
@@ -97,20 +98,25 @@ function useButton(parameters = {}) {
         { once: true }
       );
     }
+
     otherHandlers.onMouseDown?.(event);
   };
 
-  const handleKeyDown = (otherHandlers) => (event) => {
+  const createHandleKeyDown = (otherHandlers) => (event) => {
     otherHandlers.onKeyDown?.(event);
-    if (event.defaultShoudldBePrevented) {
+
+    if (event.manualPrevented) {
       return;
     }
+
     if (event.target === event.currentTarget && !isNativeButton() && event.key === ' ') {
       event.preventDefault();
     }
+
     if (event.target === event.currentTarget && event.key === ' ' && !disabled) {
       setActive(true);
     }
+
     if (
       event.target === event.currentTarget &&
       !isNativeButton() &&
@@ -122,19 +128,19 @@ function useButton(parameters = {}) {
     }
   };
 
-  const handleKeyUp = (otherHandlers) => (event) => {
+  const createHandleKeyUp = (otherHandlers) => (event) => {
     if (event.target === event.currentTarget) {
       setActive(false);
     }
+
     otherHandlers.onKeyUp?.(event);
 
-    // Keyboard accessibility for non interactive elements
     if (
       event.target === event.currentTarget &&
       !isNativeButton() &&
       !disabled &&
       event.key === ' ' &&
-      !event.defaultShouldBePrevented
+      !event.manualPrevented
     ) {
       otherHandlers.onClick?.(event);
     }
@@ -166,10 +172,16 @@ function useButton(parameters = {}) {
     }
   }
 
+  const { enableTouchRipple, getRippleHandlers } = useTouchRipple({
+    ...parameters,
+    rippleRef
+  });
+
   const getRootProps = (otherHandlers) => {
     const propsEventHandlers = extractEventHandlers(parameters);
     const externalEventHandlers = {
       ...propsEventHandlers,
+      ...getRippleHandlers(otherHandlers),
       ...otherHandlers
     };
 
@@ -179,24 +191,24 @@ function useButton(parameters = {}) {
       type,
       ...externalEventHandlers,
       ...buttonProps,
-      onBlur: handleBlur(externalEventHandlers),
-      onClick: handleClick(externalEventHandlers),
-      onFocus: handleFocus(externalEventHandlers),
-      onKeyDown: handleKeyDown(externalEventHandlers),
-      onKeyUp: handleKeyUp(externalEventHandlers),
-      onMouseDown: handleMouseDown(externalEventHandlers),
-      onMouseLeave: handleMouseLeave(externalEventHandlers),
+      onBlur: createHandleBlur(externalEventHandlers),
+      onClick: createHandleClick(externalEventHandlers),
+      onFocus: createHandleFocus(externalEventHandlers),
+      onKeyDown: createHandleKeyDown(externalEventHandlers),
+      onKeyUp: createHandleKeyUp(externalEventHandlers),
+      onMouseDown: createHandleMouseDown(externalEventHandlers),
+      onMouseLeave: createHandleMouseLeave(externalEventHandlers),
       ref: handleRef
     };
   };
 
   return {
+    enableTouchRipple,
     getRootProps,
     focusVisible,
     setFocusVisible,
     active,
+    rippleRef,
     rootRef: handleRef
   };
 }
-
-export default useButton;

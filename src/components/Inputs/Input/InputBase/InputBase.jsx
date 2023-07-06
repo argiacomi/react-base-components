@@ -9,10 +9,10 @@ import { useSlotProps } from '@components/lib';
 export const inputBaseClasses = {
   root: 'InputBase-Root',
   input: 'InputBase-Input',
-  disabled: 'InputBase-Disabled',
-  error: 'InputBase-Error',
-  focused: 'InputBase-Focused',
-  formControl: 'InputBase-FormControl'
+  disabled: 'Disabled',
+  error: 'Error',
+  focused: 'Focused',
+  formControl: 'FormControl'
 };
 
 export const InputBaseRoot = styled('div')(({ theme, ownerState }) => ({
@@ -136,6 +136,7 @@ const InputBase = React.forwardRef((props, ref) => {
     defaultValue,
     disableInjectingGlobalStyles,
     endAdornment,
+    error,
     fullWidth = false,
     id,
     inputComponent = 'input',
@@ -228,7 +229,7 @@ const InputBase = React.forwardRef((props, ref) => {
     color: fcs.color || 'primary',
     disabled: fcs.disabled,
     endAdornment,
-    error: fcs.error,
+    error: error || fcs.error,
     focused: fcs.focused,
     formControl: formControl,
     fullWidth,
@@ -276,6 +277,8 @@ const InputBase = React.forwardRef((props, ref) => {
     className: classes.input
   });
 
+  const sanitizedValue = type === 'number' && isNaN(value) ? 0 : value;
+
   return (
     <React.Fragment>
       {!disableInjectingGlobalStyles && inputGlobalStyles}
@@ -292,7 +295,7 @@ const InputBase = React.forwardRef((props, ref) => {
         <FormControlContext.Provider value={null}>
           <Input
             ownerState={ownerState}
-            aria-invalid={fcs.error}
+            aria-invalid={error || fcs.error}
             aria-describedby={ariaDescribedby}
             autoComplete={autoComplete}
             autoFocus={autoFocus}
@@ -305,7 +308,7 @@ const InputBase = React.forwardRef((props, ref) => {
             readOnly={readOnly}
             required={fcs.required}
             rows={rows}
-            value={value}
+            value={sanitizedValue}
             onKeyDown={onKeyDown}
             onKeyUp={onKeyUp}
             type={type}

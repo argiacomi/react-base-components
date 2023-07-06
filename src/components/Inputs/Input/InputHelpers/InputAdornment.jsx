@@ -1,13 +1,13 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled from '@styles';
-import { Text } from '@components/layout';
+import Text from '@components/display/text';
 import { FormControlContext, useFormControl } from '@components/Inputs/Form';
 
-const inputAdornmentClasses = {
+export const inputAdornmentClasses = {
   root: 'InputAdornment-Root',
-  start: 'InputAdornment-PositionStart',
-  hiddenLabel: 'InputAdornment-HiddenLabel'
+  start: 'PositionStart',
+  hiddenLabel: 'HiddenLabel'
 };
 
 const InputAdornmentRoot = styled('div')(({ theme, ownerState }) => ({
@@ -15,7 +15,7 @@ const InputAdornmentRoot = styled('div')(({ theme, ownerState }) => ({
   maxHeight: '2em',
   alignItems: 'center',
   whiteSpace: 'nowrap',
-  color: theme.color.selected,
+  color: theme.color.active,
   ...(ownerState.variant === 'filled' && {
     [`&.${inputAdornmentClasses.positionStart}&:not(.${inputAdornmentClasses.hiddenLabel})`]: {
       marginTop: theme.spacing(2)
@@ -73,7 +73,7 @@ const InputAdornment = React.forwardRef((props, ref) => {
 
   const classes = {
     root: [
-      inputAdornmentClasses.Root,
+      inputAdornmentClasses.root,
       ownerState.position === 'start' && inputAdornmentClasses.start,
       ownerState.hiddenLabel && inputAdornmentClasses.hiddenLabel
     ]

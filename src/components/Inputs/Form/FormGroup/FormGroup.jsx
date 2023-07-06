@@ -1,7 +1,9 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 import { useFormControl, formControlState } from '../FormControl';
+
+export const formGroupClasses = { root: 'FormGroup-Root', row: 'Row', error: 'Error' };
 
 const FormGroupRoot = styled('div')(({ ownerState }) => ({
   display: 'flex',
@@ -9,11 +11,20 @@ const FormGroupRoot = styled('div')(({ ownerState }) => ({
   flexWrap: 'wrap',
   ...(ownerState.row && {
     flexDirection: 'row'
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
 const FormGroup = React.forwardRef((props, ref) => {
-  const { className, row = false, ...other } = props;
+  const {
+    component: componentProp = 'div',
+    row = false,
+    slots = {},
+    slotProps = {},
+    ...otherProps
+  } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const formControl = useFormControl();
 
@@ -23,16 +34,30 @@ const FormGroup = React.forwardRef((props, ref) => {
     states: ['error']
   });
 
-  const ownerState = { ...props, row, error: fcs.error };
+  const ownerState = { ...props, cssStyles, row, error: fcs.error };
 
-  return (
-    <FormGroupRoot
-      className={clsx('FormGroup-Root', className)}
-      ownerState={ownerState}
-      ref={ref}
-      {...other}
-    />
-  );
+  const classes = {
+    root: [
+      formGroupClasses.root,
+      ownerState.row && formGroupClasses.row,
+      ownerState.error && formGroupClasses.error
+    ]
+  };
+
+  const component = componentProp ?? 'div';
+  const FormGroupRootComponent = slots.root ?? FormGroupRoot;
+  const formGroupRootprops = useSlotProps({
+    elementType: FormGroupRootComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
+  return <FormGroupRootComponent as={component} {...formGroupRootprops} />;
 });
 
 FormGroup.displayName = 'FormGroup';

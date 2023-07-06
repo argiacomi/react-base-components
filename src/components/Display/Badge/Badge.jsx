@@ -1,24 +1,24 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
 import { usePreviousProps, useSlotProps } from '@component/hooks';
 import useBadge from './useBadge';
 
 const RADIUS_STANDARD = 0.625;
 const RADIUS_DOT = 0.375;
 
-const badgeClasses = {
+export const badgeClasses = {
   root: 'Badge-Root',
   badge: 'Badge-Badge',
-  invisible: 'invisible'
+  invisible: 'Invisible'
 };
 
-const BadgeRoot = styled('span')({
+const BadgeRoot = styled('span')(({ ownerState }) => ({
   position: 'relative',
   display: 'inline-flex',
   verticalAlign: 'middle',
-  flexShrink: 0
-});
+  flexShrink: 0,
+  ...ownerState.cssStyles
+}));
 
 const baseStyles = (theme) => ({
   display: 'flex',
@@ -40,7 +40,7 @@ const baseStyles = (theme) => ({
 });
 
 const colorStyles = (theme, ownerState) => ({
-  backgroundColor: theme.color[ownerState.color].body,
+  backgroundColor: theme.color[ownerState.color].body || 'transparent',
   color: theme.color[ownerState.color].text
 });
 
@@ -50,7 +50,7 @@ const variantStyles = (theme, ownerState) =>
       borderRadius: `${RADIUS_STANDARD}rem`,
       height: `${RADIUS_STANDARD * 2}rem`,
       minWidth: `${RADIUS_STANDARD * 2}rem`,
-      padding: `${theme.spacing(0)} ${theme.spacing(0.75)}`
+      padding: theme.spacing(0, 0.75)
     },
     dot: {
       borderRadius: `${RADIUS_DOT}rem`,
@@ -138,23 +138,21 @@ const Badge = React.forwardRef((props, ref) => {
       vertical: 'top',
       horizontal: 'right'
     },
-    className,
-    classes,
     component,
-    components = {},
-    componentsProps = {},
     children,
     overlap: overlapProp = 'rectangular',
     color: colorProp = 'default',
     invisible: invisibleProp = false,
     max: maxProp = 99,
     badgeContent: badgeContentProp,
-    slots,
-    slotProps,
+    slots = {},
+    slotProps = {},
     showZero = false,
     variant: variantProp = 'standard',
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const {
     badgeContent,
@@ -190,6 +188,7 @@ const Badge = React.forwardRef((props, ref) => {
   const ownerState = {
     ...props,
     badgeContent,
+    cssStyles,
     invisible,
     max,
     displayValue,
@@ -200,41 +199,37 @@ const Badge = React.forwardRef((props, ref) => {
     variant
   };
 
-  // support both `slots` and `components` for backward compatibility
-  const RootSlot = slots?.root ?? components.Root ?? BadgeRoot;
-  const BadgeSlot = slots?.badge ?? components.Badge ?? BadgeBadge;
+  const classes = {
+    root: badgeClasses.root,
+    badge: [badgeClasses.badge, ownerState.invisible && badgeClasses.invisible]
+  };
 
-  const rootSlotProps = slotProps?.root ?? componentsProps.root;
-  const badgeSlotProps = slotProps?.badge ?? componentsProps.badge;
+  // support both `slots`for backward compatibility
+  const RootSlot = slots?.root ?? BadgeRoot;
+  const BadgeSlot = slots?.badge ?? BadgeBadge;
 
   const rootProps = useSlotProps({
     elementType: RootSlot,
-    externalSlotProps: rootSlotProps,
+    externalSlotProps: slotProps.root,
     externalForwardedProps: other,
     additionalProps: {
-      ref,
-      as: component
+      ref: ref
     },
     ownerState,
-    className: clsx(rootSlotProps?.className, classes?.root, className)
+    className: classes.root
   });
 
   const badgeProps = useSlotProps({
     elementType: BadgeSlot,
-    externalSlotProps: badgeSlotProps,
+    externalSlotProps: slotProps.badge,
     ownerState,
-    className: clsx(classes?.badge, badgeSlotProps?.className)
+    className: classes.badge
   });
 
   return (
-    <RootSlot className={clsx(badgeClasses.root, className)} {...rootProps}>
+    <RootSlot as={component} {...rootProps}>
       {children}
-      <BadgeSlot
-        className={clsx(badgeClasses.badge, invisible && badgeClasses.invisible)}
-        {...badgeProps}
-      >
-        {displayValue}
-      </BadgeSlot>
+      <BadgeSlot {...badgeProps}>{displayValue}</BadgeSlot>
     </RootSlot>
   );
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling, shouldForwardProp } from '@styles';
 import { useEnhancedEffect, useForkRef, useSlotProps } from '@components/lib';
 import { ButtonBase } from '@components/inputs';
 import ListItemContext from './ListItemContext';
@@ -8,12 +8,16 @@ import useListItem from './useListItem';
 
 export const listItemButtonClasses = {
   root: 'ListItemButton-Root',
-  focusVisible: 'ListItemButton-FocusVisible',
-  disabled: 'ListItemButton-Disabled',
-  selected: 'ListItemButton-Selected'
+  focusVisible: 'FocusVisible',
+  disabled: 'Disabled',
+  selected: 'Selected'
 };
 
-const ListItemButtonRoot = styled(ButtonBase)(({ theme, ownerState }) => ({
+const ListItemButtonRoot = styled(ButtonBase, {
+  shouldForwardProp: (prop) => shouldForwardProp(prop) || prop === 'classes',
+  name: 'ListItemButton',
+  slot: 'Root'
+})(({ theme, ownerState }) => ({
   display: 'flex',
   flexGrow: 1,
   justifyContent: 'flex-start',
@@ -76,7 +80,8 @@ const ListItemButtonRoot = styled(ButtonBase)(({ theme, ownerState }) => ({
   ...(ownerState.dense && {
     paddingTop: theme.spacing(0.5),
     paddingBottom: theme.spacing(0.5)
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
 const ListItemButton = React.forwardRef((props, ref) => {
@@ -89,8 +94,10 @@ const ListItemButton = React.forwardRef((props, ref) => {
     disableGutters = false,
     divider = false,
     focusVisibleClassName,
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const itemRef = React.useRef();
   const handleRef = useForkRef(itemRef, ref);
@@ -125,6 +132,7 @@ const ListItemButton = React.forwardRef((props, ref) => {
     ...props,
     active,
     alignItems,
+    cssStyles,
     dense: childContext.dense,
     disableGutters,
     divider,

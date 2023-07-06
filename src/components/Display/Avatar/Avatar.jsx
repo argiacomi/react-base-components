@@ -1,16 +1,19 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
-import { useLoaded } from '@component/hooks';
-import Icon from '@components/Display/Icon';
+import styled, { extractStyling } from '@styles';
+import { useLoaded, useSlotProps } from '@component/hooks';
+import Person from '@components/lib/icons/Person';
 
 export const avatarClasses = {
   root: 'Avatar-Root',
   fallback: 'Avatar-Fallback',
-  img: 'Avatar-Img'
+  img: 'Avatar-Img',
+  colorDefault: 'ColorDefault'
 };
 
-const AvatarRoot = styled('div')(({ theme, ownerState }) => ({
+const AvatarRoot = styled('div', {
+  name: 'Avatar',
+  slot: 'Root'
+})(({ theme, ownerState }) => ({
   position: 'relative',
   display: 'flex',
   alignItems: 'center',
@@ -33,10 +36,14 @@ const AvatarRoot = styled('div')(({ theme, ownerState }) => ({
   ...(ownerState.colorDefault && {
     color: theme.color.background,
     backgroundColor: theme.color.monochrome[200]
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
-const AvatarImg = styled('img')({
+const AvatarImg = styled('img', {
+  name: 'Avatar',
+  slot: 'Img'
+})({
   width: '100%',
   height: '100%',
   textAlign: 'center',
@@ -45,7 +52,10 @@ const AvatarImg = styled('img')({
   textIndent: 10000
 });
 
-const AvatarFallback = styled(Icon)({
+const AvatarFallback = styled(Person, {
+  name: 'Avatar',
+  slot: 'Fallback'
+})({
   width: '75%',
   height: '75%'
 });
@@ -54,15 +64,18 @@ const Avatar = React.forwardRef((props, ref) => {
   const {
     alt,
     children: childrenProp,
-    className,
-    component = 'div',
+    component: componentProp = 'div',
     imgProps,
     sizes,
+    slots = {},
+    slotProps = {},
     src,
     srcSet,
     variant = 'circular',
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   let children = null;
 
@@ -72,43 +85,63 @@ const Avatar = React.forwardRef((props, ref) => {
 
   const ownerState = {
     ...props,
+    cssStyles,
     colorDefault: !hasImgNotFailing,
-    component,
     variant
   };
 
+  const classes = {
+    root: [avatarClasses.root, variant, ownerState.colorDefault && avatarClasses.colorDefault],
+    img: avatarClasses.img,
+    fallback: avatarClasses.fallback
+  };
+
+  const AvatarComponent = slots.root || AvatarRoot;
+  const component = componentProp || 'div';
+
+  const avatarRootProps = useSlotProps({
+    elementType: AvatarComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
+  const AvatarImgComponent = slots.img || AvatarImg;
+  const avatarImgProps = useSlotProps({
+    elementType: AvatarImgComponent,
+    externalSlotProps: slotProps.img,
+    externalForwardedProps: other,
+    additionalProps: {
+      alt,
+      src,
+      srcSet,
+      sizes,
+      ...imgProps
+    },
+    ownerState,
+    className: classes.img
+  });
+
   if (hasImgNotFailing) {
-    children = (
-      <AvatarImg
-        alt={alt}
-        src={src}
-        srcSet={srcSet}
-        sizes={sizes}
-        ownerState={ownerState}
-        className={avatarClasses.img}
-        {...imgProps}
-      />
-    );
+    children = <AvatarImg {...avatarImgProps} />;
   } else if (childrenProp != null) {
     children = childrenProp;
   } else if (hasImg && alt) {
     children = alt[0];
   } else {
     children = (
-      <AvatarFallback icon='MdPerson' ownerState={ownerState} className={avatarClasses.fallback} />
+      <AvatarFallback icon='MdPerson' ownerState={ownerState} className={classes.fallback} />
     );
   }
 
   return (
-    <AvatarRoot
-      as={component}
-      ownerState={ownerState}
-      className={clsx(avatarClasses.root, className)}
-      ref={ref}
-      {...other}
-    >
+    <AvatarComponent as={component} {...avatarRootProps}>
       {children}
-    </AvatarRoot>
+    </AvatarComponent>
   );
 });
 

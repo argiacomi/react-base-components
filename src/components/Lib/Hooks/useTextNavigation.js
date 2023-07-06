@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 const TEXT_NAVIGATION_RESET_TIMEOUT = 500; // milliseconds
 

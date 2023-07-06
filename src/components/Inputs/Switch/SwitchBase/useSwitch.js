@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useControlled, useForkRef, useIsFocusVisible } from '@components/lib';
 import { useFormControl } from '@components/inputs';
 

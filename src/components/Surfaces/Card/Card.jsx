@@ -1,28 +1,37 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 import Paper from '../Paper';
 
-const CardRoot = styled(Paper)(() => {
-  return {
-    overflow: 'hidden'
-  };
-});
+export const cardClasses = { root: 'Card-Root' };
+
+const CardRoot = styled(Paper)(({ ownerState }) => ({
+  overflow: 'hidden',
+  ...ownerState.cssStyles
+}));
 
 const Card = React.forwardRef((props, ref) => {
-  const { className, raised = false, ...other } = props;
+  const { component, raised = false, slots = {}, slotProps = {}, ...otherProps } = props;
 
-  const ownerState = { ...props, raised };
+  const { cssStyles, other } = extractStyling(otherProps);
 
-  return (
-    <CardRoot
-      className={clsx('Card-Root', className)}
-      elevation={raised ? 8 : undefined}
-      ref={ref}
-      ownerState={ownerState}
-      {...other}
-    />
-  );
+  const ownerState = { ...props, cssStyles, raised };
+
+  const CardComponent = slots.root || CardRoot;
+  const cardRootProps = useSlotProps({
+    elementType: CardComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      component,
+      elevation: raised ? 8 : undefined,
+      ref: ref
+    },
+    ownerState,
+    className: cardClasses.root
+  });
+
+  return <CardComponent {...cardRootProps} />;
 });
 
 Card.displayName = 'Card';

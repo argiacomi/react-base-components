@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { useCompoundParent, useControlled } from '@components/lib';
-import { useBaseList, BaseListActionTypes } from '../../BaseList';
+import useBaseList, { baseListActions } from '../../BaseList';
 import listReducer from './listReducer';
 
 function useList(parameters) {
@@ -121,7 +121,7 @@ function useList(parameters) {
 
     if (value != null) {
       dispatch({
-        type: BaseListActionTypes.valueChange,
+        type: baseListActions.valueChange,
         value
       });
     }

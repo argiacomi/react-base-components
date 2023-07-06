@@ -28,7 +28,7 @@ function clickedRootScrollbar(event, doc) {
   );
 }
 
-export function ClickAwayListener(props) {
+function ClickAwayListener(props) {
   const {
     children,
     disableOnClickOutside = false,
@@ -155,3 +155,5 @@ export function ClickAwayListener(props) {
 }
 
 ClickAwayListener.displayName = 'ClickAwayListener';
+
+export default ClickAwayListener;

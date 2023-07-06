@@ -1,8 +1,8 @@
 import React from 'react';
-import clsx from 'clsx';
-import { Text } from '@components/layout';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
+import { Text } from '@components/display';
 import { useListItemContext } from './ListItemContext';
-import styled from '@styles';
 
 export const listItemTextClasses = {
   root: 'ListItemText-Root',
@@ -23,21 +23,26 @@ const ListItemTextRoot = styled('div')(({ theme, ownerState }) => ({
     }),
   ...(ownerState.inset && {
     paddingLeft: theme.spacing(7)
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
 const ListItemText = React.forwardRef((props, ref) => {
   const {
     children,
-    className,
+    component: componentProp = 'div',
     disableText = false,
     inset = false,
     primary: primaryProp,
     primaryTextProps,
     secondary: secondaryProp,
     secondaryTextProps,
-    ...other
+    slots = {},
+    slotProps = {},
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const { dense } = useListItemContext();
 
@@ -46,6 +51,7 @@ const ListItemText = React.forwardRef((props, ref) => {
 
   const ownerState = {
     ...props,
+    cssStyles,
     disableText,
     inset,
     primary: !!primary,
@@ -86,16 +92,24 @@ const ListItemText = React.forwardRef((props, ref) => {
     root: [listItemTextClasses.root, ownerState.inset && listItemTextClasses.inset]
   };
 
+  const component = componentProp || 'div';
+  const ListItemTextComponent = slots.root || ListItemTextRoot;
+  const listItemTextRootProps = useSlotProps({
+    elementType: ListItemTextComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
   return (
-    <ListItemTextRoot
-      className={clsx(classes.root, className)}
-      ownerState={ownerState}
-      ref={ref}
-      {...other}
-    >
+    <ListItemTextComponent as={component} {...listItemTextRootProps}>
       {primary}
       {secondary}
-    </ListItemTextRoot>
+    </ListItemTextComponent>
   );
 });
 

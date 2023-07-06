@@ -1,17 +1,19 @@
 import { default as scStyled, useTheme as useStyledTheme } from 'styled-components/macro';
-import isPropValid from '@emotion/is-prop-valid';
 import cssProperties from './cssProperties';
 
 export const shouldForwardProp = (prop) => {
-  if (import.meta.env.PROD) {
-    return isPropValid(prop);
-  }
-
-  return !['as', 'ownerState', 'ref', 'theme'].includes(prop);
+  return !['as', 'classes', 'item', 'ownerState', 'ref', 'sx', 'theme'].includes(prop);
 };
 
-const styled = (component) =>
-  scStyled(component).withConfig({ shouldForwardProp: shouldForwardProp });
+const styled = (component, configProp) => {
+  const { shouldForwardProp: customforwardProp, ...otherAttrs } = configProp || {};
+
+  return scStyled(component)
+    .withConfig({
+      shouldForwardProp: customforwardProp ?? shouldForwardProp
+    })
+    .attrs(otherAttrs);
+};
 
 export default styled;
 
@@ -21,34 +23,30 @@ export const useTheme = () => {
 
 //--- Styling Extraction Helper Functions ---//
 
-function getColorFromPath(obj, path) {
-  const parts = path.split('.');
-  let currentPart = obj;
-
-  for (const part of parts) {
-    if (currentPart[part] !== undefined) {
-      currentPart = currentPart[part];
-    } else {
-      return undefined;
-    }
-  }
-
-  return currentPart;
+function checkOverlap(arr1, arr2) {
+  return arr1.some((item) => arr2.includes(item));
 }
 
-function getCustomSpacing(styleObject, theme) {
+function isObject(value) {
+  return typeof value === 'object' && value !== null;
+}
+
+function getCustomSpacing(key, style, theme) {
   let updatedStyleObject = {};
 
-  for (let key in styleObject) {
-    if (cssProperties.customSpacing.hasOwnProperty(key)) {
-      cssProperties.customSpacing[key].forEach((cssProperty) => {
-        updatedStyleObject[cssProperty] =
-          typeof styleObject[key] === 'string' ? styleObject[key] : theme.spacing(styleObject[key]);
-      });
-    }
-  }
+  cssProperties.customSpacing[key].forEach((cssProperty) => {
+    updatedStyleObject[cssProperty] = typeof style === 'string' ? style : theme.spacing(style);
+  });
 
   return updatedStyleObject;
+}
+
+function widthTransform(value, theme) {
+  if (typeof value === 'string') {
+    return value.search('rem') ? value : theme.pxToRem(value);
+  } else {
+    return theme.spacing(value / 8);
+  }
 }
 
 function sizeTransform(value) {
@@ -67,6 +65,7 @@ export const extractStyling = (props) => {
     switch (true) {
       case key === 'sx':
         sxStyles = extractStyling(props[key]);
+        cssStyles = { ...sxStyles.cssStyles, ...cssStyles };
         break;
       case key === 'fontSize':
         cssStyles[key] = theme.text.size[props[key]] || props[key];
@@ -75,7 +74,10 @@ export const extractStyling = (props) => {
         cssStyles[key] = theme.text.weight[props[key]] || props[key];
         break;
       case cssProperties.color.includes(key):
-        cssStyles[key] = getColorFromPath(theme.color, props[key]) || props[key];
+        cssStyles[key] = theme.alpha.getColorFromPath(theme, props[key]) || props[key];
+        break;
+      case cssProperties.border.includes(key):
+        cssStyles[key] = `${widthTransform(props[key], theme)} solid currentColor`;
         break;
       case cssProperties.borderRadius.includes(key):
         cssStyles[key] = theme.rounded[props[key]] || props[key];
@@ -87,7 +89,21 @@ export const extractStyling = (props) => {
         cssStyles[key] = typeof props[key] === 'string' ? props[key] : theme.spacing(props[key]);
         break;
       case Object.keys(cssProperties.customSpacing).includes(key):
-        cssStyles = { ...cssStyles, ...getCustomSpacing(props, theme) };
+        cssStyles = { ...cssStyles, ...getCustomSpacing(key, props[key], theme) };
+        break;
+      case isObject(props[key]) && checkOverlap(Object.keys(props[key]), theme.breakpoints.keys):
+        // eslint-disable-next-line no-case-declarations
+        let breakpointObj = props[key];
+        for (let breakpointKey in breakpointObj) {
+          if (!cssStyles[`${theme.breakpoints.up(breakpointKey)}`]) {
+            cssStyles[`${theme.breakpoints.up(breakpointKey)}`] = {};
+          }
+          cssStyles[`${theme.breakpoints.up(breakpointKey)}`][key] = breakpointObj[breakpointKey];
+        }
+        break;
+      case cssProperties.special.some((char) => key.includes(char)):
+        sxStyles = extractStyling(props[key]);
+        cssStyles[key] = sxStyles.cssStyles;
         break;
       case cssProperties.other.includes(key):
         cssStyles[key] = props[key];
@@ -96,8 +112,6 @@ export const extractStyling = (props) => {
         other[key] = props[key];
     }
   });
-
-  cssStyles = { ...sxStyles.cssStyles, ...cssStyles };
 
   return { cssStyles, other };
 };

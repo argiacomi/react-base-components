@@ -1,11 +1,16 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 import { default as BaseIcon } from '@components/display/Icon';
 import { IconButton } from '@components/inputs/Button';
 import Paper from '@components/surfaces/Paper';
+import SuccessOutlinedIcon from '@components/lib/icons/SuccessOutlined';
+import ReportProblemOutlinedIcon from '@components/lib/icons/ReportProblemOutlined';
+import DangerOutlineIcon from '@components/lib/icons/DangerOutline';
+import InfoOutlinedIcon from '@components/lib/icons/InfoOutlined';
+import CloseIcon from '@components/lib/icons/InfoOutlined';
 
-const alertClasses = {
+export const alertClasses = {
   root: 'Alert-Root',
   action: 'Alert-Action',
   icon: 'Alert-Icon',
@@ -61,7 +66,8 @@ const AlertRoot = styled(Paper)(({ theme, ownerState }) => {
     backgroundColor: 'transparent',
     display: 'flex',
     padding: `${theme.spacing(0.75)} ${theme.spacing(2)}`,
-    ...(color && variantStyles(theme, ownerState, color))
+    ...(color && variantStyles(theme, ownerState, color)),
+    ...ownerState.cssStyles
   };
 });
 
@@ -93,19 +99,16 @@ const Icon = styled(BaseIcon)({
 });
 
 const defaultIconMapping = {
-  success: <Icon icon='FiCheckCircle' fontSize='inherit' />,
-  warning: <Icon icon='FiAlertTriangle' fontSize='inherit' />,
-  danger: <Icon icon='FiAlertCircle' fontSize='inherit' />,
-  info: <Icon icon='FiInfo' fontSize='inherit' />
+  success: <SuccessOutlinedIcon size='inherit' />,
+  warning: <ReportProblemOutlinedIcon size='inherit' />,
+  danger: <DangerOutlineIcon size='inherit' />,
+  info: <InfoOutlinedIcon size='inherit' />
 };
-
-const CloseIcon = () => <Icon icon='MdClose' style={{ fill: 'currentColor' }} fontSize='inherit' />;
 
 const Alert = React.forwardRef((props, ref) => {
   const {
     action,
     children,
-    className,
     closeText = 'Close',
     color,
     icon,
@@ -113,34 +116,42 @@ const Alert = React.forwardRef((props, ref) => {
     onClose,
     role = 'alert',
     severity = 'success',
-    slotProps = {},
     slots = {},
+    slotProps = {},
     variant = 'standard',
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const ownerState = {
     ...props,
+    cssStyles,
     color,
     severity,
     variant
   };
 
+  const AlertRootComponent = slots.root ?? AlertRoot;
   const AlertCloseButton = slots.closeButton ?? IconButton;
   const AlertCloseIcon = slots.closeIcon ?? CloseIcon;
 
   const closeButtonProps = slotProps.closeButton;
   const closeIconProps = slotProps.closeIcon;
 
+  const alertRootProps = useSlotProps({
+    elementType: AlertRootComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: alertClasses.root
+  });
+
   return (
-    <AlertRoot
-      role={role}
-      elevation={0}
-      ownerState={ownerState}
-      className={clsx(alertClasses.root, className)}
-      ref={ref}
-      {...other}
-    >
+    <AlertRootComponent role={role} elevation={0} {...alertRootProps}>
       {icon !== false ? (
         <AlertIcon ownerState={ownerState} className={alertClasses.icon}>
           {icon || iconMapping[severity] || defaultIconMapping[severity]}
@@ -164,11 +175,11 @@ const Alert = React.forwardRef((props, ref) => {
             onClick={onClose}
             {...closeButtonProps}
           >
-            <AlertCloseIcon fontSize='small' {...closeIconProps} />
+            <AlertCloseIcon size='small' {...closeIconProps} />
           </AlertCloseButton>
         </AlertAction>
       ) : null}
-    </AlertRoot>
+    </AlertRootComponent>
   );
 });
 

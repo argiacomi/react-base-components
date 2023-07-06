@@ -1,18 +1,62 @@
-import React from 'react';
-import { useEventCallback } from '@component/hooks';
+import * as React from 'react';
+import { useEventCallback } from '@components/lib';
 
 const useTouchRipple = (props) => {
-  const { disabled, disableRipple, disableTouchRipple, rippleRef } = props;
+  const {
+    disabled,
+    disableFocusRipple,
+    disableRipple,
+    disableTouchRipple,
+    focusVisible,
+    rippleRef
+  } = props;
 
-  // Function to handle ripple events
+  React.useEffect(() => {
+    if (focusVisible && !disableFocusRipple && !disableRipple) {
+      rippleRef.current?.pulsate();
+    }
+  }, [rippleRef, focusVisible, disableFocusRipple, disableRipple]);
+
   function useRippleHandler(rippleAction, skipRippleAction = disableTouchRipple) {
     return useEventCallback((event) => {
       if (!skipRippleAction && rippleRef.current) {
         rippleRef.current[rippleAction](event);
       }
+
       return true;
     });
   }
+
+  const keydownRef = React.useRef(false);
+  const handleKeyDown = useEventCallback((event) => {
+    if (
+      !disableFocusRipple &&
+      !keydownRef.current &&
+      focusVisible &&
+      rippleRef.current &&
+      event.key === ' '
+    ) {
+      keydownRef.current = true;
+      rippleRef.current.stop(event, () => {
+        rippleRef?.current?.start(event);
+      });
+    }
+  });
+
+  const handleKeyUp = useEventCallback((event) => {
+    if (
+      !disableFocusRipple &&
+      event.key === ' ' &&
+      rippleRef.current &&
+      focusVisible &&
+      !event.defaultPrevented
+    ) {
+      keydownRef.current = false;
+      rippleRef.current.stop(event, () => {
+        rippleRef?.current?.pulsate(event);
+      });
+    }
+  });
 
   const handleBlur = useRippleHandler('stop', false);
   const handleMouseDown = useRippleHandler('start');
@@ -35,6 +79,8 @@ const useTouchRipple = (props) => {
   const getRippleHandlers = React.useMemo(() => {
     const rippleHandlers = {
       onBlur: handleBlur,
+      onKeyDown: handleKeyDown,
+      onKeyUp: handleKeyUp,
       onMouseDown: handleMouseDown,
       onMouseUp: handleMouseUp,
       onMouseLeave: handleMouseLeave,
@@ -45,7 +91,7 @@ const useTouchRipple = (props) => {
       onTouchMove: handleTouchMove
     };
 
-    return (otherEvents = {}) => {
+    return (otherEvents) => {
       const eventNames = Object.keys(rippleHandlers);
       const wrappedEvents = eventNames.map((eventName) => ({
         name: eventName,
@@ -62,6 +108,8 @@ const useTouchRipple = (props) => {
     };
   }, [
     handleBlur,
+    handleKeyDown,
+    handleKeyUp,
     handleMouseDown,
     handleMouseUp,
     handleMouseLeave,

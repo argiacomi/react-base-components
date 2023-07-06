@@ -1,35 +1,60 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
+import { Paper } from '@components/surfaces';
+import PopperArrow from './PopperArrow';
 
-const PopperContentRoot = styled('div')(({ theme, ownerState }) => ({
+const PopperContentRoot = styled(Paper)(({ theme, ownerState }) => ({
   position: ownerState.position,
   display: 'inline-block',
   backgroundColor: theme.color.background,
   ['--popper-arrow-bg']: theme.color.background,
-  color: theme.color.text.primary,
-  boxShadow: theme.boxShadow[ownerState.elevation],
-  border: ownerState.outlined ? `1px solid ${theme.color.divider}` : 'transparent',
   ['--popper-arrow-border-color']: ownerState.outlined ? `${theme.color.divider}` : 'transparent',
   backgroundClip: 'padding-box',
-  ...(!ownerState.square && {
-    borderRadius: theme.rounded.md
-  })
+  ...ownerState.cssStyles
 }));
 
 const PopperContent = React.forwardRef((props, ref) => {
-  const { className, component, elevation = 5, square = false, outlined = false, ...other } = props;
+  const {
+    children,
+    disableArrow = false,
+    elevation = 3,
+    slots = {},
+    slotProps = {},
+    outlined = false,
+    ...otherProps
+  } = props;
 
-  const ownerState = { ...props, elevation, square, outlined };
+  const { cssStyles, other } = extractStyling(otherProps);
+
+  const ownerState = { ...props, cssStyles, elevation, outlined };
+
+  const PopperContentComponent = slots.root || PopperContentRoot;
+  const popperContentProps = useSlotProps({
+    elementType: PopperContentComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      elevation,
+      outlined: outlined,
+      ref: ref
+    },
+    ownerState,
+    className: 'PopperContent-Root'
+  });
 
   return (
-    <PopperContentRoot
-      as={component}
-      className={clsx('PopperContent-Root', className)}
-      ownerState={ownerState}
-      ref={ref}
-      {...other}
-    />
+    <PopperContentComponent {...popperContentProps}>
+      {!disableArrow && (
+        <PopperArrow
+          disableArrow={disableArrow}
+          elevation={elevation}
+          outlined={outlined}
+          {...slotProps.arrow}
+        />
+      )}
+      {children}
+    </PopperContentComponent>
   );
 });
 

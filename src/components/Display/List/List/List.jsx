@@ -1,8 +1,17 @@
-import * as React from 'react';
-import styled from '@styles';
+import React from 'react';
+import styled, { extractStyling } from '@styles';
 import { useSlotProps } from '@components/lib';
 import useList from './useList';
 import ListProvider from './useList/ListProvider';
+
+export const listClasses = {
+  root: 'List-Root',
+  padding: 'Padding',
+  dense: 'Dense',
+  subheader: 'Subheader',
+  horizontal: 'Horizontal',
+  vertical: 'Vertical'
+};
 
 const ListRoot = styled('ul')(({ ownerState }) => ({
   listStyle: 'none',
@@ -15,7 +24,8 @@ const ListRoot = styled('ul')(({ ownerState }) => ({
   }),
   ...(ownerState.subheader && {
     paddingTop: 0
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
 const List = React.forwardRef(function List(props, ref) {
@@ -26,6 +36,7 @@ const List = React.forwardRef(function List(props, ref) {
     dense = false,
     direction = 'ltr',
     disablePadding = false,
+    disableListWrap,
     onChange,
     orientation = 'horizontal',
     selectionFollowsFocus,
@@ -34,23 +45,20 @@ const List = React.forwardRef(function List(props, ref) {
     slots = {},
     subheader,
     value: valueProp,
-    ...other
+    ...otherProps
   } = props;
 
+  const { cssStyles, other } = extractStyling(otherProps);
+
   const { isRtl, getRootProps, contextValue } = useList({
-    defaultValue,
-    dense,
-    direction,
-    disablePadding,
-    orientation,
-    rootRef: ref,
-    selectionMode,
-    value: valueProp
+    ...props,
+    rootRef: ref
   });
 
   const ownerState = {
     ...props,
     component,
+    cssStyles,
     dense,
     direction,
     disablePadding,
@@ -59,13 +67,18 @@ const List = React.forwardRef(function List(props, ref) {
   };
 
   const classes = {
-    root: ['List-root', `List-${ownerState.orientation}`]
+    root: [
+      listClasses.root,
+      !ownerState.disablePadding && listClasses.padding,
+      ownerState.dense && listClasses.dense,
+      ownerState.subheader && listClasses.subheader
+    ]
   };
 
-  const RootComponent = slots.root ?? ListRoot;
+  const ListRootComponent = slots.root ?? ListRoot;
 
   const listRootProps = useSlotProps({
-    elementType: RootComponent,
+    elementType: ListRootComponent,
     getSlotProps: getRootProps,
     externalSlotProps: slotProps.root,
     externalForwardedProps: other,

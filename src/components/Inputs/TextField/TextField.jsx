@@ -1,18 +1,18 @@
 import React from 'react';
 import clsx from 'clsx';
-import styled from '@styles';
-import { Input, InputFilled, InputOutlined, InputLabel } from '../Input';
+import styled, { extractStyling } from '@styles';
+import Input, { FilledInput, OutlinedInput, InputLabel } from '../Input';
 import { FormControl, FormHelperText } from '../Form';
-// import Select from '../Select'; //TODO
+import Select from '../Select';
 import { useId } from '@components/lib';
 
 const variantComponent = {
   standard: Input,
-  filled: InputFilled,
-  outlined: InputOutlined
+  filled: FilledInput,
+  outlined: OutlinedInput
 };
 
-const TextFieldRoot = styled(FormControl)({});
+const TextFieldRoot = styled(FormControl)(({ ownerState }) => ownerState.cssStyles);
 
 const TextField = React.forwardRef((props, ref) => {
   const {
@@ -24,13 +24,10 @@ const TextField = React.forwardRef((props, ref) => {
     defaultValue,
     disabled = false,
     error = false,
-    FormHelperTextProps,
     fullWidth = false,
     helperText,
     id: idOverride,
-    InputLabelProps,
     inputProps,
-    InputProps,
     inputRef,
     label,
     maxRows,
@@ -45,16 +42,19 @@ const TextField = React.forwardRef((props, ref) => {
     required = false,
     rows,
     select = false,
-    SelectProps,
+    slotProps = {},
     type,
     value,
     variant = 'outlined',
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles } = extractStyling(otherProps);
 
   const ownerState = {
     ...props,
     autoFocus,
+    cssStyles,
     color,
     disabled,
     error,
@@ -74,13 +74,14 @@ const TextField = React.forwardRef((props, ref) => {
   const InputMore = {};
 
   if (variant === 'outlined') {
-    if (InputLabelProps && typeof InputLabelProps.shrink !== 'undefined') {
-      InputMore.notched = InputLabelProps.shrink;
+    if (slotProps.inputLabel && typeof slotProps.inputLabel?.shrink !== 'undefined') {
+      InputMore.notched = slotProps.inputLabel?.shrink;
     }
     InputMore.label = label;
   }
+
   if (select) {
-    if (!SelectProps || !SelectProps.native) {
+    if (!slotProps.select || !slotProps.select?.native) {
       InputMore.id = undefined;
     }
     InputMore['aria-describedby'] = undefined;
@@ -114,7 +115,7 @@ const TextField = React.forwardRef((props, ref) => {
       placeholder={placeholder}
       inputProps={inputProps}
       {...InputMore}
-      {...InputProps}
+      {...slotProps.input}
     />
   );
 
@@ -129,33 +130,31 @@ const TextField = React.forwardRef((props, ref) => {
       color={color}
       variant={variant}
       ownerState={ownerState}
-      {...other}
+      {...otherProps}
     >
       {label != null && label !== '' && (
-        <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
+        <InputLabel htmlFor={id} id={inputLabelId} {...slotProps.inputLabel}>
           {label}
         </InputLabel>
       )}
 
-      {
-        /*select ? (
+      {select ? (
         <Select
           aria-describedby={helperTextId}
           id={id}
           labelId={inputLabelId}
           value={value}
           input={InputElement}
-          {...SelectProps}
+          {...slotProps.select}
         >
           {children}
         </Select>
-      ) : ( */
+      ) : (
         InputElement
-        /*)*/
-      }
+      )}
 
       {helperText && (
-        <FormHelperText id={helperTextId} {...FormHelperTextProps}>
+        <FormHelperText id={helperTextId} {...slotProps.formHelperText}>
           {helperText}
         </FormHelperText>
       )}

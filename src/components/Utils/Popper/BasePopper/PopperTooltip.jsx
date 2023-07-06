@@ -1,9 +1,14 @@
 import React from 'react';
-import { PopperArrow, PopperContent } from '@components';
+import PopperContent from './PopperContent';
 import clsx from 'clsx';
 import * as Floating from '@floating-ui/dom';
-import { useEnhancedEffect, useForkRef } from '@component/hooks';
+import { useEnhancedEffect, useForkRef } from '@components/lib';
 import * as Transitions from '@transitions';
+
+export const popperTooltipClasses = {
+  root: 'Popper-Content',
+  popperArrow: 'Popper-Arrow'
+};
 
 const resolveAnchorEl = (anchorEl) => (typeof anchorEl === 'function' ? anchorEl() : anchorEl);
 
@@ -14,14 +19,14 @@ const PopperTooltip = React.forwardRef((props, ref) => {
   const {
     anchorEl,
     className,
-    component,
-    disableArrow,
+    component = 'div',
+    disableArrow = true,
     children,
     open,
     popperOptions: popperOptionsProp,
     popperRef: popperRefProp,
-    slots,
-    slotProps,
+    slots = {},
+    slotProps = {},
     transition,
     TransitionProps,
     ...other
@@ -84,6 +89,8 @@ const PopperTooltip = React.forwardRef((props, ref) => {
           ? offsetPadding + (!disableArrow && arrowWidth / 2)
           : typeof offsetPadding === 'string'
           ? parseInt(offsetPadding.replace(/\D/g, '')) + (!disableArrow && arrowWidth / 2)
+          : typeof offsetPadding === 'function'
+          ? offsetPadding
           : {
               mainAxis: 0 + (!disableArrow && arrowWidth / 2),
               ...offsetPadding
@@ -242,41 +249,30 @@ const PopperTooltip = React.forwardRef((props, ref) => {
     };
   }, [resolvedAnchorElement, popperOptions, open]);
 
-  const childProps = {
-    placement: placement,
-    className: slotProps?.className
+  const arrowProps = {
+    component: slots.arrow ?? 'div',
+    ...slotProps.arrow,
+    className: clsx(slotProps.arrow?.className, popperTooltipClasses.arrow),
+    arrowId: arrowId,
+    disableArrow: disableArrow,
+    position: position,
+    width: arrowWidth
   };
-
-  if (TransitionProps !== null) {
-    childProps.TransitionProps = TransitionProps;
-  }
 
   const rootProps = {
     role: 'tooltip',
     ref: ownRef,
-    className: clsx(className, slotProps?.root?.className, 'PopperTooltip-Root'),
-    position: position,
+    className: clsx(className, slotProps?.root?.className, popperTooltipClasses.root),
+    disableArrow: disableArrow,
     elevation: props.elevation,
-    square: props.square,
     outlined: props.outlined,
+    position: position,
+    square: props.square,
+    slotProps: { root: slotProps.root, arrow: arrowProps },
     ...other
   };
 
-  const arrowProps = {
-    component: slots?.arrow ?? 'div',
-    className: clsx(slotProps?.arrow?.className, 'PopperTooltip-Arrow'),
-    arrowId: arrowId,
-    ownerState: {
-      width: arrowWidth,
-      disableArrow: disableArrow,
-      position: position,
-      elevation: props.elevation,
-      square: props.square,
-      outlined: props.outlined
-    }
-  };
-
-  const rootComponent = component || slots?.root || 'div';
+  const rootComponent = component || slots.root || 'div';
   const TransitionComponent =
     typeof transition === 'string'
       ? Transitions[transition] || Transitions['Fade']
@@ -284,14 +280,12 @@ const PopperTooltip = React.forwardRef((props, ref) => {
 
   return transition ? (
     <TransitionComponent {...TransitionProps}>
-      <PopperContent as={rootComponent} {...rootProps}>
-        {!disableArrow && <PopperArrow {...arrowProps} />}
+      <PopperContent component={rootComponent} {...rootProps}>
         {children}
       </PopperContent>
     </TransitionComponent>
   ) : (
-    <PopperContent as={rootComponent} {...rootProps}>
-      {!disableArrow && <PopperArrow {...arrowProps} />}
+    <PopperContent component={rootComponent} {...rootProps}>
       {children}
     </PopperContent>
   );

@@ -38,11 +38,19 @@ export const PopperArrowRoot = styled('div')(({ theme, ownerState }) => {
         width: ownerState.width,
         height: ownerState.width / 2,
         backgroundColor: 'var(--popper-arrow-bg)',
+        boxShadow: ownerState.elevation > 3 ? theme.boxShadow[ownerState.elevation] : null,
+        filter: ownerState.elevation <= 3 ? theme.dropShadow[ownerState.elevation] : null,
         clipPath: `path('M ${ax} ${ay} A ${outerRadius} ${outerRadius} 0 0 0 ${bx} ${by} L ${cx} ${cy} A ${innerRadius} ${innerRadius} 0 0 1 ${dx} ${dy} L ${ex} ${ey} A ${outerRadius} ${outerRadius} 0 0 0 ${fx} ${fy} Z')`,
         ...(ownerState.square && {
           clipPath: `polygon(${polygonOffset}px 100%, 50% ${polygonOffset}px, ${
             2 * unitWidth - polygonOffset
           }px 100%, ${polygonOffset}px 100%)`
+        }),
+        ...(theme.color.mode === 'dark' && {
+          backgroundImage: `linear-gradient(${theme.alpha.add(
+            theme.color.white,
+            theme.alpha.overlay([ownerState.elevation])
+          )},${theme.alpha.add(theme.color.white, theme.alpha.overlay(ownerState.elevation))})`
         }),
         content: '""',
         zIndex: '1 '
@@ -54,7 +62,8 @@ export const PopperArrowRoot = styled('div')(({ theme, ownerState }) => {
         width: ownerState.width,
         border: `${ownerState.width / 4 + 0.5}px solid`,
         borderColor: 'var(--popper-arrow-border-color)',
-        boxShadow: 'var(--popper-arrow-shadow)',
+        boxShadow: ownerState.elevation > 3 ? theme.boxShadow[ownerState.elevation] : null,
+        filter: ownerState.elevation <= 3 ? theme.dropShadow[ownerState.elevation] : null,
         clipPath: `path('M ${ax} ${ay} A ${outerRadius} ${outerRadius} 0 0 0 ${bx} ${by} L ${cx} ${cy} A ${innerRadius} ${innerRadius} 0 0 1 ${dx} ${dy} L ${ex} ${ey} A ${outerRadius} ${outerRadius} 0 0 0 ${fx} ${fy} Z')`,
         ...(ownerState.square && {
           clipPath: `polygon(${polygonOffset}px 100%, 50% ${polygonOffset}px, ${
@@ -72,14 +81,17 @@ const PopperArrow = React.forwardRef((props, ref) => {
   const {
     arrowId: id,
     className,
-    component,
+    component = 'div',
     disableArrow: disabled = false,
+    elevation = 3,
+    outlined = false,
     position,
     square = false,
-    width = 16,
+    width,
     ...other
   } = props;
-  const ownerState = { ...props, disabled, position, square, width };
+
+  const ownerState = { ...props, disabled, elevation, outlined, position, square, width };
 
   return (
     <PopperArrowRoot

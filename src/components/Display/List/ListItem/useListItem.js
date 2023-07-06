@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useCompoundItem, useId, useForkRef } from '@components/lib';
 import { useListContext } from '../BaseList/ListContext';
 import { useBaseListItem } from '../BaseList';

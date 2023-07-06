@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { useForkRef, useEnhancedEffect, useForcedRerendering } from '@components/lib';
-import { BaseListActionTypes } from './baseListActions';
+import baseListActions from './baseListActions';
 import ListContext from './ListContext';
 
 export default function useBaseListItem(parameters) {
@@ -55,7 +55,7 @@ export default function useBaseListItem(parameters) {
       }
 
       dispatch({
-        type: BaseListActionTypes.itemClick,
+        type: baseListActions.itemClick,
         item,
         event
       });
@@ -71,7 +71,7 @@ export default function useBaseListItem(parameters) {
       }
 
       dispatch({
-        type: BaseListActionTypes.itemHover,
+        type: baseListActions.itemHover,
         item,
         event
       });

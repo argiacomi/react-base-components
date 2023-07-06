@@ -1,9 +1,16 @@
 import React from 'react';
 import clsx from 'clsx';
-import { Modal } from '@components/utils/Modal';
-import { Slide } from '@components/utils/transitions';
-import { Paper } from '@components/surfaces';
 import styled, { useTheme } from '@styles';
+import Modal from '@components/utils/Modal';
+import Slide from '@components/utils/transitions/Slide';
+import Paper from '@components/surfaces/Paper';
+
+export const drawerClasses = {
+  root: 'Drawer-Root',
+  docked: 'Drawer-Docked',
+  paper: 'Drawer-Paper',
+  modal: 'Drawer-Modal'
+};
 
 const DrawerRoot = styled(Modal)(({ theme }) => ({
   zIndex: theme.zIndex.drawer
@@ -79,7 +86,7 @@ const Drawer = React.forwardRef((props, ref) => {
     ModalProps: { BackdropProps: BackdropPropsProp, ...ModalProps } = {},
     onClose,
     open = false,
-    PaperProps = {},
+    slotProps = {},
     SlideProps,
     TransitionComponent = Slide,
     transitionDuration = defaultTransitionDuration,
@@ -108,8 +115,8 @@ const Drawer = React.forwardRef((props, ref) => {
     <DrawerPaper
       elevation={variant === 'temporary' ? elevation : 0}
       square
-      {...PaperProps}
-      className={clsx('Drawer-Paper', PaperProps.className)}
+      {...slotProps.paper}
+      className={clsx(drawerClasses.paper, slotProps.paper?.className)}
       ownerState={ownerState}
     >
       {children}
@@ -119,7 +126,7 @@ const Drawer = React.forwardRef((props, ref) => {
   if (variant === 'permanent') {
     return (
       <DrawerDockedRoot
-        className={clsx('Drawer-Root', 'Drawer-Docked', className)}
+        className={clsx(drawerClasses.root, drawerClasses.docked, className)}
         ownerState={ownerState}
         ref={ref}
         {...other}
@@ -144,7 +151,7 @@ const Drawer = React.forwardRef((props, ref) => {
   if (variant === 'persistent') {
     return (
       <DrawerDockedRoot
-        className={clsx('Drawer-Root', 'Drawer-Docked', className)}
+        className={clsx(drawerClasses.root, drawerClasses.docked, className)}
         ownerState={ownerState}
         ref={ref}
         {...other}
@@ -161,7 +168,7 @@ const Drawer = React.forwardRef((props, ref) => {
         ...BackdropPropsProp,
         transitionDuration
       }}
-      className={clsx('Drawer-Root', 'Drawer-Modal', className)}
+      className={clsx(drawerClasses.root, drawerClasses.modal, className)}
       open={open}
       ownerState={ownerState}
       onClose={onClose}

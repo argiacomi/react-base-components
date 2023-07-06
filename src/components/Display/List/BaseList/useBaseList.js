@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   areArraysEqual,
   useControllableReducer,
@@ -6,7 +6,7 @@ import {
   useLatest,
   useTextNavigation
 } from '@components/lib';
-import { BaseListActionTypes } from './baseListActions';
+import baseListActions from './baseListActions';
 import baseListReducer from './baseListReducer';
 import useListChangeNotifiers from './useListChangeNotifiers';
 
@@ -73,9 +73,9 @@ function useBaseList(params) {
       if (
         focusManagement === 'DOM' &&
         value != null &&
-        (reason === BaseListActionTypes.itemClick ||
-          reason === BaseListActionTypes.keyDown ||
-          reason === BaseListActionTypes.textNavigation)
+        (reason === baseListActions.itemClick ||
+          reason === baseListActions.keyDown ||
+          reason === baseListActions.textNavigation)
       ) {
         getItemDomElement?.(value)?.focus();
       }
@@ -164,7 +164,7 @@ function useBaseList(params) {
 
   const handleTextNavigation = useTextNavigation((searchString, event) =>
     dispatch({
-      type: BaseListActionTypes.textNavigation,
+      type: baseListActions.textNavigation,
       event,
       searchString
     })
@@ -180,7 +180,7 @@ function useBaseList(params) {
     }
 
     dispatch({
-      type: BaseListActionTypes.itemsChange,
+      type: baseListActions.itemsChange,
       event: null,
       items,
       previousItems: previousItems.current
@@ -208,7 +208,7 @@ function useBaseList(params) {
   const createHandleKeyDown = (other) => (event) => {
     other.onKeyDown?.(event);
 
-    if (event.defaultMuiPrevented) {
+    if (event.manualPrevented) {
       return;
     }
 
@@ -229,7 +229,7 @@ function useBaseList(params) {
     }
 
     dispatch({
-      type: BaseListActionTypes.keyDown,
+      type: baseListActions.keyDown,
       key: event.key,
       event
     });
@@ -240,7 +240,7 @@ function useBaseList(params) {
   const createHandleBlur = (other) => (event) => {
     other.onBlur?.(event);
 
-    if (event.defaultMuiPrevented) {
+    if (event.manualPrevented) {
       return;
     }
 
@@ -250,7 +250,7 @@ function useBaseList(params) {
     }
 
     dispatch({
-      type: BaseListActionTypes.blur,
+      type: baseListActions.blur,
       event
     });
   };

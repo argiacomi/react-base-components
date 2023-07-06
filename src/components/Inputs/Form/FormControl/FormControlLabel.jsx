@@ -1,47 +1,48 @@
 import React from 'react';
 import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 import { formControlState, useFormControl } from './FormControlContext';
-import { Text } from '@components/layout';
+import { Text } from '@components/display';
 
 export const formControlLabelClasses = {
   root: 'FormControlLabel-Root',
   asterisk: 'FormControlLabel-Asterisk',
-  disabled: 'FormControlLabel-Disabled',
-  error: 'FormControlLabel-Error',
-  label: 'FormControlLabel-Label'
+  label: 'FormControlLabel-Label',
+  disabled: 'Disabled',
+  error: 'Error'
 };
 
 export const FormControlLabelRoot = styled('label')(({ theme, ownerState }) => ({
   display: 'inline-flex',
-  width: 'max-content',
   alignItems: 'center',
   cursor: 'pointer',
   verticalAlign: 'middle',
   WebkitTapHighlightColor: 'transparent',
-  marginLeft: theme.spacing(-11 / 8),
-  marginRight: theme.spacing(2),
+  marginLeft: theme.pxToRem(-11),
+  marginRight: theme.pxToRem(16),
   [`&.${formControlLabelClasses.disabled}`]: {
     cursor: 'default'
   },
   ...(ownerState.labelPlacement === 'start' && {
     flexDirection: 'row-reverse',
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(-11 / 8)
+    marginLeft: theme.pxToRem(16),
+    marginRight: theme.pxToRem(-11)
   }),
   ...(ownerState.labelPlacement === 'top' && {
     flexDirection: 'column-reverse',
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.pxToRem(16)
   }),
   ...(ownerState.labelPlacement === 'bottom' && {
     flexDirection: 'column',
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.pxToRem(16)
   }),
   [`& .${formControlLabelClasses.label}`]: {
     [`&.${formControlLabelClasses.disabled}`]: {
       color: theme.color.disabled.text
     }
-  }
+  },
+  ...ownerState.cssStyles
 }));
 
 const AsteriskComponent = styled('span')(({ theme }) => ({
@@ -52,16 +53,24 @@ const AsteriskComponent = styled('span')(({ theme }) => ({
 
 const FormControlLabel = React.forwardRef((props, ref) => {
   const {
-    className,
+    checked,
+    component: componentProp = 'label',
     control,
     disabled: disabledProp,
     disableText,
+    inputRef,
     label: labelProp,
     labelPlacement = 'end',
+    name,
+    onChange,
     required: requiredProp,
+    slots = {},
     slotProps = {},
-    ...other
+    value,
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const formControl = useFormControl();
 
@@ -70,11 +79,10 @@ const FormControlLabel = React.forwardRef((props, ref) => {
 
   const controlProps = {
     disabled,
-    required,
-    className: control.props.className
+    required
   };
 
-  [('checked', 'name', 'onChange', 'value', 'inputRef')].forEach((key) => {
+  ['checked', 'name', 'onChange', 'value', 'inputRef'].forEach((key) => {
     if (typeof control.props[key] === 'undefined' && typeof props[key] !== 'undefined') {
       controlProps[key] = props[key];
     }
@@ -88,6 +96,7 @@ const FormControlLabel = React.forwardRef((props, ref) => {
 
   const ownerState = {
     ...props,
+    cssStyles,
     disabled,
     labelPlacement,
     required,
@@ -110,19 +119,32 @@ const FormControlLabel = React.forwardRef((props, ref) => {
   let label = labelProp;
   if (label != null && label.type !== Text && !disableText) {
     label = (
-      <Text {...textSlotProps} className={clsx(classes.label, textSlotProps?.className)}>
+      <Text
+        component='span'
+        {...textSlotProps}
+        className={clsx(classes.label, textSlotProps?.className)}
+      >
         {label}
       </Text>
     );
   }
 
+  const component = componentProp ?? 'label';
+  const FormControlLabelRootComponent = slots.root ?? FormControlLabelRoot;
+
+  const formControlLabelRootprops = useSlotProps({
+    elementType: FormControlLabelRootComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
   return (
-    <FormControlLabelRoot
-      className={clsx(classes.root, className)}
-      ownerState={ownerState}
-      ref={ref}
-      {...other}
-    >
+    <FormControlLabelRootComponent as={component} {...formControlLabelRootprops}>
       {React.cloneElement(control, controlProps)}
       {label}
       {required && (
@@ -130,7 +152,7 @@ const FormControlLabel = React.forwardRef((props, ref) => {
           &thinsp;{'*'}
         </AsteriskComponent>
       )}
-    </FormControlLabelRoot>
+    </FormControlLabelRootComponent>
   );
 });
 

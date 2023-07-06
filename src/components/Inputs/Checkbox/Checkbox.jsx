@@ -1,62 +1,67 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling, shouldForwardProp } from '@styles';
+import { useSlotProps } from '@components/lib';
 import SwitchBase from '../switch/SwitchBase';
-import { Icon } from '@components/display';
+import Icon from '@components/Display/Icon';
+import CheckBoxOutlineBlankIcon from '@components/lib/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@components/lib/icons/CheckBox';
+import IndeterminateCheckBoxIcon from '@components/lib/icons/IndeterminateCheckBox';
 
 export const checkboxClasses = {
   root: 'Checkbox-Root',
-  checked: 'Checkbox-Checked',
-  disabled: 'Checkbox-Disabled',
-  indeterminate: 'Checkbox-Indeterminate'
+  switchBase: 'Checkbox-SwitchBase',
+  checked: 'Checked',
+  disabled: 'Disabled',
+  indeterminate: 'Indeterminate'
 };
 
-const CheckboxRoot = styled(SwitchBase)(({ theme, ownerState }) => ({
+const CheckboxRoot = styled(SwitchBase, {
+  shouldForwardProp: (prop) => shouldForwardProp(prop) || prop === 'classes',
+  name: 'Checkbox',
+  slot: 'Root'
+})(({ theme, ownerState }) => ({
   color: theme.color.text.secondary,
-  '@media (hover: none)': {
-    backgroundColor: 'transparent'
-  },
-  ...(ownerState.color === 'default' && {
+  ...(!ownerState.disableRipple && {
     '&:hover': {
-      backgroundColor: theme.alpha.add(theme.color.text.primary, 0.1)
+      backgroundColor: theme.alpha.add(
+        ownerState.color === 'default' ? theme.color.active : theme.color[ownerState.color].body,
+        0.25
+      ),
+      '@media (hover: none)': {
+        backgroundColor: 'transparent'
+      }
     }
   }),
   ...(ownerState.color !== 'default' && {
-    '&:hover': {
-      backgroundColor: theme.alpha.add(theme.color[ownerState.color][500], 0.1)
-    },
     [`&.${checkboxClasses.checked}, &.${checkboxClasses.indeterminate}`]: {
-      color: theme.color[ownerState.color][500]
-    },
-    [`&.${checkboxClasses.disabled}`]: {
-      color: theme.color.disabled.body
+      color: theme.color[ownerState.color].body
     }
-  })
+  }),
+  [`&.${checkboxClasses.disabled}`]: {
+    color: theme.color.disabled.text
+  },
+  ...ownerState.cssStyles
 }));
+
+const defaultCheckedIcon = <CheckBoxIcon />;
+const defaultIcon = <CheckBoxOutlineBlankIcon />;
+const defaultIndeterminateIcon = <IndeterminateCheckBoxIcon />;
 
 const Checkbox = React.forwardRef((props, ref) => {
   const {
-    checkedIcon = 'MdCheckBox',
+    checkedIcon = defaultCheckedIcon,
     color = 'primary',
-    icon: iconProp = 'MdCheckBoxOutlineBlank',
+    icon: iconProp = defaultIcon,
     indeterminate = false,
-    indeterminateIcon: indeterminateIconProp = 'MdIndeterminateCheckBox',
+    indeterminateIcon: indeterminateIconProp = defaultIndeterminateIcon,
     inputProps,
     size = 'medium',
-    className,
-    ...other
+    slots = {},
+    slotProps = {},
+    ...otherProps
   } = props;
 
-  const ownerState = {
-    ...props,
-    color,
-    indeterminate,
-    size
-  };
-
-  const classes = {
-    root: [checkboxClasses.root, ownerState.indeterminate && checkboxClasses.indeterminate]
-  };
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const renderIcon = (icon) => {
     if (typeof icon === 'string') {
@@ -69,30 +74,48 @@ const Checkbox = React.forwardRef((props, ref) => {
   const icon = renderIcon(indeterminate ? indeterminateIconProp : iconProp);
   const indeterminateIcon = renderIcon(indeterminate ? indeterminateIconProp : checkedIcon);
 
-  return (
-    <CheckboxRoot
-      className={clsx(classes.root, className)}
-      type='checkbox'
-      inputProps={{
+  const ownerState = {
+    ...props,
+    cssStyles,
+    color,
+    indeterminate,
+    size
+  };
+
+  const classes = {
+    root: [checkboxClasses.root, ownerState.indeterminate && checkboxClasses.indeterminate]
+  };
+
+  const CheckboxComponent = slots.root || CheckboxRoot;
+  const checkboxnRootProps = useSlotProps({
+    elementType: CheckboxComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      type: 'checkbox',
+      inputProps: {
         'data-indeterminate': indeterminate,
         ...inputProps
-      }}
+      },
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
+  return (
+    <CheckboxComponent
+      {...checkboxnRootProps}
       icon={React.cloneElement(icon, {
         size: icon.props.fontSize ?? size
       })}
       checkedIcon={React.cloneElement(indeterminateIcon, {
         size: indeterminateIcon.props.fontSize ?? size
       })}
-      ownerState={ownerState}
-      ref={ref}
-      classes={{
-        ...classes,
-        root: 'Checkbox-SwitchBase'
-      }}
-      {...other}
     />
   );
 });
+
 Checkbox.displayName = 'Checkbox';
 
 export default Checkbox;

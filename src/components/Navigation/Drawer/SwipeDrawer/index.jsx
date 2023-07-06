@@ -1,1 +1,2 @@
-export { default as SwipeDrawer } from './SwipeDrawer';
+export { default } from './SwipeDrawer';
+export * from './SwipeDrawer';

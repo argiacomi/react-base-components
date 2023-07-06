@@ -1,6 +1,6 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 import { formControlState, useFormControl } from '../FormControl';
 
 export const formLabelClasses = {
@@ -24,7 +24,8 @@ export const FormLabelRoot = styled('label')(({ theme, ownerState }) => ({
   },
   [`&.${formLabelClasses.error}`]: {
     color: theme.color.danger.body
-  }
+  },
+  ...ownerState.cssStyles
 }));
 
 const AsteriskComponent = styled('span')(({ theme }) => ({
@@ -34,7 +35,15 @@ const AsteriskComponent = styled('span')(({ theme }) => ({
 }));
 
 const FormLabel = React.forwardRef((props, ref) => {
-  const { children, className, component = 'label', ...other } = props;
+  const {
+    children,
+    component: componentProp = 'label',
+    slots = {},
+    slotProps = {},
+    ...otherProps
+  } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const formControl = useFormControl();
 
@@ -46,8 +55,8 @@ const FormLabel = React.forwardRef((props, ref) => {
 
   const ownerState = {
     ...props,
+    cssStyles,
     color: fcs.color || 'primary',
-    component,
     disabled: fcs.disabled,
     error: fcs.error,
     filled: fcs.filled,
@@ -65,21 +74,28 @@ const FormLabel = React.forwardRef((props, ref) => {
     asterisk: [formLabelClasses.asterisk, ownerState.error && formLabelClasses.error]
   };
 
+  const component = componentProp ?? 'label';
+  const FormLabelRootComponent = slots.root ?? FormLabelRoot;
+  const formLabelRootprops = useSlotProps({
+    elementType: FormLabelRootComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
   return (
-    <FormLabelRoot
-      as={component}
-      ownerState={ownerState}
-      className={clsx(classes.root, className)}
-      ref={ref}
-      {...other}
-    >
+    <FormLabelRootComponent as={component} {...formLabelRootprops}>
       {children}
       {fcs.required && (
         <AsteriskComponent ownerState={ownerState} aria-hidden className={classes.asterisk}>
           &thinsp;{'*'}
         </AsteriskComponent>
       )}
-    </FormLabelRoot>
+    </FormLabelRootComponent>
   );
 });
 

@@ -1,6 +1,11 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
+
+export const cardActionsClasses = {
+  root: 'CardActions-Root',
+  spacing: 'Spacing'
+};
 
 const CardActionsRoot = styled('div')(({ theme, ownerState }) => ({
   display: 'flex',
@@ -10,22 +15,40 @@ const CardActionsRoot = styled('div')(({ theme, ownerState }) => ({
     '& > :not(:first-of-type)': {
       marginLeft: theme.spacing(1)
     }
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
 const CardActions = React.forwardRef((props, ref) => {
-  const { disableSpacing = false, className, ...other } = props;
+  const {
+    disableSpacing = false,
+    component = 'div',
+    slots = {},
+    slotProps = {},
+    ...otherProps
+  } = props;
 
-  const ownerState = { ...props, disableSpacing };
+  const { cssStyles, other } = extractStyling(otherProps);
 
-  return (
-    <CardActionsRoot
-      className={clsx('CardActions-Root', className)}
-      ownerState={ownerState}
-      ref={ref}
-      {...other}
-    />
-  );
+  const ownerState = { ...props, cssStyles, disableSpacing };
+
+  const classes = {
+    root: [cardActionsClasses.root, !ownerState.disableSpacing && cardActionsClasses.spacing]
+  };
+
+  const CardActionsComponent = slots.root || CardActionsRoot;
+  const cardActionsRootProps = useSlotProps({
+    elementType: CardActionsComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
+  return <CardActionsComponent as={component} {...cardActionsRootProps} />;
 });
 
 CardActions.displayName = 'CardActions';

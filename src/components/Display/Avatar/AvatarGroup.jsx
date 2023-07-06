@@ -1,15 +1,21 @@
 import React from 'react';
 import { isFragment } from 'react-is';
 import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 import Avatar, { avatarClasses } from './Avatar';
+
+export const avatarGroupClasses = {
+  root: 'AvatarGroup-Root',
+  avatar: 'AvatarGroup-Avatar'
+};
 
 const SPACINGS = {
   small: '-1rem',
   medium: null
 };
 
-const AvatarGroupRoot = styled('div')(({ theme }) => ({
+const AvatarGroupRoot = styled('div')(({ theme, ownerState }) => ({
   [`& .${avatarClasses.root}`]: {
     border: `2px solid ${theme.color.background}`,
     boxSizing: 'content-box',
@@ -19,7 +25,8 @@ const AvatarGroupRoot = styled('div')(({ theme }) => ({
     }
   },
   display: 'flex',
-  flexDirection: 'row-reverse'
+  flexDirection: 'row-reverse',
+  ...ownerState.cssStyles
 }));
 
 const AvatarGroupAvatar = styled(Avatar)(({ theme }) => ({
@@ -34,23 +41,25 @@ const AvatarGroupAvatar = styled(Avatar)(({ theme }) => ({
 const AvatarGroup = React.forwardRef(function AvatarGroup(props, ref) {
   const {
     children: childrenProp,
-    className,
-    component = 'div',
+    component: componentProp = 'div',
     max = 5,
+    slots = {},
     slotProps = {},
     spacing = 'medium',
     total,
     variant = 'circular',
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   let clampedMax = max < 2 ? 2 : max;
 
   const ownerState = {
     ...props,
+    cssStyles,
     max,
     spacing,
-    component,
     variant
   };
 
@@ -84,31 +93,45 @@ const AvatarGroup = React.forwardRef(function AvatarGroup(props, ref) {
 
   const additionalAvatarSlotProps = slotProps?.additionalAvatar;
 
+  const AvatarGroupComponent = slots.root || AvatarGroupRoot;
+  const component = componentProp || 'div';
+
+  const avatarGroupRootProps = useSlotProps({
+    elementType: AvatarGroupComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: avatarGroupClasses.root
+  });
+
+  const AvatarComponent = slots.avatar || AvatarGroupAvatar;
+
+  const avatarProps = useSlotProps({
+    elementType: AvatarComponent,
+    externalSlotProps: slotProps.avatar,
+    additionalProps: {
+      ...additionalAvatarSlotProps,
+      style: marginLeft,
+      variant
+    },
+    ownerState,
+    className: avatarGroupClasses.avatar
+  });
+
   return (
-    <AvatarGroupRoot
-      as={component}
-      ownerState={ownerState}
-      className={clsx('AvatarGroup-Root', className)}
-      ref={ref}
-      {...other}
-    >
+    <AvatarGroupComponent as={component} {...avatarGroupRootProps}>
       {extraAvatars ? (
-        <AvatarGroupAvatar
-          ownerState={ownerState}
-          variant={variant}
-          {...additionalAvatarSlotProps}
-          className={clsx('AvatarGroup-Avatar', additionalAvatarSlotProps?.className)}
-          style={{ marginLeft, ...additionalAvatarSlotProps?.style }}
-        >
-          +{extraAvatars}
-        </AvatarGroupAvatar>
+        <AvatarGroupAvatar {...avatarProps}>+{extraAvatars}</AvatarGroupAvatar>
       ) : null}
       {children
         .slice(0, maxAvatars)
         .reverse()
         .map((child, index) => {
           return React.cloneElement(child, {
-            className: clsx(child.props.className, 'AvatarGroup-Avatar'),
+            className: clsx(child.props.className, avatarGroupClasses.avatar),
             style: {
               marginLeft: index === maxAvatars - 1 ? undefined : marginLeft,
               ...child.props.style
@@ -116,7 +139,7 @@ const AvatarGroup = React.forwardRef(function AvatarGroup(props, ref) {
             variant: child.props.variant || variant
           });
         })}
-    </AvatarGroupRoot>
+    </AvatarGroupComponent>
   );
 });
 

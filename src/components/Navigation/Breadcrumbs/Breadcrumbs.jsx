@@ -1,12 +1,18 @@
 import React from 'react';
 import { isFragment } from 'react-is';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
 import { useSlotProps } from '@components/lib';
-import { Text } from '@components/layout';
+import { Text } from '@components/display';
 import BreadcrumbCollapsed from './BreadcrumbCollapsed';
 
-const BreadcrumbsRoot = styled(Text)({});
+export const breadcrumbsClasses = {
+  root: 'Breadcrumbs-Root',
+  li: 'Breadcrumbs-Li',
+  ol: 'Breadcrumbs-Ol',
+  separator: 'Breadcrumbs-Separator'
+};
+
+const BreadcrumbsRoot = styled(Text)(({ ownerState }) => ownerState.cssStyles);
 
 const BreadcrumbsOl = styled('ol')({
   display: 'flex',
@@ -49,7 +55,6 @@ function insertSeparators(items, className, separator, ownerState) {
 const Breadcrumbs = React.forwardRef((props, ref) => {
   const {
     children,
-    className,
     component = 'nav',
     slots = {},
     slotProps = {},
@@ -58,14 +63,17 @@ const Breadcrumbs = React.forwardRef((props, ref) => {
     itemsBeforeCollapse = 1,
     maxItems = 8,
     separator = '/',
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const [expanded, setExpanded] = React.useState(false);
 
   const ownerState = {
     ...props,
     component,
+    cssStyles,
     expanded,
     expandText,
     itemsAfterCollapse,
@@ -128,31 +136,38 @@ const Breadcrumbs = React.forwardRef((props, ref) => {
       return React.isValidElement(child);
     })
     .map((child, index) => (
-      <li className={'Breadcrumbs-Li'} key={`child-${index}`}>
+      <li className={breadcrumbsClasses.li} key={`child-${index}`}>
         {child}
       </li>
     ));
 
+  const BreadcrumbComponent = slots.root || BreadcrumbsRoot;
+  const breadcrumbProps = useSlotProps({
+    elementType: BreadcrumbComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      color: 'text.secondary',
+      component,
+      ref: ref
+    },
+    ownerState,
+    className: breadcrumbsClasses.root
+  });
+
   return (
-    <BreadcrumbsRoot
-      ref={ref}
-      component={component}
-      color='text.secondary'
-      className={clsx('Breadcrumbs-Root', className)}
-      ownerState={ownerState}
-      {...other}
-    >
-      <BreadcrumbsOl className={'Breadcrumbs-Ol'} ref={listRef} ownerState={ownerState}>
+    <BreadcrumbComponent {...breadcrumbProps}>
+      <BreadcrumbsOl className={breadcrumbsClasses.ol} ref={listRef} ownerState={ownerState}>
         {insertSeparators(
           expanded || (maxItems && allItems.length <= maxItems)
             ? allItems
             : renderItemsBeforeAndAfter(allItems),
-          'Breadcrumbs-Separator',
+          breadcrumbsClasses.separator,
           separator,
           ownerState
         )}
       </BreadcrumbsOl>
-    </BreadcrumbsRoot>
+    </BreadcrumbComponent>
   );
 });
 

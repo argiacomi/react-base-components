@@ -15,6 +15,7 @@ const cssProperties = {
     'textDecorationColor',
     'textEmphasisColor'
   ],
+  border: ['border', 'borderBottom', 'borderLeft', 'borderRight', 'borderTop'],
   borderRadius: [
     'borderRadius',
     'borderBottomLeftRadius',
@@ -24,6 +25,7 @@ const cssProperties = {
   ],
   sizing: ['width', 'height', 'minHeight', 'maxHeight', 'minWidth', 'maxWidth'],
   spacing: [
+    'gap',
     'margin',
     'marginBottom',
     'marginLeft',
@@ -51,6 +53,7 @@ const cssProperties = {
     px: ['paddingLeft', 'paddingRight'],
     py: ['paddingTop', 'paddingBottom']
   },
+  special: ['.', '>', '+', '~', '*', ':', '::', '[ ]', ',', '@', '--', '&'],
   other: [
     'alignContent',
     'alignItems',

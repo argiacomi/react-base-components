@@ -1,41 +1,59 @@
-import { css } from 'styled-components/macro'; //eslint-disable-line
+import { Box } from '@components';
 import {
-  Box,
+  // AccordionDemo,
   // AlertDemo,
+  // AppBarDemo,
+  // AutcompleteDemo,
   // AvatarDemo,
   // BackdropDemo,
   // BadgeDemo,
-  // BreadcrumbsDemo,
+  // BottomNavigationDemo,
+  // BoxDemo,
+  BreadcrumbsDemo,
   // ButtonDemo,
   // ButtonGroupDemo,
   // CardDemo,
+  // CheckboxDemo,
   // ChipDemo,
   // ClickAwayListenerDemo,
+  // ContainerDemo,
+  // DialogDemo,
+  // DividerDemo,
   // DrawerDemo,
-  // FabDemo
+  // FabDemo,
   // FocusTrapDemo,
   // FormControlDemo,
+  // GridDemo,
   // InputDemo,
-  // ListDemo
-  // MenuDemo
+  // LinkDemo,
+  // ListDemo,
+  // MenuDemo,
   // ModalDemo,
+  // MultiSelectDemo,
   // NoSsrDemo,
+  // PaginationDemo,
+  // PaperDemo,
   // PopoverDemo,
   // PopperDemo,
-  // ProgressDemo
+  // ProgressDemo,
   // RadioDemo,
+  // SelectDemo,
+  // SliderDemo,
+  // SkeletonDemo,
   // SnackbarDemo,
-  SwitchDemo
-  // TabDemo
+  // SwitchDemo,
+  // TabDemo,
+  TableDemo
+  // TextDemo,
   // TextFieldDemo,
-  // TooltipDemo,
-  // NewTabDemo,
-} from '@components';
+  // ToggleButtonDemo,
+  // TooltipDemo
+} from '@demos';
 
 const App = () => {
   return (
-    <Box css={{ margin: '3rem', height: 2000 }}>
-      <SwitchDemo />
+    <Box margin='3rem' height={2000}>
+      <TableDemo />
     </Box>
   );
 };

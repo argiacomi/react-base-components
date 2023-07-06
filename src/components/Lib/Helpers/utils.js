@@ -1,3 +1,5 @@
+import React from 'react';
+
 //--- Document and Window Utilities ---//
 
 export function ownerDocument(node) {
@@ -8,6 +10,18 @@ export function ownerWindow(node) {
   const doc = ownerDocument(node);
   return doc.defaultView || window;
 }
+
+export const visuallyHidden = {
+  border: 0,
+  clip: 'rect(0 0 0 0)',
+  height: '1px',
+  margin: -1,
+  overflow: 'hidden',
+  padding: 0,
+  position: 'absolute',
+  whiteSpace: 'nowrap',
+  width: '1px'
+};
 
 //--- Function Utilities ---//
 
@@ -119,6 +133,15 @@ export function areArraysEqual(array1, array2, itemComparer) {
   );
 }
 
+export function areEqualValues(a, b) {
+  if (typeof b === 'object' && b !== null) {
+    return a === b;
+  }
+
+  // The value could be a number, the DOM will stringify it anyway.
+  return String(a) === String(b);
+}
+
 //--- Input Utilities ---//
 
 export function hasValue(value) {
@@ -137,40 +160,15 @@ export function isAdornedStart(obj) {
   return obj.startAdornment;
 }
 
-//--- Event Handler Utilities ---//
-
-export function extractEventHandlers(object, excludeKeys = []) {
-  if (object === undefined) {
-    return {};
-  }
-
-  const result = {};
-
-  Object.keys(object)
-    .filter(
-      (prop) =>
-        prop.match(/^on[A-Z]/) && typeof object[prop] === 'function' && !excludeKeys.includes(prop)
-    )
-
-    .forEach((prop) => {
-      result[prop] = object[prop];
-    });
-
-  return result;
+export function isElement(element, names) {
+  return React.isValidElement(element) && names.indexOf(element.type.displayName) !== -1;
 }
 
-export function omitEventHandlers(object) {
-  if (object === undefined) {
-    return {};
+//--- ClassName Utility ---//
+export function capitalize(string) {
+  if (typeof string !== 'string') {
+    throw new Error('`capitalize(string)` expects a string argument.');
   }
 
-  const result = {};
-
-  Object.keys(object)
-    .filter((prop) => !(prop.match(/^on[A-Z]/) && typeof object[prop] === 'function'))
-    .forEach((prop) => {
-      result[prop] = object[prop];
-    });
-
-  return result;
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }

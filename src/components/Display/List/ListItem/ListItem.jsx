@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
 import { useEnhancedEffect, useForkRef, useSlotProps } from '@components/lib';
 import { ButtonBase } from '@components/inputs';
 import ListItemContext from './ListItemContext';
@@ -8,12 +8,12 @@ import useListItem from './useListItem';
 import { listItemButtonClasses } from './ListItemButton';
 import ListItemSecondaryAction from './ListItemSecondaryAction';
 
-const listItemClasses = {
+export const listItemClasses = {
   root: 'ListItem-Root',
-  focusVisible: 'ListItem-FocusVisible',
-  disabled: 'ListItem-Disabled',
-  selected: 'ListItem-Selected',
-  inset: 'ListItem-Inset'
+  focusVisible: 'FocusVisible',
+  disabled: 'Disabled',
+  selected: 'Selected',
+  inset: 'Inset'
 };
 
 export const ListItemRoot = styled('div')(({ theme, ownerState }) => ({
@@ -93,7 +93,8 @@ export const ListItemRoot = styled('div')(({ theme, ownerState }) => ({
         )
       }
     }
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
 const ListItem = React.forwardRef((props, ref) => {
@@ -112,8 +113,10 @@ const ListItem = React.forwardRef((props, ref) => {
     secondaryAction,
     slotProps = {},
     slots = {},
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const itemRef = React.useRef();
   const handleRef = useForkRef(itemRef, ref);
@@ -150,6 +153,7 @@ const ListItem = React.forwardRef((props, ref) => {
     alignItems,
     autoFocus,
     button,
+    cssStyles,
     dense: childContext.dense,
     disabled,
     disableGutters,

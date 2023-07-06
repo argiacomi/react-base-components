@@ -1,7 +1,12 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled from '@styles';
-import { Portal, PopperTooltip } from '@components';
+import PopperTooltip from './PopperTooltip';
+import Portal from '../../Portal';
+
+export const basePopperClasses = {
+  root: 'BasePopper-Root'
+};
 
 const resolveAnchorEl = (anchorEl) => (typeof anchorEl === 'function' ? anchorEl() : anchorEl);
 
@@ -31,16 +36,11 @@ const BasePopper = React.forwardRef((props, ref) => {
     anchorEl,
     children,
     className,
-    component = 'div',
-    disableArrow = false,
-    slots = {},
-    slotProps = {},
     container: containerProp,
     disablePortal = false,
     keepMounted = false,
     open = false,
     popperOptions = {},
-    popperRef,
     style,
     transition,
     TransitionProps,
@@ -84,7 +84,7 @@ const BasePopper = React.forwardRef((props, ref) => {
       }
     : undefined;
 
-  const ownerState = { ...props, position: popperOptions.position, open, exited, style };
+  const ownerState = { ...props, position: popperOptions.position, open, exited };
 
   if (!keepMounted && !open && (!transition || exited)) {
     return null;
@@ -94,15 +94,11 @@ const BasePopper = React.forwardRef((props, ref) => {
     <Portal disablePortal={disablePortal} container={container}>
       <BasePopperTooltip
         anchorEl={anchorEl}
-        className={clsx('BasePopper-Root', className)}
-        component={component}
-        disableArrow={disableArrow}
-        slots={slots}
-        slotProps={slotProps}
+        className={clsx(basePopperClasses.root, className)}
         open={transition ? !exited : open}
         popperOptions={popperOptions}
-        popperRef={popperRef}
         ref={ref}
+        style={style}
         {...other}
         transition={transition}
         TransitionProps={transitionProps}

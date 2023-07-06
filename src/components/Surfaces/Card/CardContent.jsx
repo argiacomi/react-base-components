@@ -1,28 +1,39 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 
-const CardContentRoot = styled('div')(({ theme }) => ({
+export const cardContentClasses = {
+  root: 'CardContent-Root'
+};
+
+const CardContentRoot = styled('div')(({ theme, ownerState }) => ({
   padding: theme.spacing(2),
   '&:last-child': {
     paddingBottom: theme.spacing(3)
-  }
+  },
+  ...ownerState.cssStyles
 }));
 
 const CardContent = React.forwardRef((props, ref) => {
-  const { className, component = 'div', ...other } = props;
+  const { component = 'div', slots = {}, slotProps = {}, ...otherProps } = props;
 
-  const ownerState = { ...props, component };
+  const { cssStyles, other } = extractStyling(otherProps);
 
-  return (
-    <CardContentRoot
-      as={component}
-      className={clsx('CardContent-Root', className)}
-      ownerState={ownerState}
-      ref={ref}
-      {...other}
-    />
-  );
+  const ownerState = { ...props, cssStyles };
+
+  const CardContentComponent = slots.root || CardContentRoot;
+  const cardContentRootProps = useSlotProps({
+    elementType: CardContentComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: cardContentClasses.root
+  });
+
+  return <CardContentComponent as={component} {...cardContentRootProps} />;
 });
 
 CardContent.displayName = 'CardContent';

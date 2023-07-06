@@ -1,4 +1,3 @@
-// Importing necessary modules from React and components library
 import React from 'react';
 import { useForkRef, ownerDocument } from '@components/lib';
 

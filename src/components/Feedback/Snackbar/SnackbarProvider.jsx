@@ -200,7 +200,7 @@ const SnackbarProvider = (props) => {
         transitionDuration: merger.transitionDuration,
         TransitionProps: merger.TransitionProps || true,
         iconVariant: merger.iconVariant || true,
-        style: merger.style || true,
+        style: merger.style,
         SnackbarProps: merger.SnackbarProps || true,
         className: clsx(props.className, options.className),
         children: options.children || undefined

@@ -1,115 +1,150 @@
 import React from 'react';
-import styled from '@styles';
-import clsx from 'clsx';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 import ButtonBase from '../ButtonBase/ButtonBase';
-import { Icon } from '@components/display';
+import { Icon, iconClasses } from '@components/display';
 
-const IconButtonRoot = styled(ButtonBase)(({ theme, ownerState }) => ({
-  textAlign: 'center',
-  flex: '0 0 auto',
-  ...theme.text.size['2xl'],
-  height: `${1.5 * ownerState.icons}rem`,
-  width: `${1.5 * ownerState.icons}rem`,
-  borderRadius: theme.rounded.full,
-  overflow: 'visible',
-  transition: theme.transition.create('background-color', {
-    duration: theme.transition.duration.shortest
-  }),
-  boxSizing: 'content-box',
-  ...{
-    start: { marginLeft: '-.75rem' },
-    end: { marginRight: '-.75rem' }
-  }[ownerState.edge],
-  ...(ownerState.color === 'inherit' && {
-    color: 'inherit'
-  }),
-  ...(ownerState.color !== 'inherit' && {
-    ...(ownerState.color === 'default' && {
-      color: theme.color.text.secondary,
-      fill: 'inherit',
+export const iconButtonClasses = {
+  root: 'IconButton-Root',
+  disabled: 'Disabled'
+};
+
+const IconButtonRoot = styled(ButtonBase)(
+  ({ theme, ownerState }) => ({
+    textAlign: 'center',
+    flex: '0 0 auto',
+    fontSize: theme.pxToRem(
+      {
+        mini: 14,
+        small: 18,
+        medium: 24,
+        large: 28,
+        jumbo: 32
+      }[ownerState.size]
+    ),
+    padding: theme.spacing(1),
+    borderRadius: '50%',
+    overflow: 'visible', // Explicitly set the default value to solve a bug on IE11.
+    color: theme.color.active,
+    transition: theme.transition.create('background-color', {
+      duration: theme.transition.duration.shortest
+    }),
+    ...(!ownerState.disableRipple && {
       '&:hover': {
-        backgroundColor: theme.alpha.add(theme.color.black, 0.05)
+        backgroundColor: theme.alpha.add(theme.color.active, theme.color.hoverOpacity),
+        '@media (hover: none)': {
+          backgroundColor: 'transparent'
+        }
       }
     }),
-    ...(ownerState.color !== 'default' && {
-      color: theme.color[ownerState.color][500],
-      fill: theme.color[ownerState.color][500],
-      '&:hover': {
-        backgroundColor: theme.alpha.add(theme.color[ownerState.color][500], 0.2)
-      }
+    ...(ownerState.edge === 'start' && {
+      marginLeft: ownerState.size === 'small' ? theme.spacing(-3 / 16) : theme.spacing(-12 / 16)
+    }),
+    ...(ownerState.edge === 'end' && {
+      marginRight: ownerState.size === 'small' ? theme.spacing(-3 / 16) : theme.spacing(-12 / 16)
     })
   }),
-  padding: {
-    xs: '0.25rem',
-    small: '0.375rem',
-    medium: '0.5rem',
-    large: '0.75rem',
-    xl: '.875rem'
-  }[ownerState.size],
-  ...(ownerState.edge === 'start' &&
-    (ownerState.size === 'xs' || ownerState.size === 'sm') && { marginLeft: '-.25rem' }),
-  ...(ownerState.disabled && {
-    color: theme.color.disabled.text,
-    fill: theme.color.disabled.text,
-    pointerEvents: 'none'
-  })
-}));
+  ({ theme, ownerState }) => {
+    const color = theme.color?.[ownerState.color];
+    return {
+      ...(ownerState.color === 'inherit' && {
+        color: 'inherit'
+      }),
+      ...(ownerState.color !== 'inherit' &&
+        ownerState.color !== 'default' && {
+          color: color?.body,
+          ...(!ownerState.disableRipple && {
+            '&:hover': {
+              ...(color && {
+                backgroundColor: theme.alpha.add(color.body, theme.color.hoverOpacity)
+              }),
+              '@media (hover: none)': {
+                backgroundColor: 'transparent'
+              }
+            }
+          })
+        }),
+      padding: theme.pxToRem(
+        {
+          mini: 6,
+          small: 6,
+          medium: 8,
+          large: 12,
+          jumbo: 12
+        }[ownerState.size]
+      ),
+      [`& .${iconClasses.root}`]: {},
+      ...(ownerState.disabled && {
+        color: theme.color.disabled.text,
+        fill: theme.color.disabled.text,
+        pointerEvents: 'none'
+      })
+    };
+  },
+  ({ ownerState }) => ownerState.cssStyles
+);
 
 const IconButton = React.forwardRef((props, ref) => {
   const {
     edge = false,
     children,
-    className,
     color = 'inherit',
+    component = 'button',
     disabled = false,
+    disableRipple = false,
     disableFocusRipple = false,
+    icon,
     size = 'medium',
-    ...other
+    slots = {},
+    slotProps = {},
+    ...otherProps
   } = props;
 
-  const iconArray = Array.isArray(props.icon) ? props.icon : [props.icon];
+  const { cssStyles, other } = extractStyling(otherProps);
+
+  const iconArray = Array.isArray(icon) ? icon : [icon];
   const icons = iconArray.length;
 
   const ownerState = {
     ...props,
-    edge,
+    cssStyles,
     color,
     disabled,
     disableFocusRipple,
+    edge,
     icons,
     size
   };
 
+  const classes = {
+    root: [iconButtonClasses.root, ownerState.disabled && iconButtonClasses.disabled]
+  };
+
+  const IconButtonComponent = slots.root || IconButtonRoot;
+
+  const buttonRootProps = useSlotProps({
+    elementType: IconButtonComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      centerRipple: true,
+      disabled,
+      disableRipple,
+      disableFocusRipple,
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
   return (
-    <IconButtonRoot
-      className={clsx('IconButton-Root', className)}
-      centerRipple
-      disableRipple={disableFocusRipple}
-      disabled={disabled}
-      ref={ref}
-      ownerState={ownerState}
-      {...other}
-    >
+    <IconButtonComponent component={component} {...buttonRootProps}>
       {props.icon
         ? iconArray.map((icon, index) => (
-            <Icon
-              key={index}
-              icon={icon}
-              size={
-                {
-                  mini: '1.125rem',
-                  small: '1.25rem',
-                  medium: '1.375rem',
-                  large: '1.5rem',
-                  jumbo: '1.675rem',
-                  auto: 'auto'
-                }[ownerState.size]
-              }
-              css={{ transition: 'none' }}
-            />
+            <Icon key={index} icon={icon} transition='none' {...slotProps.icon} />
           ))
         : children}
-    </IconButtonRoot>
+    </IconButtonComponent>
   );
 });
 

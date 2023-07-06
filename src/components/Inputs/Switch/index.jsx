@@ -1,3 +1,5 @@
-export { default as Switch } from './Switch';
+export { default } from './Switch';
 export * from './Switch';
+
+export { default as SwitchBase } from './SwitchBase';
 export * from './SwitchBase';

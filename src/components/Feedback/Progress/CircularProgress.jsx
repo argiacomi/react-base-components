@@ -1,7 +1,14 @@
 import React from 'react';
-import clsx from 'clsx';
 import { keyframes, css } from 'styled-components/macro';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
+
+export const circularProgressClasses = {
+  root: 'CircularProgress-Root',
+  svg: 'CircularProgress-SVG',
+  circle: 'CircularProgress-Circle',
+  circleDisableShrink: 'CircleDisableShrink'
+};
 
 const SIZE = 44;
 
@@ -46,7 +53,8 @@ const CircularProgressRoot = styled('span')(
     ownerState.variant === 'indeterminate' &&
     css`
       animation: ${circularRotateKeyframe} 1.4s linear infinite;
-    `
+    `,
+  ({ ownerState }) => ownerState.cssStyles
 );
 
 const CircularProgressSVG = styled('svg')({
@@ -74,19 +82,24 @@ const CircularProgressCircle = styled('circle')(
 
 const CircularProgress = React.forwardRef((props, ref) => {
   const {
-    className,
     color = 'primary',
+    component: componentProp = 'span',
     disableShrink = false,
     size = 40,
+    slots = {},
+    slotProps = {},
     style,
     thickness = 3.6,
     value = 0,
     variant = 'indeterminate',
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const ownerState = {
     ...props,
+    cssStyles,
     color,
     disableShrink,
     size,
@@ -107,33 +120,64 @@ const CircularProgress = React.forwardRef((props, ref) => {
     rootStyle.transform = 'rotate(-90deg)';
   }
 
+  const classes = {
+    root: circularProgressClasses.root,
+    svg: circularProgressClasses.svg,
+    circle: [
+      circularProgressClasses.circle,
+      ownerState.disableShrink && circularProgressClasses.circleDisableShrink
+    ]
+  };
+
+  const component = componentProp || 'span';
+  const CircularProgressComponent = slots.root || CircularProgressRoot;
+  const circularProgresstRootProps = useSlotProps({
+    elementType: CircularProgressComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref,
+      role: 'progressbar',
+      style: { width: size, height: size, ...rootStyle, ...style },
+      ...rootProps
+    },
+    ownerState,
+    className: classes.root
+  });
+
+  const CircularProgressSVGComponent = slots.svg || CircularProgressSVG;
+  const circularProgressSVGProps = useSlotProps({
+    elementType: CircularProgressComponent,
+    externalSlotProps: slotProps.svg,
+    additionalProps: {
+      viewBox: `${SIZE / 2} ${SIZE / 2} ${SIZE} ${SIZE}`
+    },
+    ownerState,
+    className: classes.svg
+  });
+
+  const CircularProgressCircleComponent = slots.circle || CircularProgressCircle;
+  const circularProgressCircleProps = useSlotProps({
+    elementType: CircularProgressComponent,
+    externalSlotProps: slotProps.circle,
+    additionalProps: {
+      style: circleStyle,
+      cx: SIZE,
+      cy: SIZE,
+      r: (SIZE - thickness) / 2,
+      fill: 'none',
+      strokeWidth: thickness
+    },
+    ownerState,
+    className: classes.circle
+  });
+
   return (
-    <CircularProgressRoot
-      className={clsx('CircularProgress-Root', className)}
-      style={{ width: size, height: size, ...rootStyle, ...style }}
-      ownerState={ownerState}
-      ref={ref}
-      role='progressbar'
-      {...rootProps}
-      {...other}
-    >
-      <CircularProgressSVG
-        className={'CircularProgress-Svg'}
-        ownerState={ownerState}
-        viewBox={`${SIZE / 2} ${SIZE / 2} ${SIZE} ${SIZE}`}
-      >
-        <CircularProgressCircle
-          className={'CircularProgress-Circle'}
-          style={circleStyle}
-          ownerState={ownerState}
-          cx={SIZE}
-          cy={SIZE}
-          r={(SIZE - thickness) / 2}
-          fill='none'
-          strokeWidth={thickness}
-        />
-      </CircularProgressSVG>
-    </CircularProgressRoot>
+    <CircularProgressComponent as={component} {...circularProgresstRootProps}>
+      <CircularProgressSVGComponent {...circularProgressSVGProps}>
+        <CircularProgressCircleComponent {...circularProgressCircleProps} />
+      </CircularProgressSVGComponent>
+    </CircularProgressComponent>
   );
 });
 

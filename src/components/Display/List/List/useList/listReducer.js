@@ -1,7 +1,7 @@
-import { baseListReducer, BaseListActionTypes, moveHighlight } from '../../BaseList';
+import { baseListReducer, baseListActions, moveHighlight } from '../../BaseList';
 
 export default function listReducer(state, action) {
-  if (action.type === BaseListActionTypes.valueChange) {
+  if (action.type === baseListActions.valueChange) {
     return {
       ...state,
       highlightedValue: action.value
@@ -14,7 +14,7 @@ export default function listReducer(state, action) {
     context: { selectionFollowsFocus }
   } = action;
 
-  if (action.type === BaseListActionTypes.itemsChange) {
+  if (action.type === baseListActions.itemsChange) {
     if (newState.selectedValues.length > 0) {
       return {
         ...newState,

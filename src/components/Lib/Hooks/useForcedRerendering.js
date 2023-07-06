@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 export function useForcedRerendering() {
   const [, setState] = React.useState({});

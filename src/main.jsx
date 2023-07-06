@@ -10,8 +10,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <CssBaseline />
     <GlobalStyles />
     <StyleSheetManager
-      disableCSSOMInjection
-      enableVendorPrefixes
+      // disableCSSOMInjection
+      // enableVendorPrefixes
       shouldForwardProp={shouldForwardProp}
     >
       <GlobalTheme>

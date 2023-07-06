@@ -1,2 +1,4 @@
-export { default as InputBase } from './InputBase';
+export { default } from './InputBase';
+export * from './InputBase';
+
 export { default as useInputBase } from './useInputBase';

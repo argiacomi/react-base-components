@@ -8,12 +8,13 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@utils': path.resolve(__dirname, './src/lib/utils.js'),
       '@components': path.resolve(__dirname, './src/components'),
+      '@demos': path.resolve(__dirname, './src/demos'),
       '@component/hooks': path.resolve(__dirname, './src/components/lib/hooks'),
       '@component/utils': path.resolve(__dirname, './src/components/lib/helpers'),
       '@styles': path.resolve(__dirname, './src/styles'),
-      '@transitions': path.resolve(__dirname, './src/components/utils/transitions')
+      '@transitions': path.resolve(__dirname, './src/components/utils/transitions'),
+      '@BaseList': path.resolve(__dirname, './src/Components/Display/List/BaseList')
     }
   },
   plugins: [

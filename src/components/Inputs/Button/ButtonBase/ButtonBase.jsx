@@ -1,10 +1,17 @@
 import React from 'react';
 import clsx from 'clsx';
-import styled from '@styles';
-import { useForkRef } from '@components/lib';
+import styled, { extractStyling } from '@styles';
+import { useForkRef, useSlotProps } from '@components/lib';
 import useButton from './useButton';
+// import useTouchRipple from './useTouchRipple';
 import TouchRipple from './TouchRipple';
-import useTouchRipple from './useTouchRipple';
+
+const buttonBaseClasses = {
+  root: 'ButtonBase-Root',
+  active: 'Active',
+  disabled: 'Disabled',
+  focusVisible: 'FocusVisible'
+};
 
 const ButtonBaseRoot = styled('button')(({ ownerState }) => ({
   display: 'inline-flex',
@@ -35,7 +42,8 @@ const ButtonBaseRoot = styled('button')(({ ownerState }) => ({
   }),
   '@media print': {
     colorAdjust: 'exact'
-  }
+  },
+  ...ownerState.cssStyles
 }));
 
 const ButtonBase = React.forwardRef((props, ref) => {
@@ -43,101 +51,115 @@ const ButtonBase = React.forwardRef((props, ref) => {
     action,
     centerRipple = false,
     children,
-    className,
-    classes: classesProp,
+    color = 'primary',
     component = 'button',
     disabled = false,
-    focusableWhenDisabled = false,
-    focusVisibleClassName,
+    disableFocusRipple = false,
     disableRipple = false,
     disableTouchRipple = false,
-    LinkComponent = 'a',
-    onFocusVisible,
+    focusableWhenDisabled = false,
+    focusVisibleClassName,
+    slots = {},
+    slotProps = {},
     tabIndex = 0,
-    TouchRippleProps,
     type,
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const buttonRef = React.useRef(null);
   const handleRef = useForkRef(buttonRef, ref);
 
-  const rippleRef = React.useRef(null);
   let ComponentProp = component;
 
   if (ComponentProp === 'button' && (other.href || other.to)) {
-    ComponentProp = LinkComponent;
+    ComponentProp = slots.link || 'a';
   }
 
-  const { focusVisible, active, setFocusVisible, getRootProps } = useButton({
-    disabled,
-    focusableWhenDisabled,
-    href: props.href,
-    onFocusVisible,
-    tabIndex,
-    to: props.to,
-    type,
-    rootRef: handleRef
-  });
+  const { enableTouchRipple, getRootProps, focusVisible, setFocusVisible, active, rippleRef } =
+    useButton({
+      ...props,
+      cssStyles,
+      disabled,
+      disableFocusRipple,
+      disableRipple,
+      disableTouchRipple,
+      focusableWhenDisabled,
+      rootRef: handleRef,
+      tabIndex,
+      type
+    });
 
   React.useImperativeHandle(
     action,
     () => ({
       focusVisible: () => {
         setFocusVisible(true);
-        buttonRef.current.focus();
+        buttonRef.current?.focus();
       }
     }),
     [setFocusVisible]
   );
-
-  const { enableTouchRipple, getRippleHandlers } = useTouchRipple({
-    disabled,
-    disableRipple,
-    disableTouchRipple,
-    rippleRef
-  });
 
   if (!import.meta.env.PROD) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     React.useEffect(() => {
       if (enableTouchRipple && !rippleRef.current) {
         console.error(
-          `The 'component prop provided to Button is invalid.
-          Please make sure the children prop is rendered in this custom component.`
+          [
+            'The `component` prop provided to Button is invalid.',
+            'Please make sure the children prop is rendered in this custom component.'
+          ].join('\n')
         );
       }
-    }, [enableTouchRipple]);
+    }, [enableTouchRipple, rippleRef]);
   }
 
   const ownerState = {
     ...props,
-    classes: classesProp,
+    active,
+    color,
     component,
     disabled,
-    active,
     focusVisible,
     tabIndex,
     type
   };
 
-  const classes = ['ButtonBase-Root', focusVisible && focusVisibleClassName];
+  const classes = {
+    root: [
+      buttonBaseClasses.root,
+      ownerState.disabled && buttonBaseClasses.disabled,
+      ownerState.focusVisible && clsx(buttonBaseClasses.focusVisible, focusVisibleClassName),
+      ownerState.active && buttonBaseClasses.active
+    ]
+  };
+
+  const Root = slots.root ?? ButtonBaseRoot;
+  const rootProps = useSlotProps({
+    elementType: Root,
+    getSlotProps: getRootProps,
+    externalForwardedProps: other,
+    externalSlotProps: slotProps.root,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
 
   return (
-    <ButtonBaseRoot
-      as={ComponentProp}
-      className={clsx(classes, className)}
-      ownerState={ownerState}
-      {...getRootProps(getRippleHandlers(other))}
-      {...other}
-    >
+    <Root as={ComponentProp} {...rootProps}>
       {children}
       {enableTouchRipple ? (
-        <TouchRipple center={centerRipple} {...TouchRippleProps} ref={rippleRef} />
+        /* TouchRipple is only needed client-side, x2 boost on the server. */
+        <TouchRipple center={centerRipple} {...slotProps.touchRipple} ref={rippleRef} />
       ) : null}
-    </ButtonBaseRoot>
+    </Root>
   );
 });
+
 ButtonBase.displayName = 'ButtonBase';
 
 export default ButtonBase;

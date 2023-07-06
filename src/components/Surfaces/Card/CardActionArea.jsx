@@ -1,15 +1,16 @@
 import React from 'react';
 import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 import { ButtonBase } from '@components/inputs';
 
-const cardActionAreaClasses = {
+export const cardActionAreaClasses = {
   root: 'CardActionArea-Root',
-  focusVisible: 'focusVisible',
-  focusHighlight: 'focusHighlight'
+  focusVisible: 'FocusVisible',
+  focusHighlight: 'FocusHighlight'
 };
 
-const CardActionAreaRoot = styled(ButtonBase)({
+const CardActionAreaRoot = styled(ButtonBase)(({ ownerState }) => ({
   display: 'block',
   textAlign: 'inherit',
   borderRadius: 'inherit',
@@ -22,10 +23,11 @@ const CardActionAreaRoot = styled(ButtonBase)({
   },
   [`&.${cardActionAreaClasses.focusVisible} .${cardActionAreaClasses.focusHighlight}`]: {
     opacity: 0.12
-  }
-});
+  },
+  ...ownerState.cssStyles
+}));
 
-const CardActionAreaFocusHighlight = styled('span')(({ theme }) => ({
+const CardActionAreaFocusHighlight = styled('span')(({ theme, ownerState }) => ({
   overflow: 'hidden',
   pointerEvents: 'none',
   position: 'absolute',
@@ -39,24 +41,41 @@ const CardActionAreaFocusHighlight = styled('span')(({ theme }) => ({
 }));
 
 const CardActionArea = React.forwardRef((props, ref) => {
-  const { children, className, focusVisibleClassName, ...other } = props;
+  const {
+    children,
+    component,
+    focusVisibleClassName,
+    slots = {},
+    slotProps = {},
+    ...otherProps
+  } = props;
 
-  const ownerState = props;
+  const { cssStyles, other } = extractStyling(otherProps);
+
+  const ownerState = { ...props, cssStyles };
+
+  const CardActionAreaComponent = slots.root || CardActionAreaRoot;
+  const cardActionAreaRootProps = useSlotProps({
+    elementType: CardActionAreaComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      component,
+      focusVisibleClassName: clsx(focusVisibleClassName, cardActionAreaClasses.focusVisible),
+      ref: ref
+    },
+    ownerState,
+    className: cardActionAreaClasses.root
+  });
 
   return (
-    <CardActionAreaRoot
-      className={clsx(cardActionAreaClasses.root, className)}
-      focusVisibleClassName={clsx(focusVisibleClassName, cardActionAreaClasses.focusVisible)}
-      ref={ref}
-      ownerState={ownerState}
-      {...other}
-    >
+    <CardActionAreaComponent {...cardActionAreaRootProps}>
       {children}
       <CardActionAreaFocusHighlight
         className={cardActionAreaClasses.focusHighlight}
         ownerState={ownerState}
       />
-    </CardActionAreaRoot>
+    </CardActionAreaComponent>
   );
 });
 

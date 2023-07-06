@@ -3,6 +3,12 @@ import clsx from 'clsx';
 import styled from '@styles';
 import { Paper } from '@components/surfaces';
 
+export const snackbarContentClasses = {
+  root: 'SnackbarContent-Root',
+  action: 'SnackbarContent-Action',
+  message: 'SnackbarContent-Message'
+};
+
 const SnackbarContentRoot = styled(Paper)(({ theme }) => {
   const emphasis = theme.color.mode === 'light' ? 0.8 : 0.25;
   const backgroundColor = theme.alpha.emphasize(theme.color.background, emphasis);
@@ -45,16 +51,16 @@ const SnackbarContent = React.forwardRef((props, ref) => {
       role={role}
       square
       elevation={6}
-      className={clsx('SnackbarContent-Root', className)}
+      className={clsx(snackbarContentClasses.root, className)}
       ownerState={ownerState}
       ref={ref}
       {...other}
     >
-      <SnackbarContentMessage className={'SnackbarContent-Message'} ownerState={ownerState}>
+      <SnackbarContentMessage className={snackbarContentClasses.message} ownerState={ownerState}>
         {message}
       </SnackbarContentMessage>
       {action ? (
-        <SnackbarContentAction className={'SnackbarContent-Action'} ownerState={ownerState}>
+        <SnackbarContentAction className={snackbarContentClasses.action} ownerState={ownerState}>
           {action}
         </SnackbarContentAction>
       ) : null}

@@ -1,16 +1,17 @@
 import React from 'react';
 import clsx from 'clsx';
-import styled from '@styles';
-import { ButtonBase } from '@components';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
+import ButtonBase from '@components/Inputs/Button/ButtonBase';
 import AccordionContext from './AccordionContext';
 
-const accordionSummaryClasses = {
+export const accordionSummaryClasses = {
   root: 'AccordionSummary-Root',
   content: 'AccordionSummary-Content',
-  iconWrapper: 'AccordionSummary-ExpandedIconWrapper',
-  expanded: 'expanded',
-  focusVisible: 'focusVisible',
-  disabled: 'disabled'
+  iconWrapper: 'AccordionSummary-ExpandIconWrapper',
+  expanded: 'Expanded',
+  focusVisible: 'FocusVisible',
+  disabled: 'Disabled'
 };
 
 const AccordionSummaryRoot = styled(ButtonBase)(({ theme, ownerState }) => ({
@@ -34,7 +35,8 @@ const AccordionSummaryRoot = styled(ButtonBase)(({ theme, ownerState }) => ({
     [`&.${accordionSummaryClasses.expanded}`]: {
       minHeight: theme.spacing(8)
     }
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
 const AccordionSummaryContent = styled('div')(({ theme, ownerState }) => ({
@@ -64,13 +66,25 @@ const AccordionSummaryExpandIconWrapper = styled('div')(({ theme }) => ({
 }));
 
 const AccordionSummary = React.forwardRef((props, ref) => {
-  const { children, className, expandIcon, focusVisibleClassName, onClick, ...other } = props;
+  const {
+    children,
+    component = 'div',
+    expandIcon,
+    focusVisibleClassName,
+    onClick,
+    slots = {},
+    slotProps = {},
+    ...otherProps
+  } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const context = React.useContext(AccordionContext);
   const { disabled, enableGutters, expanded, toggle } = context;
 
   const ownerState = {
     ...props,
+    cssStyles,
     disabled,
     enableGutters,
     expanded
@@ -97,20 +111,27 @@ const AccordionSummary = React.forwardRef((props, ref) => {
     ]
   };
 
+  const AccordionSummaryComponent = slots.root || AccordionSummaryRoot;
+  const accordionSummaryprops = useSlotProps({
+    elementType: AccordionSummaryComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      disableFocusRipple: true,
+      disableRipple: true,
+      disabled,
+      component: component,
+      'aria-expanded': expanded,
+      focusVisibleClassName: clsx(classes.focusVisible, focusVisibleClassName),
+      onClick: handleChange,
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
   return (
-    <AccordionSummaryRoot
-      focusRipple={false}
-      disableRipple
-      disabled={disabled}
-      component='div'
-      aria-expanded={expanded}
-      className={clsx(classes.root, className)}
-      focusVisibleClassName={clsx(classes.focusVisible, focusVisibleClassName)}
-      onClick={handleChange}
-      ref={ref}
-      ownerState={ownerState}
-      {...other}
-    >
+    <AccordionSummaryComponent {...accordionSummaryprops}>
       <AccordionSummaryContent className={clsx(classes.content)} ownerState={ownerState}>
         {children}
       </AccordionSummaryContent>
@@ -122,7 +143,7 @@ const AccordionSummary = React.forwardRef((props, ref) => {
           {expandIcon}
         </AccordionSummaryExpandIconWrapper>
       )}
-    </AccordionSummaryRoot>
+    </AccordionSummaryComponent>
   );
 });
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ListContext from '../../BaseList/ListContext';
 import { CompoundComponentContext } from '@components/lib';
 

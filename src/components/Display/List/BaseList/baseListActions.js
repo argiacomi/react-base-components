@@ -1,4 +1,4 @@
-export const BaseListActionTypes = {
+const baseListActions = {
   blur: 'list:blur',
   focus: 'list:focus',
   itemClick: 'list:itemClick',
@@ -9,3 +9,5 @@ export const BaseListActionTypes = {
   textNavigation: 'list:textNavigation',
   valueChange: 'list:valueChange'
 };
+
+export default baseListActions;

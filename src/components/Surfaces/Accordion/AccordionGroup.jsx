@@ -1,6 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
 
+export const accordionGroupClasses = { root: 'AccordionGroup-Root' };
+
 const AccordionGroup = React.forwardRef((props, ref) => {
   const {
     children,
@@ -18,7 +20,7 @@ const AccordionGroup = React.forwardRef((props, ref) => {
   return (
     <AccordionGroupRoot
       as={component}
-      className={clsx('Accordion-Group', className)}
+      className={clsx(accordionGroupClasses.root, className)}
       ref={ref}
       {...other}
     >

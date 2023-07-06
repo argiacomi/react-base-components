@@ -1,7 +1,19 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled, { useTheme } from '@styles';
+import styled, { extractStyling, useTheme } from '@styles';
 import { keyframes, css } from 'styled-components/macro';
+import { useSlotProps } from '@components/lib';
+
+const linearProgressClasses = {
+  root: 'LinearProgress-Root',
+  dashed: 'LinearProgress-Dashed',
+  bar: 'LinearProgress-Bar',
+  bar1Indeterminate: 'Bar1Indeterminate',
+  bar1Determinate: 'Bar1Determinate',
+  bar1Buffer: 'Bar1Buffer',
+  bar2Indeterminate: 'Bar2Indeterminate',
+  bar2Determinate: 'Bar2Determinate',
+  bar2Buffer: 'Bar2Buffer'
+};
 
 const TRANSITION_DURATION = 4; // seconds
 const indeterminate1Keyframe = keyframes`
@@ -60,8 +72,8 @@ const getColorShade = (theme, color) => {
     return 'currentColor';
   }
   return theme.color.mode === 'light'
-    ? theme.alpha.lighten(theme.color[color].main, 0.62)
-    : theme.alpha.darken(theme.color[color].main, 0.5);
+    ? theme.alpha.lighten(theme.color[color].body, 0.62)
+    : theme.alpha.darken(theme.color[color].body, 0.5);
 };
 
 const LinearProgressRoot = styled('span')(({ ownerState, theme }) => ({
@@ -89,7 +101,8 @@ const LinearProgressRoot = styled('span')(({ ownerState, theme }) => ({
       }
     }),
   ...(ownerState.variant === 'buffer' && { backgroundColor: 'transparent' }),
-  ...(ownerState.variant === 'query' && { transform: 'rotate(180deg)' })
+  ...(ownerState.variant === 'query' && { transform: 'rotate(180deg)' }),
+  ...ownerState.cssStyles
 }));
 
 const LinearProgressDashed = styled('span')(
@@ -111,7 +124,8 @@ const LinearProgressDashed = styled('span')(
   },
   css`
     animation: ${bufferKeyframe} 3s infinite linear;
-  `
+  `,
+  ({ ownerState }) => ownerState.cssStyles
 );
 
 const LinearProgressBar1 = styled('span')(
@@ -172,16 +186,21 @@ const LinearProgressBar2 = styled('span')(
 
 const LinearProgress = React.forwardRef((props, ref) => {
   const {
-    className,
     color = 'primary',
+    component: componentProp = 'span',
+    slots = {},
+    slotProps = {},
     value,
     valueBuffer,
     variant = 'indeterminate',
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const ownerState = {
     ...props,
+    cssStyles,
     color,
     variant
   };
@@ -221,29 +240,72 @@ const LinearProgress = React.forwardRef((props, ref) => {
     }
   }
 
+  const classes = {
+    root: linearProgressClasses.root,
+    dashed: linearProgressClasses.dashed,
+    bar1: [
+      linearProgressClasses.bar,
+      (variant === 'indeterminate' || variant === 'query') &&
+        linearProgressClasses.bar1Indeterminate,
+      variant === 'determinate' && linearProgressClasses.bar1Determinate,
+      variant === 'buffer' && linearProgressClasses.bar1Buffer
+    ],
+    bar2: [
+      linearProgressClasses.bar,
+      (variant === 'indeterminate' || variant === 'query') && linearProgressClasses.bar2Determinate,
+      variant === 'buffer' && linearProgressClasses.bar2Buffer
+    ]
+  };
+
+  const component = componentProp || 'span';
+  const LinearProgressComponent = slots.root || LinearProgressRoot;
+  const linearProgresstRootProps = useSlotProps({
+    elementType: LinearProgressComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref,
+      role: 'progressbar',
+      ...rootProps
+    },
+    ownerState,
+    className: classes.root
+  });
+
+  const LinearProgressDashedComponent = slots.root || LinearProgressDashed;
+  const linearProgressDashedProps = useSlotProps({
+    elementType: LinearProgressDashedComponent,
+    externalSlotProps: slotProps.dashed,
+    ownerState,
+    className: classes.dashed
+  });
+
+  const LinearProgressBar1Component = slots.root || LinearProgressBar1;
+  const linearProgressBar1Props = useSlotProps({
+    elementType: LinearProgressBar1Component,
+    externalSlotProps: slotProps.bar1,
+    additionalProps: { style: inlineStyles.bar1 },
+    ownerState,
+    className: classes.bar
+  });
+
+  const LinearProgressBar2Component = slots.root || LinearProgressBar2;
+  const linearProgressBar2Props = useSlotProps({
+    elementType: LinearProgressBar2Component,
+    externalSlotProps: slotProps.bar2,
+    additionalProps: { style: inlineStyles.bar2 },
+    ownerState,
+    className: classes.bar
+  });
+
   return (
-    <LinearProgressRoot
-      className={clsx('LinearProgress-Root', className)}
-      ownerState={ownerState}
-      role='progressbar'
-      {...rootProps}
-      ref={ref}
-      {...other}
-    >
+    <LinearProgressRoot as={component} {...linearProgresstRootProps}>
       {variant === 'buffer' ? (
-        <LinearProgressDashed className={'LinearProgress-Dashed'} ownerState={ownerState} />
+        <LinearProgressDashedComponent {...linearProgressDashedProps} />
       ) : null}
-      <LinearProgressBar1
-        className={'LinearProgress-Bar1'}
-        ownerState={ownerState}
-        style={inlineStyles.bar1}
-      />
+      <LinearProgressBar1Component {...linearProgressBar1Props} />
       {variant === 'determinate' ? null : (
-        <LinearProgressBar2
-          className={'LinearProgress-Bar2'}
-          ownerState={ownerState}
-          style={inlineStyles.bar2}
-        />
+        <LinearProgressBar2Component {...linearProgressBar2Props} />
       )}
     </LinearProgressRoot>
   );

@@ -1,6 +1,13 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
+
+export const listSubheaderClasses = {
+  root: 'ListSubheader-Root',
+  gutter: 'Gutters',
+  inset: 'Inset',
+  sticky: 'Sticky'
+};
 
 const ListSubheaderRoot = styled('li')(({ theme, ownerState }) => ({
   boxSizing: 'border-box',
@@ -28,38 +35,56 @@ const ListSubheaderRoot = styled('li')(({ theme, ownerState }) => ({
     top: 0,
     zIndex: 1,
     backgroundColor: theme.color.background
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
 const ListSubheader = React.forwardRef((props, ref) => {
   const {
-    className,
     color = 'default',
-    component = 'li',
+    component: componentProp = 'li',
     disableGutters = false,
     disableSticky = false,
     inset = false,
-    ...other
+    slots = {},
+    slotProps = {},
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const ownerState = {
     ...props,
+    cssStyles,
     color,
-    component,
     disableGutters,
     disableSticky,
     inset
   };
 
-  return (
-    <ListSubheaderRoot
-      as={component}
-      className={clsx('ListSubheader-Root', className)}
-      ref={ref}
-      ownerState={ownerState}
-      {...other}
-    />
-  );
+  const classes = {
+    root: [
+      listSubheaderClasses.root,
+      !disableGutters && listSubheaderClasses.gutters,
+      inset && listSubheaderClasses.inset,
+      !disableSticky && listSubheaderClasses.sticky
+    ]
+  };
+
+  const component = componentProp || 'li';
+  const ListSubheaderComponent = slots.root || ListSubheaderRoot;
+  const listSubheaderRootProps = useSlotProps({
+    elementType: ListSubheaderComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
+  return <ListSubheaderComponent as={component} {...listSubheaderRootProps} />;
 });
 
 ListSubheader.displayName = 'ListSubheader';

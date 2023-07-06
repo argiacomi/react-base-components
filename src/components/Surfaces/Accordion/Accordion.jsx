@@ -1,15 +1,17 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 import { Collapse, Paper } from '@components';
 import { useControlled } from '@component/hooks';
 import AccordionContext from './AccordionContext';
 
-const accordionClasses = {
+export const accordionClasses = {
   root: 'Accordion-Root',
   region: 'Accordion-Region',
-  expanded: 'expanded',
-  disabled: 'disabled'
+  rounded: 'Rounded',
+  expanded: 'Expanded',
+  disabled: 'Disabled',
+  gutters: 'Gutters'
 };
 
 const AccordionRoot = styled(Paper)(
@@ -45,7 +47,6 @@ const AccordionRoot = styled(Paper)(
       }
     },
     [`&.${accordionClasses.disabled}`]: {
-      color: theme.color.disabled.text,
       backgroundColor: theme.color.disabled.body
     }
   }),
@@ -77,24 +78,28 @@ const AccordionRoot = styled(Paper)(
           display: 'none'
         }
       }
-    })
+    }),
+    ...ownerState.cssStyles
   })
 );
 
 const Accordion = React.forwardRef((props, ref) => {
   const {
     children: childrenProp,
-    className,
     defaultExpanded = false,
     disabled = false,
     enableGutters = false,
     expanded: expandedProp,
     onChange,
+    slots = {},
+    slotProps = {},
     square = false,
     TransitionComponent = Collapse,
     TransitionProps,
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const [expanded, setExpandedState] = useControlled({
     controlled: expandedProp,
@@ -122,6 +127,7 @@ const Accordion = React.forwardRef((props, ref) => {
 
   const ownerState = {
     ...props,
+    cssStyles,
     square,
     disabled,
     enableGutters,
@@ -131,20 +137,29 @@ const Accordion = React.forwardRef((props, ref) => {
   const classes = {
     root: [
       accordionClasses.root,
+      !ownerState.square && accordionClasses.rounded,
       ownerState.expanded && accordionClasses.expanded,
-      ownerState.disabled && accordionClasses.disabled
+      ownerState.disabled && accordionClasses.disabled,
+      !ownerState.disableGutters && accordionClasses.gutters
     ],
     region: accordionClasses.region
   };
 
+  const AccordionComponent = slots.root || AccordionRoot;
+  const accordionProps = useSlotProps({
+    elementType: AccordionComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref,
+      square
+    },
+    ownerState,
+    className: classes.root
+  });
+
   return (
-    <AccordionRoot
-      className={clsx(classes.root, className)}
-      ref={ref}
-      ownerState={ownerState}
-      square={square}
-      {...other}
-    >
+    <AccordionComponent {...accordionProps}>
       <AccordionContext.Provider value={contextValue}>{summary}</AccordionContext.Provider>
       <TransitionComponent in={expanded} timeout='auto' {...TransitionProps}>
         <div
@@ -156,7 +171,7 @@ const Accordion = React.forwardRef((props, ref) => {
           {children}
         </div>
       </TransitionComponent>
-    </AccordionRoot>
+    </AccordionComponent>
   );
 });
 Accordion.displayName = 'Accordion';

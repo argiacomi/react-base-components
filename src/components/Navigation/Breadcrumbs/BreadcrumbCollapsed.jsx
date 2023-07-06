@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from '@styles';
-import { Icon } from '@components/display';
+import MoreHorizIcon from '@components/lib/icons/MoreHoriz';
 import { ButtonBase } from '@components/inputs';
-
-const MoreHorizIcon = () => <Icon icon='MdMoreHoriz' />;
 
 const BreadcrumbCollapsedButton = styled(ButtonBase)(({ theme }) => ({
   display: 'flex',
@@ -26,10 +24,10 @@ const BreadcrumbCollapsedButton = styled(ButtonBase)(({ theme }) => ({
   }
 }));
 
-const BreadcrumbCollapsedIcon = styled(MoreHorizIcon)(({ theme }) => ({
-  width: theme.spacing(3),
-  height: theme.spacing(2)
-}));
+const BreadcrumbCollapsedIcon = styled(MoreHorizIcon)({
+  width: 24,
+  height: 16
+});
 
 const BreadcrumbCollapsed = React.forwardRef((props, ref) => {
   const { slots = {}, slotProps = {}, ...otherProps } = props;
@@ -37,7 +35,11 @@ const BreadcrumbCollapsed = React.forwardRef((props, ref) => {
 
   return (
     <li ref={ref}>
-      <BreadcrumbCollapsedButton focusRipple {...otherProps} ownerState={ownerState}>
+      <BreadcrumbCollapsedButton
+        className='Breadcrumb-CollapsedButton'
+        {...otherProps}
+        ownerState={ownerState}
+      >
         <BreadcrumbCollapsedIcon
           as={slots.CollapsedIcon}
           ownerState={ownerState}

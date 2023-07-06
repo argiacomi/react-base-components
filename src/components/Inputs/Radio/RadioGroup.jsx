@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup } from '../Form';
+import FormGroup from '../Form/FormGroup';
 import { useControlled, useForkRef, useId } from '@components/lib';
 import RadioGroupContext from './RadioGroupContext';
 
@@ -13,6 +13,7 @@ const RadioGroup = React.forwardRef((props, ref) => {
     value: valueProp,
     ...other
   } = props;
+
   const rootRef = React.useRef(null);
 
   const [value, setValueState] = useControlled({

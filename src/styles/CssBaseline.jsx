@@ -210,12 +210,6 @@ const BaseStyles = createGlobalStyle`
     resize: vertical;
   }
 
-  [type="checkbox"],
-  [type="radio"] {
-    box-sizing: border-box;
-    padding: 0;
-  }
-
   [type="number"]::-webkit-inner-spin-button,
   [type="number"]::-webkit-outer-spin-button {
     height: auto;

@@ -1,8 +1,17 @@
 import React from 'react';
-import styled from '@styles';
-import clsx from 'clsx';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 import { useForkRef, useIsFocusVisible } from '@component/hooks';
-import { Text } from '@components/layout';
+import { Text } from '@components/display';
+
+export const linkClasses = {
+  root: 'Link-Root',
+  none: 'UnderlineNone',
+  hover: 'UnderlineHover',
+  always: 'UnderlineAlways',
+  button: 'Button',
+  focusVisible: 'FocusVisible'
+};
 
 const LinkRoot = styled(Text)(({ theme, ownerState }) => ({
   ...(ownerState.underline === 'always' && {
@@ -31,7 +40,7 @@ const LinkRoot = styled(Text)(({ theme, ownerState }) => ({
   }),
   ...(ownerState.color !== 'inherit' && {
     ...(ownerState.color !== 'text' && {
-      color: theme.color[ownerState.color][500]
+      color: theme.alpha.getColorFromPath(theme.color, ownerState.color)
     })
   }),
   ...(ownerState.component === 'button' && {
@@ -59,20 +68,24 @@ const LinkRoot = styled(Text)(({ theme, ownerState }) => ({
     ['&.focusVisible']: {
       outline: 'auto'
     }
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
 const Link = React.forwardRef((props, ref) => {
   const {
-    className,
     color = 'primary',
     component = 'a',
     onBlur,
     onFocus,
+    slots = {},
+    slotProps = {},
     underline = 'always',
     variant = 'inherit',
-    ...other
+    ...otherProps
   } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const {
     isFocusVisibleRef,
@@ -86,6 +99,7 @@ const Link = React.forwardRef((props, ref) => {
 
   const ownerState = {
     ...props,
+    cssStyles,
     color,
     component,
     focusVisible,
@@ -113,21 +127,36 @@ const Link = React.forwardRef((props, ref) => {
     }
   };
 
-  return (
-    <LinkRoot
-      color={color}
-      className={clsx('Link-Root', className)}
-      ownerState={ownerState}
-      component={component}
-      onBlur={handleBlur}
-      onFocus={handleFocus}
-      target='_blank'
-      rel='noopener'
-      ref={handlerRef}
-      variant={variant}
-      {...other}
-    />
-  );
+  const classes = {
+    root: [
+      linkClasses.root,
+      linkClasses[ownerState.underline],
+      ownerState.component === 'button' && linkClasses.button,
+      ownerState.focusVisible && linkClasses.focusVisible
+    ]
+  };
+
+  const LinkComponent = slots.root || LinkRoot;
+
+  const linkRootProps = useSlotProps({
+    elementType: LinkComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      color,
+      component: component,
+      onBlur: handleBlur,
+      onFocus: handleFocus,
+      rel: 'noopener',
+      ref: { handlerRef },
+      target: '_blank',
+      variant
+    },
+    ownerState,
+    className: classes.root
+  });
+
+  return <LinkComponent {...linkRootProps} />;
 });
 
 Link.displayName = 'Link';

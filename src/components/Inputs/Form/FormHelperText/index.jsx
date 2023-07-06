@@ -1,1 +1,2 @@
-export { default as FormHelperText } from './FormHelperText';
+export { default } from './FormHelperText';
+export * from './FormHelperText';

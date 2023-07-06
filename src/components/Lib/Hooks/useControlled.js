@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import * as React from 'react';
+import React from 'react';
 
 export function useControlled({ controlled, default: defaultProp, name, state = 'value' }) {
   const { current: isControlled } = React.useRef(controlled !== undefined);
@@ -7,6 +6,7 @@ export function useControlled({ controlled, default: defaultProp, name, state = 
   const value = isControlled ? controlled : valueState;
 
   if (!import.meta.env.PROD) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     React.useEffect(() => {
       if (isControlled !== (controlled !== undefined)) {
         console.error(
@@ -18,8 +18,10 @@ export function useControlled({ controlled, default: defaultProp, name, state = 
       }
     }, [state, name, controlled, isControlled]);
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { current: defaultValue } = React.useRef(defaultProp);
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     React.useEffect(() => {
       if (!isControlled && defaultValue !== defaultProp) {
         console.error(

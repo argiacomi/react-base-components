@@ -14,6 +14,7 @@ export * from './useLoaded';
 export * from './useMedia';
 export * from './useMessageBus';
 export * from './usePreviousProps';
+export * from './useScrollbarSize';
 export * from './useSize';
 export * from './useSlotProps';
 export * from './useTextNavigation';

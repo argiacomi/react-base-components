@@ -1,6 +1,6 @@
 import React from 'react';
-import clsx from 'clsx';
-import styled from '@styles';
+import styled, { extractStyling } from '@styles';
+import { useSlotProps } from '@components/lib';
 import { formControlState, useFormControl } from '../FormControl';
 
 export const formHelperTextClasses = {
@@ -29,11 +29,20 @@ const FormHelperTextRoot = styled('p')(({ theme, ownerState }) => ({
   ...(ownerState.contained && {
     marginLeft: theme.spacing(14 / 8),
     marginRight: theme.spacing(14 / 8)
-  })
+  }),
+  ...ownerState.cssStyles
 }));
 
 const FormHelperText = React.forwardRef((props, ref) => {
-  const { children, className, component = 'p', ...other } = props;
+  const {
+    children,
+    component: componentProp = 'p',
+    slots = {},
+    slotProps = {},
+    ...otherProps
+  } = props;
+
+  const { cssStyles, other } = extractStyling(otherProps);
 
   const formControl = useFormControl();
   const fcs = formControlState({
@@ -44,7 +53,7 @@ const FormHelperText = React.forwardRef((props, ref) => {
 
   const ownerState = {
     ...props,
-    component,
+    cssStyles,
     contained: fcs.variant === 'filled' || fcs.variant === 'outlined',
     variant: fcs.variant,
     size: fcs.size,
@@ -63,16 +72,23 @@ const FormHelperText = React.forwardRef((props, ref) => {
     ]
   };
 
+  const component = componentProp ?? 'p';
+  const FormHelperTextRootComponent = slots.root ?? FormHelperTextRoot;
+  const formHelperTextRootprops = useSlotProps({
+    elementType: FormHelperTextRootComponent,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref: ref
+    },
+    ownerState,
+    className: classes.root
+  });
+
   return (
-    <FormHelperTextRoot
-      as={component}
-      ownerState={ownerState}
-      className={clsx(classes.root, className)}
-      ref={ref}
-      {...other}
-    >
+    <FormHelperTextRootComponent as={component} {...formHelperTextRootprops}>
       {children === ' ' ? <span className='notranslate'>&#8203;</span> : children}
-    </FormHelperTextRoot>
+    </FormHelperTextRootComponent>
   );
 });
 

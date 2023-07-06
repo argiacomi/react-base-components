@@ -3,10 +3,22 @@ import clsx from 'clsx';
 import { useEnhancedEffect } from '@component/hooks';
 
 const Ripple = (props) => {
-  const { className, classes, rippleX, rippleY, rippleSize, in: inProp, onExited, timeout } = props;
+  const {
+    className,
+    classes,
+    pulsate = false,
+    rippleX,
+    rippleY,
+    rippleSize,
+    in: inProp,
+    onExited,
+    timeout
+  } = props;
   const [leaving, setLeaving] = React.useState(false);
 
-  const rippleClassName = clsx(className, classes.ripple, classes.rippleVisible);
+  const rippleClassName = clsx(className, classes.ripple, classes.rippleVisible, {
+    [classes.ripplePulsate]: pulsate
+  });
 
   const rippleStyles = {
     width: rippleSize,
@@ -16,7 +28,8 @@ const Ripple = (props) => {
   };
 
   const childClassName = clsx(classes.child, {
-    [classes.childLeaving]: leaving
+    [classes.childLeaving]: leaving,
+    [classes.childPulsate]: pulsate
   });
 
   if (!inProp && !leaving) {

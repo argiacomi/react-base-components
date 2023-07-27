@@ -15,7 +15,7 @@ const colorThemes = {
     color: {
       mode: 'light',
       active: 'rgba(0, 0, 0, 0.54)',
-      hover: 'rgba(0, 0, 0, 0.04)',
+      hover: 'rgba(60, 64, 67, 0.08)',
       hoverOpacity: 0.12,
       selected: 'rgba(0, 0, 0, 0.08)',
       selectedOpacity: 0.08,

@@ -43,7 +43,9 @@ import {
   // SnackbarDemo,
   // SwitchDemo,
   // TabDemo,
-  TableDemo // TextDemo,
+  // TableDemo,
+  // TextDemo,
+  TextareaAutosizeDemo,
   // TextFieldDemo,
   // ToggleButtonDemo,
   // TooltipDemo
@@ -52,7 +54,7 @@ import {
 const App = () => {
   return (
     <Box margin='3rem' height={2000}>
-      <TableDemo />
+      <TextareaAutosizeDemo />
     </Box>
   );
 };

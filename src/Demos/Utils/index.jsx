@@ -4,4 +4,5 @@ export { default as ModalDemo } from './ModalDemo';
 export { default as NoSsrDemo } from './NoSsrDemo';
 export { default as PopoverDemo } from './PopoverDemo';
 export { default as PopperDemo } from './PopperDemo';
+export { default as TextareaAutosizeDemo } from './TextareaAutosizeDemo';
 // export { default as TransitionsDemo } from './TransitionsDemo';

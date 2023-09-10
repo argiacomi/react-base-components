@@ -19,8 +19,7 @@ import {
   // ContainerDemo,
   // DialogDemo,
   // DividerDemo,
-  // DrawerDemo,
-  // FabDemo,
+  DrawerDemo // FabDemo,
   // FocusTrapDemo,
   // FormControlDemo,
   // GridDemo,
@@ -45,7 +44,7 @@ import {
   // TabDemo,
   // TableDemo,
   // TextDemo,
-  TextareaAutosizeDemo,
+  // TextareaAutosizeDemo,
   // TextFieldDemo,
   // ToggleButtonDemo,
   // TooltipDemo
@@ -54,7 +53,7 @@ import {
 const App = () => {
   return (
     <Box margin='3rem' height={2000}>
-      <TextareaAutosizeDemo />
+      <DrawerDemo />
     </Box>
   );
 };

@@ -1,8 +1,8 @@
-export { default as Tab } from './Tab';
-export * from './Tab';
-export { default as TabPanel } from './TabPanel';
-export * from './TabPanel';
-export { default as Tabs } from './Tabs';
-export * from './Tabs';
-export { default as TabsList } from './TabsList';
-export * from './TabsList';
+export { default as Tab } from './tab';
+export * from './tab';
+export { default as TabPanel } from './tabPanel';
+export * from './tabPanel';
+export { default as Tabs } from './tabs';
+export * from './tabs';
+export { default as TabsList } from './tabsList';
+export * from './tabsList';

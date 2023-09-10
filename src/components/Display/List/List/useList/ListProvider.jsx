@@ -1,6 +1,6 @@
 import React from 'react';
 import { CompoundComponentContext } from '@components/lib';
-import ListContext from '../../BaseList/ListContext';
+import ListContext from '../../baseList/ListContext';
 
 export default function ListProvider(props) {
   const { value: valueProp, children } = props;

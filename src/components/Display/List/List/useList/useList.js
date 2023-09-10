@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCompoundParent, useControlled } from '@components/lib';
-import useBaseList, { baseListActions } from '../../BaseList';
+import useBaseList, { baseListActions } from '../../baseList';
 import listReducer from './listReducer';
 
 function useList(parameters) {

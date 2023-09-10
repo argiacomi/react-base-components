@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
-import { dialogTitleClasses } from '../DialogTitle';
+import { dialogTitleClasses } from '../dialogTitle';
 
 export const dialogContentClasses = {
   root: 'DialogContent-Root',

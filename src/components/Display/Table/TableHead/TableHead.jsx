@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
-import Tablelvl2Context from '../Table/Tablelvl2Context';
+import Tablelvl2Context from '../table/Tablelvl2Context';
 
 export const tableHeadClasses = {
   root: 'TableHead-Root'

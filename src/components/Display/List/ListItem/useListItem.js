@@ -1,8 +1,8 @@
 import React from 'react';
 import { useCompoundItem, useForkRef, useId } from '@components/lib';
 import { useButton } from '@components/inputs';
-import { useBaseListItem } from '../BaseList';
-import { useListContext } from '../BaseList/ListContext';
+import { useBaseListItem } from '../baseList';
+import { useListContext } from '../baseList/ListContext';
 
 function listItemValueGenerator(otherItemValues) {
   return otherItemValues.size;

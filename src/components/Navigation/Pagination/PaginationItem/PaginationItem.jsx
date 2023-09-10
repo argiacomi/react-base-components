@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling, useTheme } from '@styles';
 import { capitalize } from '@components/lib';
-import ButtonBase from '@components/Inputs/Button/ButtonBase';
+import ButtonBase from '@components/inputs/button/buttonBase';
 import FirstPageIcon from '@icons/FirstPage';
 import LastPageIcon from '@icons/LastPage';
 import NavigateBeforeIcon from '@icons/NavigateBefore';

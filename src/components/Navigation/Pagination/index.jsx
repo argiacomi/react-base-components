@@ -1,4 +1,4 @@
-export { default } from './Pagination';
-export * from './Pagination';
-export { default as PaginationItem } from './PaginationItem';
-export * from './PaginationItem';
+export { default } from './pagination';
+export * from './pagination';
+export { default as PaginationItem } from './paginationItem';
+export * from './paginationItem';

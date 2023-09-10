@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
-import PaginationItem from '../PaginationItem';
+import PaginationItem from '../paginationItem';
 import usePagination from './usePagination';
 
 export const paginationClasses = {

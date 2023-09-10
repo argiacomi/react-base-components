@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCompoundParent } from '@components/lib';
-import useBaseList from '@components/display/list/baselist';
-import { useTabsContext } from '../../Tabs';
+import useBaseList from '@components/display/list/baseList';
+import { useTabsContext } from '../../tabs';
 import tabsListReducer from './tabsListReducer';
 
 export const tabsListActionTypes = {

@@ -1,4 +1,4 @@
-export { default } from './Menu';
-export * from './Menu';
-export { default as MenuItem } from './MenuItem';
-export * from './MenuItem';
+export { default } from './menu';
+export * from './menu';
+export { default as MenuItem } from './menuItem';
+export * from './menuItem';

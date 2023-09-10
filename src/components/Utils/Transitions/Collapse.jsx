@@ -2,8 +2,7 @@ import React from 'react';
 import { Transition } from 'react-transition-group';
 import clsx from 'clsx';
 import styled from '@styles';
-import { getAutoHeightDuration, getTransitionProps } from '@components/lib';
-import { useForkRef } from '@components/lib';
+import { getAutoHeightDuration, getTransitionProps, useForkRef } from '@components/lib';
 
 const CollapseRoot = styled('div')(({ theme, ownerState }) => ({
   height: 0,

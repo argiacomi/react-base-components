@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { capitalize } from '@components/lib';
-import { useTableContext, useTablelvl2Context } from '../Table';
+import { useTableContext, useTablelvl2Context } from '../table';
 
 export const tableCellClasses = {
   root: 'TableCell-Root',

@@ -1,4 +1,4 @@
-export { default } from './BottomNavigation';
-export * from './BottomNavigation';
-export { default as BottomNavigationAction } from './BottomNavigationAction';
-export * from './BottomNavigationAction';
+export { default } from './bottomNavigation';
+export * from './bottomNavigation';
+export { default as BottomNavigationAction } from './bottomNavigationAction';
+export * from './bottomNavigationAction';

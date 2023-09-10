@@ -1,8 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled, { useTheme } from '@styles';
-import Paper from '@components/surfaces/Paper';
-import Modal from '@components/utils/Modal';
+import Paper from '@components/surfaces/paper';
+import Modal from '@components/utils/modal';
 import Slide from '@components/utils/transitions/Slide';
 
 export const drawerClasses = {

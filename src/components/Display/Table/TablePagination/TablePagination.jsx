@@ -2,15 +2,15 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { appendOwnerState, useId } from '@components/lib';
-import IconButton from '@components/Inputs/Button/IconButton';
-import InputBase from '@components/Inputs/Input/InputBase';
-import Select from '@components/Inputs/Select';
-import MenuItem from '@components/Navigation/Menu/MenuItem';
-import Toolbar from '@components/Surfaces/AppBar/Toolbar';
-import TableCell from '../TableCell';
+import IconButton from '@components/inputs/button/iconButton';
+import InputBase from '@components/inputs/input/inputBase';
+import Select from '@components/inputs/select';
+import MenuItem from '@components/navigation/menu/menuItem';
+import Toolbar from '@components/surfaces/appBar/toolbar';
+import TableCell from '../tableCell';
 import BaseTablePagination, {
   tablePaginationClasses as baseTablePaginationClasses
-} from './BaseTablePagination';
+} from './baseTablePagination';
 import FirstPageIcon from '@icons/FirstPage';
 import KeyboardArrowLeft from '@icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@icons/KeyboardArrowRight';

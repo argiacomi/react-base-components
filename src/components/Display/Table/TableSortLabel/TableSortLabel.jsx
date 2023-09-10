@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { capitalize } from '@components/lib';
-import ButtonBase from '@components/Inputs/Button/ButtonBase';
+import ButtonBase from '@components/inputs/button/buttonBase';
 import ArrowDownwardIcon from '@icons/ArrowDownward';
 
 export const tableSortLabelClasses = {

@@ -8,8 +8,8 @@ import {
   ListItemContext,
   listItemIconClasses,
   listItemTextClasses
-} from '@components/Display';
-import { ButtonBase } from '@components/Inputs/Button';
+} from '@components/display';
+import { ButtonBase } from '@components/inputs/button';
 import useMenuItem from './useMenuItem';
 
 export const menuItemClasses = {

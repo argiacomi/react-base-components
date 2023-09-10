@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@styles';
 import { useSlotProps } from '@components/lib';
-import ButtonBase from '@components/inputs/Button/ButtonBase';
+import ButtonBase from '@components/inputs/button/buttonBase';
 import KeyboardArrowLeft from '@icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@icons/KeyboardArrowRight';
 

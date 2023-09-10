@@ -1,5 +1,4 @@
 import { forwardRef } from 'react';
-import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { useSlotProps } from '@components/lib';
 

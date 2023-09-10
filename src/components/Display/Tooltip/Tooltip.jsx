@@ -10,7 +10,7 @@ import {
   useId,
   useIsFocusVisible
 } from '@components/lib';
-import Popper, { PopperContent } from '@components/utils/Popper';
+import Popper, { PopperContent } from '@components/utils/popper';
 
 export const tooltipClasses = {
   popper: 'Tooltip-Popper',

@@ -1,8 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
-import Text from '@components/Display/Text';
-import { useDialogContext } from '../Dialog/DialogContext';
+import Text from '@components/display/text';
+import { useDialogContext } from '../dialog/DialogContext';
 
 export const dialogTitleClasses = {
   root: 'DialogTitle-Root'

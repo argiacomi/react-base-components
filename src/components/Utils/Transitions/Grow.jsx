@@ -1,8 +1,7 @@
 import React from 'react';
 import { Transition } from 'react-transition-group';
 import { useTheme } from '@styles';
-import { getTransitionProps, reflow } from '@components/lib';
-import { useForkRef } from '@components/lib';
+import { getTransitionProps, reflow, useForkRef } from '@components/lib';
 
 const getScale = (value) => {
   return `scale(${value}, ${value ** 2})`;

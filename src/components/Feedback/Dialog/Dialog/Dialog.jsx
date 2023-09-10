@@ -2,8 +2,8 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling, useTheme } from '@styles';
 import { capitalize, useId } from '@components/lib';
-import Backdrop from '@components/Feedback/Backdrop';
-import Paper from '@components/Surfaces/Paper';
+import Backdrop from '@components/feedback/backdrop';
+import Paper from '@components/surfaces/paper';
 import { Fade, Modal } from '@components/utils';
 import DialogContext from './DialogContext';
 

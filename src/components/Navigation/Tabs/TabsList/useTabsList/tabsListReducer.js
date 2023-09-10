@@ -1,4 +1,4 @@
-import { baseListActions, baseListReducer, moveHighlight } from '@components/display/list/baselist';
+import { baseListActions, baseListReducer, moveHighlight } from '@components/display/list/baseList';
 import { tabsListActionTypes } from './useTabsList';
 
 export default function tabsListReducer(state, action) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling, shouldForwardProp } from '@styles';
-import Text from '@components/Display/Text';
+import Text from '@components/display/text';
 
 export const dialogContentTextClasses = {
   root: 'DialogContentText-Root'

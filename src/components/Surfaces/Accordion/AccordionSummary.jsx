@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { useSlotProps } from '@components/lib';
-import ButtonBase from '@components/Inputs/Button/ButtonBase';
+import ButtonBase from '@components/inputs/button/buttonBase';
 import AccordionContext from './AccordionContext';
 
 export const accordionSummaryClasses = {

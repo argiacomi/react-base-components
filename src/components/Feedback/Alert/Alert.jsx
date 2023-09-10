@@ -1,9 +1,9 @@
 import React from 'react';
 import styled, { extractStyling } from '@styles';
 import { useSlotProps } from '@components/lib';
-import { default as BaseIcon } from '@components/display/Icon';
-import { IconButton } from '@components/inputs/Button';
-import Paper from '@components/surfaces/Paper';
+import { default as BaseIcon } from '@components/display/icon';
+import { IconButton } from '@components/inputs/button';
+import Paper from '@components/surfaces/paper';
 import CloseIcon from '@icons/Close';
 import DangerOutlineIcon from '@icons/DangerOutline';
 import InfoOutlinedIcon from '@icons/InfoOutlined';

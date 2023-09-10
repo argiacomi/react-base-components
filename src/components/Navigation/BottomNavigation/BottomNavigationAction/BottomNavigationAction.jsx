@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
-import ButtonBase from '@components/Inputs/Button/ButtonBase';
+import ButtonBase from '@components/inputs/button/buttonBase';
 
 export const bottomNavigationActionClasses = {
   root: 'BottomNavigationAction-Root',

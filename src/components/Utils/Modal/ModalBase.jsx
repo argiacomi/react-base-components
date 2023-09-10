@@ -6,8 +6,8 @@ import {
   useForkRef,
   useSlotProps
 } from '@components/lib';
-import FocusTrap from '../FocusTrap';
-import Portal from '../Portal';
+import FocusTrap from '../focusTrap';
+import Portal from '../portal';
 import ModalManager, { ariaHidden } from './ModalManager';
 
 export const modalBaseClasses = {

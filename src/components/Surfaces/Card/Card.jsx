@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { extractStyling } from '@styles';
 import { useSlotProps } from '@components/lib';
-import Paper from '../Paper';
+import Paper from '../paper';
 
 export const cardClasses = { root: 'Card-Root' };
 

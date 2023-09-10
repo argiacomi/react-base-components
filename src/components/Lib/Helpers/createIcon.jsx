@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from '@components/Display/Icon';
+import Icon from '@components/display/icon';
 
 export default function createIcon(displayName) {
   function Component(props, ref) {

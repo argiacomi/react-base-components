@@ -3,7 +3,7 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 import { ownerDocument, ownerWindow, useForkRef, useSlotProps } from '@components/lib';
-import Modal from '../Modal';
+import Modal from '../modal';
 import Popper from '../popper';
 
 export const popoverClasses = {

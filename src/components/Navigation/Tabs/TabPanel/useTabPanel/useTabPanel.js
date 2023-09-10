@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCompoundItem, useForkRef, useId } from '@components/lib';
-import { useTabsContext } from '../../Tabs';
+import { useTabsContext } from '../../tabs';
 
 function tabPanelValueGenerator(otherTabPanelValues) {
   return otherTabPanelValues.size;

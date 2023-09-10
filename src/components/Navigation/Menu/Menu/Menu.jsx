@@ -2,8 +2,8 @@ import { baseListActions } from '@BaseList';
 import React from 'react';
 import styled, { extractStyling, shouldForwardProp, useTheme } from '@styles';
 import { useSlotProps } from '@components/lib';
-import List from '@components/Display/List';
-import Popover, { PopoverPopper } from '@components/Utils/Popover/Popover';
+import List from '@components/display/list';
+import Popover, { PopoverPopper } from '@components/utils/popover/Popover';
 import useMenu, { MenuProvider } from './useMenu';
 
 export const menuClasses = {

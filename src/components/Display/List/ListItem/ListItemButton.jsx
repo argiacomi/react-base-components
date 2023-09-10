@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling, shouldForwardProp } from '@styles';
 import { useEnhancedEffect, useForkRef, useSlotProps } from '@components/lib';
-import ButtonBase from '@components/inputs/button/buttonbase';
+import ButtonBase from '@components/inputs/button/buttonBase';
 import ListItemContext from './ListItemContext';
 import useListItem from './useListItem';
 

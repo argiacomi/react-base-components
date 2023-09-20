@@ -46,12 +46,12 @@ export const PopperArrowRoot = styled('div')(({ theme, ownerState }) => {
             2 * unitWidth - polygonOffset
           }px 100%, ${polygonOffset}px 100%)`
         }),
-        ...(theme.color.mode === 'dark' && {
+        '@media (prefers-color-scheme: dark)': {
           backgroundImage: `linear-gradient(${theme.alpha.add(
             theme.color.white,
             theme.alpha.overlay([ownerState.elevation])
           )},${theme.alpha.add(theme.color.white, theme.alpha.overlay(ownerState.elevation))})`
-        }),
+        },
         content: '""',
         zIndex: '1 '
       },

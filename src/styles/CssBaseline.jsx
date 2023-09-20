@@ -1,16 +1,4 @@
-import { createGlobalStyle, ThemeProvider } from 'styled-components/macro';
-import { useEffect, useState } from 'react';
-
-const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-const themes = {
-  light: {
-    smoothing: 'auto'
-  },
-  dark: {
-    smoothing: 'antialiased'
-  }
-};
+import { createGlobalStyle } from 'styled-components/macro';
 
 const BaseStyles = createGlobalStyle`
   *, ::before, ::after {
@@ -28,8 +16,10 @@ const BaseStyles = createGlobalStyle`
     line-break: strict;
     -webkit-tap-highlight-color: transparent;
     -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: ${({ theme }) => theme.smoothing};
+    -webkit-font-smoothing: auto;
   }
+
+  @media (prefers-color-scheme: dark) { body{ -webkit-font-smoothing: antialiased;}}
 
   main {
     display: block;
@@ -256,20 +246,6 @@ const BaseStyles = createGlobalStyle`
   }
 `;
 
-const CssBaseline = () => {
-  const [theme, setTheme] = useState(darkModeQuery.matches ? 'dark' : 'light');
-
-  useEffect(() => {
-    darkModeQuery.addListener((event) => {
-      setTheme(event.matches ? 'dark' : 'light');
-    });
-  });
-
-  return (
-    <ThemeProvider theme={themes[theme]}>
-      <BaseStyles />
-    </ThemeProvider>
-  );
+export const CssBaseline = () => {
+  return <BaseStyles />;
 };
-
-export default CssBaseline;

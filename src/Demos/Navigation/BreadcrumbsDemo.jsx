@@ -135,23 +135,27 @@ function CollapsedBreadcrumbs() {
   );
 }
 
-const StyledBreadcrumb = styled(Chip)(({ theme }) => {
-  const backgroundColor =
-    theme.color.mode === 'light' ? theme.color.gray[100] : theme.color.gray[800];
-  return {
-    backgroundColor,
-    height: theme.spacing(3),
-    color: theme.color.text.primary,
-    fontWeight: theme.text.weight.normal,
+const StyledBreadcrumb = styled(Chip)(({ theme }) => ({
+  height: theme.spacing(3),
+  color: theme.color.text.primary,
+  fontWeight: theme.text.weight.normal,
+  '&:hover, &:focus': {
+    backgroundColor: theme.alpha.emphasize(theme.color.gray[100], 0.06)
+  },
+  '&:active': {
+    boxShadow: theme.boxShadow[1],
+    backgroundColor: theme.alpha.emphasize(theme.color.gray[100], 0.12)
+  },
+  '@media (prefers-color-scheme: dark)': {
     '&:hover, &:focus': {
-      backgroundColor: theme.alpha.emphasize(backgroundColor, 0.06)
+      backgroundColor: theme.alpha.emphasize(theme.color.gray[800], 0.06)
     },
     '&:active': {
       boxShadow: theme.boxShadow[1],
-      backgroundColor: theme.alpha.emphasize(backgroundColor, 0.12)
+      backgroundColor: theme.alpha.emphasize(theme.color.gray[800], 0.12)
     }
-  };
-});
+  }
+}));
 
 function CustomizedBreadcrumbs() {
   return (

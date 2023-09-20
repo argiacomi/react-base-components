@@ -58,7 +58,10 @@ const AppBarRoot = styled(Paper)(({ theme, ownerState }) => ({
     color: 'inherit'
   }),
   ...(ownerState.color === 'monochrome' && {
-    border: `1px solid ${theme.color.mode === 'dark' ? theme.color.white : theme.color.black}`
+    border: `1px solid ${theme.color.black}`,
+    '@media (prefers-color-scheme: dark)': {
+      border: `1px solid ${theme.color.white}`
+    }
   }),
   ...ownerState.cssStyles
 }));

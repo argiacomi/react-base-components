@@ -39,7 +39,10 @@ const variantStyles = (theme, ownerState) =>
       [`&.${buttonClasses.disabled}`]: { color: theme.alpha.add(theme.color.disabled.text, 0.6) }
     },
     text: {
-      color: theme.color.mode === 'dark' ? theme.color.white : theme.color.black,
+      color: theme.color.black,
+      '@media (prefers-color-scheme: dark)': {
+        color: theme.color.white
+      },
       backgroundColor: 'transparent',
       filter: theme.dropShadow[4],
       padding: theme.pxToRem(

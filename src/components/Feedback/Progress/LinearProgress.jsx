@@ -67,15 +67,6 @@ const bufferKeyframe = keyframes`
   }
 `;
 
-const getColorShade = (theme, color) => {
-  if (color === 'inherit') {
-    return 'currentColor';
-  }
-  return theme.color.mode === 'light'
-    ? theme.alpha.lighten(theme.color[color].body, 0.62)
-    : theme.alpha.darken(theme.color[color].body, 0.5);
-};
-
 const LinearProgressRoot = styled('span')(({ ownerState, theme }) => ({
   position: 'relative',
   overflow: 'hidden',
@@ -85,7 +76,16 @@ const LinearProgressRoot = styled('span')(({ ownerState, theme }) => ({
   '@media print': {
     colorAdjust: 'exact'
   },
-  backgroundColor: getColorShade(theme, ownerState.color),
+  backgroundColor:
+    ownerState.color === 'inherit'
+      ? 'currentColor'
+      : theme.alpha.lighten(theme.color[ownerState.color].body, 0.62),
+  '@media (prefers-color-scheme: dark)': {
+    backgroundColor:
+      ownerState.color === 'inherit'
+        ? 'currentColor'
+        : theme.alpha.darken(theme.color[ownerState.color].body, 0.5)
+  },
   ...(ownerState.color === 'inherit' &&
     ownerState.variant !== 'buffer' && {
       backgroundColor: 'none',

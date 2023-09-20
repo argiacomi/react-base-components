@@ -31,8 +31,7 @@ const grey = {
   900: '#1A2027'
 };
 
-const StyledInputElement = styled('input')(
-  ({ theme }) => `
+const StyledInputElement = styled.input`
   width: 320px;
   font-family: IBM Plex Sans, sans-serif;
   font-size: 0.875rem;
@@ -40,10 +39,10 @@ const StyledInputElement = styled('input')(
   line-height: 1.5;
   padding: 12px;
   border-radius: 12px;
-  color: ${theme.color.mode === 'dark' ? grey[300] : grey[900]};
-  background: ${theme.color.mode === 'dark' ? grey[900] : '#fff'};
-  border: 1px solid ${theme.color.mode === 'dark' ? grey[700] : grey[200]};
-  box-shadow: 0px 2px 2px ${theme.color.mode === 'dark' ? grey[900] : grey[50]};
+  color: ${grey[900]};
+  background: #fff;
+  border: 1px solid ${grey[200]};
+  box-shadow: 0px 2px 2px ${grey[50]};
 
   &:hover {
     border-color: ${blue[400]};
@@ -51,12 +50,22 @@ const StyledInputElement = styled('input')(
 
   &:focus {
     border-color: ${blue[400]};
-    box-shadow: 0 0 0 3px ${theme.color.mode === 'dark' ? blue[500] : blue[200]};
+    box-shadow: 0 0 0 3px ${blue[200]};
   }
 
   // firefox
   &:focus-visible {
     outline: 0;
   }
-`
-);
+
+  @media (prefers-color-scheme: dark) {
+    color: ${grey[300]};
+    background: ${grey[900]};
+    border: 1px solid ${grey[700]};
+    box-shadow: 0px 2px 2px ${grey[900]};
+
+    &:focus {
+      box-shadow: 0 0 0 3px ${blue[500]};
+    }
+  }
+`;

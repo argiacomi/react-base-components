@@ -130,8 +130,16 @@ const onDeleteStyles = (theme, ownerState) => ({
   [`&.${chipClasses.focusVisible}`]: {
     backgroundColor:
       ownerState.color === 'default'
-        ? theme.alpha.add(theme.color.selected, theme.color.mode === 'light' ? 0.2 : 0.28)
+        ? theme.alpha.add(theme.color.selected, 0.2)
         : theme.color[ownerState.color][600]
+  },
+  '@media (prefers-color-scheme: dark)': {
+    [`&.${chipClasses.focusVisible}`]: {
+      backgroundColor:
+        ownerState.color === 'default'
+          ? theme.alpha.add(theme.color.selected, 0.28)
+          : theme.color[ownerState.color][600]
+    }
   }
 });
 

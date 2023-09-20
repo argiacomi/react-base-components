@@ -171,12 +171,18 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
       },
       [`& + .${switchClasses.track}`]: {
         opacity: 1,
-        backgroundColor: theme.color.mode === 'dark' ? '#8796A5' : '#aab4be'
+        backgroundColor: '#aab4be',
+        '@media (prefers-color-scheme: dark)': {
+          backgroundColor: '#8796A5'
+        }
       }
     }
   },
   [`& .${switchClasses.thumb}`]: {
-    backgroundColor: theme.color.mode === 'dark' ? '#003892' : '#001e3c',
+    backgroundColor: '#001e3c',
+    '@media (prefers-color-scheme: dark)': {
+      backgroundColor: '#003892'
+    },
     width: 32,
     height: 32,
     '&:before': {
@@ -195,7 +201,10 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
   [`& .${switchClasses.track}`]: {
     opacity: 1,
-    backgroundColor: theme.color.mode === 'dark' ? '#8796A5' : '#aab4be',
+    backgroundColor: '#aab4be',
+    '@media (prefers-color-scheme: dark)': {
+      backgroundColor: '#8796A5'
+    },
     borderRadius: 20 / 2
   }
 }));
@@ -220,7 +229,10 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
     top: 0,
     left: 0,
     zIndex: 1,
-    color: theme.color.mode === 'light' ? theme.color.white : theme.color.gray[300],
+    color: theme.color.white,
+    '@media (prefers-color-scheme: dark)': {
+      color: theme.color.gray[300]
+    },
     padding: 9,
     margin: 0,
     '&:hover': {
@@ -252,8 +264,14 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
     transition: theme.transition.create(['opacity', 'background-color'], {
       duration: theme.transition.duration.shortest
     }),
-    backgroundColor: theme.color.mode === 'light' ? theme.color.black : theme.color.white,
-    opacity: theme.color.mode === 'light' ? 0.38 : 0.3
+    backgroundColor: theme.color.black,
+    '@media (prefers-color-scheme: dark)': {
+      backgroundColor: theme.color.white
+    },
+    opacity: 0.38,
+    '@media (prefers-color-scheme: dark)': {
+      opacity: 0.3
+    }
   },
   ['.Switch-Thumb']: {
     boxShadow: theme.boxShadow[1],
@@ -309,7 +327,10 @@ const IOSSwitch = styled((props) => (
       transform: 'translateX(16px)',
       color: '#fff',
       '& + .Switch-Track': {
-        backgroundColor: theme.color.mode === 'dark' ? '#2ECA45' : '#65C466',
+        backgroundColor: '#65C466',
+        '@media (prefers-color-scheme: dark)': {
+          backgroundColor: '#2ECA45'
+        },
         opacity: 1,
         border: 0
       },
@@ -322,10 +343,16 @@ const IOSSwitch = styled((props) => (
       border: '6px solid #fff'
     },
     '&.Disabled .Switch-Thumb': {
-      color: theme.color.mode === 'light' ? theme.color.gray[100] : theme.color.gray[600]
+      color: theme.color.gray[100],
+      '@media (prefers-color-scheme: dark)': {
+        color: theme.color.gray[600]
+      }
     },
     '&.Disabled + .Switch-Track': {
-      opacity: theme.color.mode === 'light' ? 0.7 : 0.3
+      opacity: 0.7,
+      '@media (prefers-color-scheme: dark)': {
+        opacity: 0.3
+      }
     }
   },
   '& .Switch-Thumb': {
@@ -335,7 +362,10 @@ const IOSSwitch = styled((props) => (
   },
   '& .Switch-Track': {
     borderRadius: 26 / 2,
-    backgroundColor: theme.color.mode === 'light' ? '#E9E9EA' : '#39393D',
+    backgroundColor: '#E9E9EA',
+    '@media (prefers-color-scheme: dark)': {
+      backgroundColor: '#39393D'
+    },
     opacity: 1,
     transition: theme.transition.create(['background-color'], {
       duration: 500
@@ -362,7 +392,10 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
       color: '#fff',
       '& + .Switch-Track': {
         opacity: 1,
-        backgroundColor: theme.color.mode === 'dark' ? '#177ddc' : '#1890ff'
+        backgroundColor: '#1890ff',
+        '@media (prefers-color-scheme: dark)': {
+          backgroundColor: '#177ddc'
+        }
       }
     }
   },
@@ -378,7 +411,10 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
   '& .Switch-Track': {
     borderRadius: 16 / 2,
     opacity: 1,
-    backgroundColor: theme.color.mode === 'dark' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.25)',
+    backgroundColor: 'rgba(0,0,0,.25)',
+    '@media (prefers-color-scheme: dark)': {
+      backgroundColor: 'rgba(255,255,255,.35)'
+    },
     boxSizing: 'border-box'
   }
 }));

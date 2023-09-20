@@ -40,20 +40,23 @@ export const InputBaseRoot = styled('div')(({ theme, ownerState }) => ({
 }));
 
 export const InputBaseComponent = styled('input')(({ theme, ownerState }) => {
-  const light = theme.color.mode === 'light';
   const placeholder = {
     color: 'currentColor',
-    opacity: light ? 0.42 : 0.5,
+    opacity: 0.42,
     transition: theme.transition.create('opacity', {
       duration: theme.transition.duration.shorter
-    })
+    }),
+    '@media (prefers-color-scheme: dark)': {
+      opacity: 0.5
+    }
   };
 
   const placeholderHidden = {
     opacity: '0 !important'
   };
 
-  const placeholderVisible = { opacity: light ? 0.42 : 0.5 };
+  const lightPlaceholderVisible = { opacity: 0.42 };
+  const darkPlaceholderVisible = { opacity: 0.5 };
 
   return {
     font: 'inherit',
@@ -89,10 +92,18 @@ export const InputBaseComponent = styled('input')(({ theme, ownerState }) => {
       '&::-moz-placeholder': placeholderHidden,
       '&:-ms-input-placeholder': placeholderHidden,
       '&::-ms-input-placeholder': placeholderHidden,
-      '&:focus::-webkit-input-placeholder': placeholderVisible,
-      '&:focus::-moz-placeholder': placeholderVisible,
-      '&:focus:-ms-input-placeholder': placeholderVisible,
-      '&:focus::-ms-input-placeholder': placeholderVisible
+      '&:focus::-webkit-input-placeholder': lightPlaceholderVisible,
+      '&:focus::-moz-placeholder': lightPlaceholderVisible,
+      '&:focus:-ms-input-placeholder': lightPlaceholderVisible,
+      '&:focus::-ms-input-placeholder': lightPlaceholderVisible
+    },
+    '@media (prefers-color-scheme: dark)': {
+      [`label[data-shrink=false] + .${inputBaseClasses.formControl} &`]: {
+        '&:focus::-webkit-input-placeholder': darkPlaceholderVisible,
+        '&:focus::-moz-placeholder': darkPlaceholderVisible,
+        '&:focus:-ms-input-placeholder': darkPlaceholderVisible,
+        '&:focus::-ms-input-placeholder': darkPlaceholderVisible
+      }
     },
     [`&.${inputBaseClasses.disabled}`]: {
       opacity: 1,

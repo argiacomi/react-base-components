@@ -232,25 +232,31 @@ const BpIcon = styled('span')(({ theme }) => ({
   borderRadius: 3,
   width: 16,
   height: 16,
-  boxShadow:
-    theme.color.mode === 'dark'
-      ? '0 0 0 1px rgb(16 22 26 / 40%)'
-      : 'inset 0 0 0 1px rgba(16,22,26,.2), inset 0 -1px 0 rgba(16,22,26,.1)',
-  backgroundColor: theme.color.mode === 'dark' ? '#394b59' : '#f5f8fa',
-  backgroundImage:
-    theme.color.mode === 'dark'
-      ? 'linear-gradient(180deg,hsla(0,0%,100%,.05),hsla(0,0%,100%,0))'
-      : 'linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))',
+  boxShadow: 'inset 0 0 0 1px rgba(16,22,26,.2), inset 0 -1px 0 rgba(16,22,26,.1)',
+  backgroundColor: '#f5f8fa',
+  backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))',
   '.FocusVisible &': {
     outline: '2px auto rgba(19,124,189,.6)',
     outlineOffset: 2
   },
   'input:hover ~ &': {
-    backgroundColor: theme.color.mode === 'dark' ? '#30404d' : '#ebf1f5'
+    backgroundColor: '#ebf1f5'
   },
   'input:disabled ~ &': {
     boxShadow: 'none',
-    background: theme.color.mode === 'dark' ? 'rgba(57,75,89,.5)' : 'rgba(206,217,224,.5)'
+    background: 'rgba(206,217,224,.5)'
+  },
+  '@media (prefers-color-scheme: dark)': {
+    boxShadow: '0 0 0 1px rgb(16 22 26 / 40%)',
+    backgroundColor: '#394b59',
+    backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.05),hsla(0,0%,100%,0))',
+    'input:hover ~ &': {
+      backgroundColor: '#30404d'
+    },
+    'input:disabled ~ &': {
+      boxShadow: 'none',
+      background: 'rgba(57,75,89,.5)'
+    }
   }
 }));
 

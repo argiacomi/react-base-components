@@ -11,7 +11,6 @@ export default defineConfig({
       '@components': path.resolve(__dirname, './src/components'),
       '@demos': path.resolve(__dirname, './src/demos'),
       '@icons': path.resolve(__dirname, './src/components/lib/icons'),
-      '@components/lib': path.resolve(__dirname, './src/components/lib/helpers'),
       '@styles': path.resolve(__dirname, './src/styles'),
       '@transitions': path.resolve(__dirname, './src/components/utils/transitions'),
       '@BaseList': path.resolve(__dirname, './src/Components/Display/List/BaseList')

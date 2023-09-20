@@ -7,20 +7,25 @@ const BreadcrumbCollapsedButton = styled(ButtonBase)(({ theme }) => ({
   display: 'flex',
   marginLeft: `calc(${theme.spacing(1)} * 0.5)`,
   marginRight: `calc(${theme.spacing(1)} * 0.5)`,
-  ...(theme.color.mode === 'light'
-    ? { backgroundColor: theme.color.gray[100], color: theme.color.gray[900] }
-    : { backgroundColor: theme.color.gray[900], color: theme.color.gray[100] }),
+  backgroundColor: theme.color.gray[100],
+  color: theme.color.gray[900],
+  '@media (prefers-color-scheme: dark)': {
+    backgroundColor: theme.color.gray[900],
+    color: theme.color.gray[100]
+  },
   borderRadius: 2,
   '&:hover, &:focus': {
-    ...(theme.color.mode === 'light'
-      ? { backgroundColor: theme.color.gray[200] }
-      : { backgroundColor: theme.color.gray[800] })
+    backgroundColor: theme.color.gray[200],
+    '@media (prefers-color-scheme: dark)': {
+      backgroundColor: theme.color.gray[800]
+    }
   },
   '&:active': {
     boxShadow: theme.boxShadow[0],
-    ...(theme.color.mode === 'light'
-      ? { backgroundColor: theme.alpha.emphasize(theme.color.gray[200], 0.12) }
-      : { backgroundColor: theme.alpha.emphasize(theme.color.gray[800], 0.12) })
+    backgroundColor: theme.alpha.emphasize(theme.color.gray[200], 0.12),
+    '@media (prefers-color-scheme: dark)': {
+      backgroundColor: theme.alpha.emphasize(theme.color.gray[800], 0.12)
+    }
   }
 }));
 

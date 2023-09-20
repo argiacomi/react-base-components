@@ -22,9 +22,6 @@ const OutlinedInputRoot = styled(InputBaseRoot, {
   name: 'OutlinedInput',
   slot: 'Root'
 })(({ theme, ownerState }) => {
-  const borderColor =
-    theme.color.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
-
   return {
     position: 'relative',
     borderRadius: theme.rounded.md,
@@ -34,9 +31,14 @@ const OutlinedInputRoot = styled(InputBaseRoot, {
     // Reset on touch devices, it doesn't add specificity
     '@media (hover: none)': {
       [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
-        borderColor: borderColor
+        borderColor: 'rgba(0, 0, 0, 0.23)'
       }
     },
+    '@media (prefers-color-scheme: dark) and (hover: none)': {
+      [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
+        borderColor: 'rgba(255, 255, 255, 0.23)'
+      }
+    }
     [`&.${outlinedInputClasses.focused} .${outlinedInputClasses.notchedOutline}`]: {
       borderColor: theme.color[ownerState.color].body,
       borderWidth: 2
@@ -62,13 +64,12 @@ const OutlinedInputRoot = styled(InputBaseRoot, {
   };
 });
 
-const NotchedOutlineRoot = styled(NotchedOutline)(({ theme }) => {
-  const borderColor =
-    theme.color.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
-  return {
-    borderColor: borderColor
-  };
-});
+const NotchedOutlineRoot = styled(NotchedOutline)(({ theme }) => ({
+  borderColor: 'rgba(0, 0, 0, 0.23)',
+  '@media (prefers-color-scheme: dark)': {
+    borderColor: 'rgba(255, 255, 255, 0.23)',
+  }
+}));
 
 const OutlinedInputInput = styled(InputBaseComponent)(({ ownerState }) => ({
   padding: '16.5px 14px',

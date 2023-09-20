@@ -35,15 +35,15 @@ const ToggleButtonRoot = styled(ButtonBase)(({ theme, ownerState }) => ({
     }),
     ...(ownerState.color !== 'default' && {
       color: theme.color[ownerState.color][500],
-      backgroundColor:
-        theme.color.mode === 'dark'
-          ? theme.alpha.add(theme.color[ownerState.color][500], 0.3)
-          : theme.alpha.add(theme.color[ownerState.color][500], 0.2),
+      backgroundColor: theme.alpha.add(theme.color[ownerState.color][500], 0.2),
       '&:hover': {
-        backgroundColor:
-          theme.color.mode === 'dark'
-            ? theme.alpha.add(theme.color[ownerState.color][500], 0.25)
-            : theme.alpha.add(theme.color[ownerState.color][500], 0.4)
+        backgroundColor: theme.alpha.add(theme.color[ownerState.color][500], 0.4)
+      },
+      '@media (prefers-color-scheme: dark)': {
+        backgroundColor: theme.alpha.add(theme.color[ownerState.color][500], 0.3),
+        '&:hover': {
+          backgroundColor: theme.alpha.add(theme.color[ownerState.color][500], 0.25)
+        }
       }
     })
   },

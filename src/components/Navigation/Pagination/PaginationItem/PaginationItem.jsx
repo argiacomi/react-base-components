@@ -147,9 +147,10 @@ const PaginationItemPage = styled(ButtonBase, {
       }
     }),
     ...(ownerState.variant === 'outlined' && {
-      border: `1px solid ${
-        theme.color.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)'
-      }`,
+      border: '1px solid rgba(0, 0, 0, 0.23)',
+      '@media (prefers-color-scheme: dark)': {
+        border: '1px solid rgba(255, 255, 255, 0.23)'
+      },
       [`&.${paginationItemClasses.selected}`]: {
         ...(ownerState.color !== 'standard' && {
           color: theme.color[ownerState.color].body,

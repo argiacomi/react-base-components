@@ -21,8 +21,6 @@ const InputRoot = styled(InputBaseRoot, {
   name: 'Input',
   slot: 'Root'
 })(({ theme, ownerState }) => {
-  const light = theme.color.mode === 'light';
-  const bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
   return {
     position: 'relative',
     ...(ownerState.formControl && {
@@ -54,7 +52,7 @@ const InputRoot = styled(InputBaseRoot, {
         }
       },
       '&::before': {
-        borderBottom: `1px solid ${bottomLineColor}`,
+        borderBottom: '1px solid rgba(0 0 0 0.42)',
         left: 0,
         bottom: 0,
         content: '"\\00a0"',
@@ -68,11 +66,21 @@ const InputRoot = styled(InputBaseRoot, {
       [`&:hover:not(.${inputClasses.disabled}, .${inputClasses.error}):before`]: {
         borderBottom: `2px solid ${theme.color.text.primary}`,
         '@media (hover: none)': {
-          borderBottom: `1px solid ${bottomLineColor}`
+          borderBottom: '1px solid rgba(0 0 0 0.42)'
         }
       },
       [`&.${inputClasses.disabled}:before`]: {
         borderBottomStyle: 'dotted'
+      },
+      '@media (prefers-color-scheme: dark)': {
+        '&::before': {
+          borderBottom: '1px solid rgba(255, 255, 255, 0.7)'
+        },
+        [`&:hover:not(.${inputClasses.disabled}, .${inputClasses.error}):before`]: {
+          '@media (hover: none)': {
+            borderBottom: '1px solid rgba(255 255 255 0.7)'
+          }
+        }
       }
     })
   };

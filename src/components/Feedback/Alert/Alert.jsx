@@ -18,42 +18,31 @@ export const alertClasses = {
 };
 
 const variantStyles = (theme, ownerState, colorProp) => {
-  const colorVariants =
-    theme.color.mode === 'light'
-      ? {
-          getColor: 600,
-          getBackgroundColor: 300,
-          opacity: 0.35
-        }
-      : {
-          getColor: 600,
-          getBackgroundColor: 500,
-          opacity: 0.2
-        };
-
   const color = colorProp === 'info' ? 'primary' : colorProp;
 
   return {
     standard: {
-      color: theme.color[color][colorVariants.getColor],
-      backgroundColor: theme.alpha.add(
-        theme.color[color][colorVariants.getBackgroundColor],
-        colorVariants.opacity
-      ),
+      color: theme.color[color][600],
+      backgroundColor: theme.alpha.add(theme.color[color][300], 0.35),
       [`& .${alertClasses.icon}`]: {
         color: theme.color[color].body
+      },
+      '@media (prefers-color-scheme: dark)': {
+        backgroundColor: theme.alpha.add(theme.color[color][500], 0.2)
       }
     },
     outlined: {
-      color: theme.color[color][colorVariants.getColor],
-      border: `1px solid ${theme.color[color][colorVariants.getColor]}`,
+      color: theme.color[color][600],
+      border: `1px solid ${theme.color[color][600]}`,
       [`& .${alertClasses.icon}`]: { color: theme.color[color].body }
     },
     filled: {
       fontWeight: theme.text.weight.medium,
-      backgroundColor:
-        theme.color.mode === 'dark' ? theme.color[color][600] : theme.color[color].body,
-      color: theme.color[color].text
+      backgroundColor: theme.color[color].body,
+      color: theme.color[color].text,
+      '@media (prefers-color-scheme: dark)': {
+        backgroundColor: theme.color[color][600]
+      }
     }
   }[ownerState.variant];
 };

@@ -49,7 +49,7 @@ const SwitchSwitchBase = styled(SwitchBase)(({ theme, ownerState }) => ({
   top: 0,
   left: 0,
   zIndex: 1,
-  color: theme.color.mode === 'dark' ? theme.color.monochrome[500] : theme.color.white,
+  color: theme.color.white,
   transition: theme.transition.create(['left', 'transform'], {
     duration: theme.transition.duration.standard,
     delay: '0ms'
@@ -67,7 +67,7 @@ const SwitchSwitchBase = styled(SwitchBase)(({ theme, ownerState }) => ({
     backgroundColor: theme.color.disabled
   },
   [`&.${switchClasses.disabled} + .${switchClasses.track}`]: {
-    opacity: theme.color.mode === 'dark' ? 0.5 : 0.3
+    opacity: 0.3
   },
   [`&.${switchClasses.checked} + .${switchClasses.track}`]: {
     ...(ownerState.color === 'success' || ownerState.color === 'warning'
@@ -77,6 +77,12 @@ const SwitchSwitchBase = styled(SwitchBase)(({ theme, ownerState }) => ({
   [`& .${switchClasses.input}`]: {
     left: '-125%',
     width: '325%'
+  },
+  '@media (prefers-color-scheme: dark)': {
+    color: theme.color.monochrome[500],
+    [`&.${switchClasses.disabled} + .${switchClasses.track}`]: {
+      opacity: 0.5
+    }
   }
 }));
 
@@ -89,10 +95,10 @@ const SwitchTrack = styled('span')(({ theme }) => ({
     duration: theme.transition.duration.standard,
     delay: '0ms'
   }),
-  backgroundColor:
-    theme.color.mode === 'dark'
-      ? theme.alpha.add(theme.color.white, 0.55)
-      : theme.alpha.add(theme.color.black, 0.25)
+  backgroundColor: theme.alpha.add(theme.color.black, 0.25),
+  '@media (prefers-color-scheme: dark)': {
+    backgroundColor: theme.alpha.add(theme.color.white, 0.55)
+  }
 }));
 
 const SwitchThumb = styled('span')(({ theme }) => ({

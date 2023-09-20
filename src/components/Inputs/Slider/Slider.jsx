@@ -146,10 +146,10 @@ export const SliderTrack = styled('span', {
     display: 'none'
   }),
   ...(ownerState.track === 'inverted' && {
-    backgroundColor:
-      theme.color.mode === 'light'
-        ? theme.alpha.lighten(theme.color[ownerState.color].body, 0.62)
-        : theme.alpha.darken(theme.color[ownerState.color].body, 0.5)
+    backgroundColor: theme.alpha.lighten(theme.color[ownerState.color].body, 0.62),
+    '@media (prefers-color-scheme: dark)': {
+      backgroundColor: theme.alpha.darken(theme.color[ownerState.color].body, 0.5)
+    }
   })
 }));
 

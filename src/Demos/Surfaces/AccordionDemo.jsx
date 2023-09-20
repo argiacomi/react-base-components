@@ -139,7 +139,10 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
-  backgroundColor: theme.color.mode === 'dark' ? 'rgba(255, 255, 255, .05)' : 'rgba(0, 0, 0, .03)',
+  backgroundColor: 'rgba(0, 0, 0, .03)',
+  '@media (prefers-color-scheme: dark)': {
+    backgroundColor: 'rgba(255, 255, 255, .05)'
+  },
   flexDirection: 'row-reverse',
   '& .AccordionSummary-ExpandIconWrapper.Expanded': {
     transform: 'rotate(90deg)'

@@ -23,12 +23,12 @@ const PaperRoot = styled('div')(({ theme, ownerState }) => ({
   ...(!ownerState.outlined && {
     boxShadow: ownerState.elevation > 3 ? theme.boxShadow[ownerState.elevation] : null,
     filter: ownerState.elevation <= 3 ? theme.dropShadow[ownerState.elevation] : null,
-    ...(theme.color.mode === 'dark' && {
+    '@media (prefers-color-scheme: dark)': {
       backgroundImage: `linear-gradient(${theme.alpha.add(
         theme.color.white,
         theme.alpha.overlay([ownerState.elevation])
       )},${theme.alpha.add(theme.color.white, theme.alpha.overlay(ownerState.elevation))})`
-    })
+    }
   }),
   ...ownerState.cssStyles
 }));

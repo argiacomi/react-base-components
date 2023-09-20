@@ -19,122 +19,121 @@ const FilledInputRoot = styled(InputBaseRoot, {
   shouldForwardProp: (prop) => shouldForwardProp(prop) || prop === 'classes',
   name: 'FilledInput',
   slot: 'Root'
-})(({ theme, ownerState }) => {
-  const light = theme.color.mode === 'light';
-  const bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
-  const backgroundColor = light ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.09)';
-  const hoverBackground = light ? 'rgba(0, 0, 0, 0.09)' : 'rgba(255, 255, 255, 0.13)';
-  const disabledBackground = light ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.12)';
-  return {
-    position: 'relative',
-    backgroundColor: backgroundColor,
-    borderTopLeftRadius: theme.rounded.md,
-    borderTopRightRadius: theme.rounded.md,
-    transition: theme.transition.create('background-color', {
-      duration: theme.transition.duration.shorter,
-      easing: theme.transition.easing.easeOut
-    }),
+})(({ theme, ownerState }) => ({
+  position: 'relative',
+  backgroundColor: 'rgba(0, 0, 0, 0.06)',
+  borderTopLeftRadius: theme.rounded.md,
+  borderTopRightRadius: theme.rounded.md,
+  transition: theme.transition.create('background-color', {
+    duration: theme.transition.duration.shorter,
+    easing: theme.transition.easing.easeOut
+  }),
+  '&:hover': {
+    backgroundColor: 'rgba(0, 0, 0, 0.09)',
+    '@media (hover: none)': {
+      backgroundColor: 'rgba(0, 0, 0, 0.06)'
+    }
+  },
+  [`&.${filledInputClasses.focused}`]: {
+    backgroundColor: 'rgba(0, 0, 0, 0.06)'
+  },
+  [`&.${filledInputClasses.disabled}`]: {
+    backgroundColor: 'rgba(0, 0, 0, 0.12)'
+  },
+  '@media (prefers-color-scheme: dark)': {
+    backgroundColor: 'rgba(255, 255, 255, 0.09)',
     '&:hover': {
-      backgroundColor: hoverBackground,
-      '@media (hover: none)': {
-        backgroundColor: backgroundColor
-      }
+      backgroundColor: 'rgba(255, 255, 255, 0.13)'
     },
     [`&.${filledInputClasses.focused}`]: {
-      backgroundColor: backgroundColor
+      backgroundColor: 'rgba(255, 255, 255, 0.09)'
     },
     [`&.${filledInputClasses.disabled}`]: {
-      backgroundColor: disabledBackground
-    },
-    ...(!ownerState.disableUnderline && {
-      '&:after': {
-        borderBottom: `2px solid ${theme.color[ownerState.color || 'primary']?.body}`,
-        left: 0,
-        bottom: 0,
-        content: '""',
-        position: 'absolute',
-        right: 0,
-        transform: 'scaleX(0)',
-        transition: theme.transition.create('transform', {
-          duration: theme.transition.duration.shorter,
-          easing: theme.transition.easing.easeOut
-        }),
-        pointerEvents: 'none'
-      },
-      [`&.${filledInputClasses.focused}:after`]: {
-        transform: 'scaleX(1) translateX(0)'
-      },
-      [`&.${filledInputClasses.error}`]: {
-        '&:before, &:after': {
-          borderBottomColor: theme.color.danger.body
-        }
-      },
-      '&:before': {
-        borderBottom: `1px solid ${bottomLineColor}`,
-        left: 0,
-        bottom: 0,
-        content: '"\\00a0"',
-        position: 'absolute',
-        right: 0,
-        transition: theme.transition.create('border-bottom-color', {
-          duration: theme.transition.duration.shorter
-        }),
-        pointerEvents: 'none' // Transparent to the hover style.
-      },
-      [`&:hover:not(.${filledInputClasses.disabled}, .${filledInputClasses.error}):before`]: {
-        borderBottom: `1px solid ${theme.color.text.primary}`
-      },
-      [`&.${filledInputClasses.disabled}:before`]: {
-        borderBottomStyle: 'dotted'
-      }
-    }),
-    ...(ownerState.startAdornment && {
-      paddingLeft: 12
-    }),
-    ...(ownerState.endAdornment && {
-      paddingRight: 12
-    }),
-    ...(ownerState.multiline && {
-      padding: '25px 12px 8px',
-      ...(ownerState.size === 'small' && {
-        paddingTop: 21,
-        paddingBottom: 4
+      backgroundColor: 'rgba(255, 255, 255, 0.12)'
+    }
+  },
+  ...(!ownerState.disableUnderline && {
+    '&:after': {
+      borderBottom: `2px solid ${theme.color[ownerState.color || 'primary']?.body}`,
+      left: 0,
+      bottom: 0,
+      content: '""',
+      position: 'absolute',
+      right: 0,
+      transform: 'scaleX(0)',
+      transition: theme.transition.create('transform', {
+        duration: theme.transition.duration.shorter,
+        easing: theme.transition.easing.easeOut
       }),
-      ...(ownerState.hiddenLabel && {
-        paddingTop: 16,
-        paddingBottom: 17
-      })
+      pointerEvents: 'none'
+    },
+    [`&.${filledInputClasses.focused}:after`]: {
+      transform: 'scaleX(1) translateX(0)'
+    },
+    [`&.${filledInputClasses.error}`]: {
+      '&:before, &:after': {
+        borderBottomColor: theme.color.danger.body
+      }
+    },
+    '&:before': {
+      borderBottom: '1px solid rgba(0 0 0 0.42)',
+      left: 0,
+      bottom: 0,
+      content: '"\\00a0"',
+      position: 'absolute',
+      right: 0,
+      transition: theme.transition.create('border-bottom-color', {
+        duration: theme.transition.duration.shorter
+      }),
+      pointerEvents: 'none' // Transparent to the hover style.
+    },
+    '@media (prefers-color-scheme: dark)': {
+      '&:before': {
+        borderBottom: '1px solid rgba(255 255 255 0.7)'
+      }
+    },
+    [`&:hover:not(.${filledInputClasses.disabled}, .${filledInputClasses.error}):before`]: {
+      borderBottom: `1px solid ${theme.color.text.primary}`
+    },
+    [`&.${filledInputClasses.disabled}:before`]: {
+      borderBottomStyle: 'dotted'
+    }
+  }),
+  ...(ownerState.startAdornment && {
+    paddingLeft: 12
+  }),
+  ...(ownerState.endAdornment && {
+    paddingRight: 12
+  }),
+  ...(ownerState.multiline && {
+    padding: '25px 12px 8px',
+    ...(ownerState.size === 'small' && {
+      paddingTop: 21,
+      paddingBottom: 4
+    }),
+    ...(ownerState.hiddenLabel && {
+      paddingTop: 16,
+      paddingBottom: 17
     })
-  };
-});
+  })
+}));
 
 const InputFilledInput = styled(InputBaseComponent)(({ theme, ownerState }) => ({
   paddingTop: 25,
   paddingRight: 12,
   paddingBottom: 8,
   paddingLeft: 12,
-  ...(!theme.vars && {
+  '&:-webkit-autofill': {
+    borderTopLeftRadius: 'inherit',
+    borderTopRightRadius: 'inherit'
+  },
+  '@media (prefers-color-scheme: dark)': {
     '&:-webkit-autofill': {
-      WebkitBoxShadow: theme.color.mode === 'light' ? null : '0 0 0 100px #266798 inset',
-      WebkitTextFillColor: theme.color.mode === 'light' ? null : '#fff',
-      caretColor: theme.color.mode === 'light' ? null : '#fff',
-      borderTopLeftRadius: 'inherit',
-      borderTopRightRadius: 'inherit'
+      WebkitBoxShadow: '0 0 0 100px rgb(38 103 152) inset',
+      WebkitTextFillColor: theme.color.white,
+      caretColor: theme.color.white
     }
-  }),
-  ...(theme.vars && {
-    '&:-webkit-autofill': {
-      borderTopLeftRadius: 'inherit',
-      borderTopRightRadius: 'inherit'
-    },
-    [theme.getColorSchemeSelector('dark')]: {
-      '&:-webkit-autofill': {
-        WebkitBoxShadow: '0 0 0 100px #266798 inset',
-        WebkitTextFillColor: '#fff',
-        caretColor: '#fff'
-      }
-    }
-  }),
+  },
   ...(ownerState.size === 'small' && {
     paddingTop: 21,
     paddingBottom: 4

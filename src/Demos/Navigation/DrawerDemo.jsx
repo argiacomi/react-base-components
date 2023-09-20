@@ -97,13 +97,19 @@ const Root = styled('div')({
 });
 
 const StyledBox = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.color.mode === 'light' ? '#fff' : theme.color.gray[800]
+  backgroundColor: theme.color.white,
+  '@media (prefers-color-scheme: dark)': {
+    backgroundColor: theme.color.gray[800]
+  }
 }));
 
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
   height: 6,
-  backgroundColor: theme.color.mode === 'light' ? theme.color.gray[300] : theme.color.gray[900],
+  backgroundColor: theme.color.gray[300],
+  '@media (prefers-color-scheme: dark)': {
+    backgroundColor: theme.color.gray[900]
+  },
   borderRadius: 3,
   position: 'absolute',
   top: 8,

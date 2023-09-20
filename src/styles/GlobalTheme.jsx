@@ -1,84 +1,11 @@
 import Color from 'color';
 import { keyframes, ThemeProvider } from 'styled-components/macro';
-import { useEffect, useState } from 'react';
 import {
   createBreakpoints,
   createTransitions,
   getOverlappingBreakpoints,
   traverseBreakpoints
-} from '@components/lib';
-
-const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-const colorThemes = {
-  light: {
-    color: {
-      mode: 'light',
-      active: 'rgba(0, 0, 0, 0.54)',
-      hover: 'rgba(60, 64, 67, 0.08)',
-      hoverOpacity: 0.12,
-      selected: 'rgba(0, 0, 0, 0.08)',
-      selectedOpacity: 0.08,
-      disabledBackground: 'rgba(0, 0, 0, 0.12)',
-      disabledOpacity: 0.38,
-      focus: 'rgba(0, 0, 0, 0.12)',
-      focusOpacity: 0.12,
-      activatedOpacity: 0.12,
-      background: '#f2f2f2',
-      disabled: {
-        body: '#cdcdcd',
-        text: '#8F8F8F'
-      },
-      divider: '#AFAFAF',
-      text: {
-        primary: 'rgba(0, 0, 0, 0.89)',
-        secondary: 'rgba(0, 0, 0, 0.6)'
-      },
-      monochrome: {
-        body: '#000000',
-        text: '#ffffff',
-        200: '#757575',
-        300: '#616161',
-        400: '#424242',
-        500: '#212121',
-        600: '#000000'
-      }
-    }
-  },
-  dark: {
-    color: {
-      mode: 'dark',
-      active: '#ffffff',
-      hover: 'rgba(255, 255, 255, 0.08)',
-      hoverOpacity: 0.24,
-      selected: 'rgba(255, 255, 255, 0.16)',
-      selectedOpacity: 0.16,
-      disabledOpacity: 0.38,
-      focus: 'rgba(255, 255, 255, 0.12)',
-      focusOpacity: 0.12,
-      activatedOpacity: 0.24,
-      background: '#101010',
-      disabled: {
-        body: 'rgba(255, 255, 255, 0.25)',
-        text: '#616161'
-      },
-      divider: '#616161',
-      text: {
-        primary: '#ffffff',
-        secondary: 'rgba(255, 255, 255, 0.7)'
-      },
-      monochrome: {
-        body: '#ffffff',
-        text: '#000000',
-        200: '#bdbdbd',
-        300: '#e0e0e0',
-        400: '#eeeeee',
-        500: '#f2f2f2',
-        600: '#ffffff'
-      }
-    }
-  }
-};
+} from '../components/lib/helpers';
 
 export const baseTheme = {
   spacing: (...spaces) => spaces.map((space) => `${space * 0.5}rem`).join(' '),
@@ -120,7 +47,7 @@ export const baseTheme = {
     contrastText: (color) => {
       return Color(color).contrast(Color('rgba(0, 0, 0, 0.89)')) >= 3
         ? 'rgba(0, 0, 0, 0.89)'
-        : '#ffffff';
+        : 'rgba(252, 252, 252,)';
     },
     getColorFromPath: (obj, path) => {
       if (typeof path === 'string') {
@@ -213,80 +140,110 @@ export const baseTheme = {
     }
   },
   color: {
-    transparent: 'transparent',
+    mode: 'var(--color-mode)',
+    active: 'var(--color-active)',
     current: 'currentColor',
-    white: '#ffffff',
-    black: '#000000',
+    background: 'var(--color-background)',
+    disabledBackground: 'var(--color-disabledBackground)',
+    disabled: {
+      body: 'var(--color-disabled-body)',
+      text: 'var(--color-disabled-text)'
+    },
+    divider: 'var(--color-divider)',
+    focus: 'var(--color-focus)',
+    hover: 'var(--color-hover)',
+    selected: 'var(--color-selected)',
+    transparent: 'transparent',
+    activatedOpacity: 'var(--color-activatedOpacity)',
+    disabledOpacity: 'var(--color-disabledOpacity)',
+    focusOpacity: 'var(--color-focusOpacity)',
+    hoverOpacity: 'var(--color-hoverOpacity)',
+    selectedOpacity: 'var(--color-selectedOpacity)',
+    text: {
+      primary: 'var(--color-text-primary)',
+      secondary: 'var(--color-text-secondary)'
+    },
+    white: 'rgb(255, 255, 255)',
+    black: 'rgb(0, 0, 0)',
     primary: {
-      body: '#1d75de',
-      text: '#ffffff',
-      200: '#a5c8f2',
-      300: '#77aceb',
-      400: '#4a91e5',
-      500: '#1d75de',
-      600: '#175eb2'
+      body: 'rgb(29, 117, 222)',
+      text: 'rgb(255, 255, 255)',
+      200: 'rgb(165, 200, 242)',
+      300: 'rgb(119, 172, 235)',
+      400: 'rgb(74, 145, 229)',
+      500: 'rgb(29, 117, 222)',
+      600: 'rgb(23, 94, 178)'
     },
     secondary: {
-      body: '#9750dd',
-      text: '#ffffff',
-      200: '#d5b9f1',
-      300: '#c196eb',
-      400: '#ac73e4',
-      500: '#9750dd',
-      600: '#7940b1'
+      body: 'rgb(151, 80, 221)',
+      text: 'rgb(255, 255, 255)',
+      200: 'rgb(213, 185, 241)',
+      300: 'rgb(193, 150, 235)',
+      400: 'rgb(172, 115, 228)',
+      500: 'rgb(151, 80, 221)',
+      600: 'rgb(121, 64, 177)'
     },
     success: {
-      body: '#1ed75f',
-      text: '#ffffff',
-      200: '#a5efbf',
-      300: '#78e79f',
-      400: '#4bdf7f',
-      500: '#1ed75f',
-      600: '#18ac4c'
+      body: 'rgb(30, 215, 95)',
+      text: 'rgb(255, 255, 255)',
+      200: 'rgb(165, 239, 191)',
+      300: 'rgb(120, 231, 159)',
+      400: 'rgb(75, 223, 127)',
+      500: 'rgb(30, 215, 95)',
+      600: 'rgb(24, 172, 76)'
     },
     warning: {
-      body: '#fbbc05',
-      text: '#ffffff',
-      200: '#fde49b',
-      300: '#fdd769',
-      400: '#fcc937',
-      500: '#fbbc05',
-      600: '#c99604'
+      body: 'rgb(251, 188, 5)',
+      text: 'rgb(255, 255, 255)',
+      200: 'rgb(253, 228, 155)',
+      300: 'rgb(253, 215, 105)',
+      400: 'rgb(252, 201, 55)',
+      500: 'rgb(251, 188, 5)',
+      600: 'rgb(201, 150, 4)'
     },
     danger: {
-      body: '#ea4335',
-      text: '#ffffff',
-      200: '#f7b4ae',
-      300: '#f28e86',
-      400: '#ee695d',
-      500: '#ea4335',
-      600: '#bb362a'
+      body: 'rgb(234, 67, 53)',
+      text: 'rgb(255, 255, 255)',
+      200: 'rgb(247, 180, 174)',
+      300: 'rgb(242, 142, 134)',
+      400: 'rgb(238, 105, 93)',
+      500: 'rgb(234, 67, 53)',
+      600: 'rgb(187, 54, 42)'
     },
     default: {
-      body: '#9e9e9e',
-      text: '#ffffff',
-      200: '#eeeeee',
-      300: '#e0e0e0',
-      400: '#bdbdbd',
-      500: '#9e9e9e',
-      600: '#757575'
+      body: 'rgb(158, 158, 158)',
+      text: 'rgb(255, 255, 255)',
+      200: 'rgb(238, 238, 238)',
+      300: 'rgb(224, 224, 224)',
+      400: 'rgb(189, 189, 189)',
+      500: 'rgb(158, 158, 158)',
+      600: 'rgb(117, 117, 117)'
     },
     gray: {
-      50: '#fafafa',
-      100: '#f5f5f5',
-      200: '#F2F2F2',
-      300: '#eeeeee',
-      400: '#e0e0e0',
-      500: '#bdbdbd',
-      600: '#9e9e9e',
-      700: '#757575',
-      800: '#616161',
-      900: '#424242',
-      1000: '#212121'
+      50: 'rgb(250, 250, 250)',
+      100: 'rgb(245, 245, 245)',
+      200: 'rgb(242, 242, 242)',
+      300: 'rgb(238, 238, 238)',
+      400: 'rgb(224, 224, 224)',
+      500: 'rgb(189, 189, 189)',
+      600: 'rgb(158, 158, 158)',
+      700: 'rgb(117, 117, 117)',
+      800: 'rgb(97, 97, 97)',
+      900: 'rgb(66, 66, 66)',
+      1000: 'rgb(33, 33, 33)'
+    },
+    monochrome: {
+      body: 'var(--color-monochrome-body)',
+      text: 'var(--color-monochrome-text)',
+      200: 'var(--color-monochrome-200)',
+      300: 'var(--color-monochrome-300)',
+      400: 'var(--color-monochrome-400)',
+      500: 'var(--color-monochrome-500)',
+      600: 'var(--color-monochrome-600)'
     }
   },
   dropShadow: {
-    0: 'drop-shadow(0 0 #0000)',
+    0: 'drop-shadow(0 0px rgba(0 0 0 / 0))',
     1: 'drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06))',
     2: 'drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06))',
     3: 'drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1))',
@@ -522,28 +479,5 @@ export const baseTheme = {
 };
 
 export const GlobalTheme = ({ children }) => {
-  const [theme, setTheme] = useState(darkModeQuery.matches ? 'dark' : 'light');
-
-  useEffect(() => {
-    const handler = (event) => {
-      setTheme(event.matches ? 'dark' : 'light');
-    };
-
-    darkModeQuery.addListener(handler);
-    return () => darkModeQuery.removeListener(handler);
-  }, []);
-
-  return (
-    <ThemeProvider
-      theme={{
-        ...baseTheme,
-        color: {
-          ...baseTheme.color,
-          ...colorThemes[theme].color
-        }
-      }}
-    >
-      {children}
-    </ThemeProvider>
-  );
+  return <ThemeProvider theme={baseTheme}>{children}</ThemeProvider>;
 };

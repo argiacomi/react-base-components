@@ -12,7 +12,8 @@ import {
   Tooltip
 } from '@components';
 import React from 'react';
-import styled, { useTheme } from '@styles';
+import styled from '@styles';
+import { useMedia } from '@components/lib';
 
 const PauseRounded = (props) => <Icon icon='MdPause' {...props} />;
 const PlayArrowRounded = (props) => <Icon icon='MdPlayArrow' {...props} />;
@@ -334,7 +335,7 @@ const iOSBoxShadow =
   '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)';
 
 const IOSSlider = styled(Slider)(({ theme }) => ({
-  color: theme.color.mode === 'dark' ? '#3880ff' : '#3880ff',
+  color: '#3880ff',
   height: 2,
   padding: '15px 0',
   [`& .${sliderClasses.thumb}`]: {
@@ -361,7 +362,7 @@ const IOSSlider = styled(Slider)(({ theme }) => ({
     },
     '& *': {
       background: 'transparent',
-      color: theme.color.mode === 'dark' ? '#fff' : '#000'
+      color: '#000'
     }
   },
   [`& .${sliderClasses.track}`]: {
@@ -378,6 +379,11 @@ const IOSSlider = styled(Slider)(({ theme }) => ({
     [`&.${sliderClasses.markActive}`]: {
       opacity: 1,
       backgroundColor: 'currentColor'
+    }
+  },
+  '@media (prefers-color-scheme: dark)': {
+    [`& .${sliderClasses.valueLabel} & *`]: {
+      color: '#fff'
     }
   }
 }));
@@ -446,9 +452,15 @@ const AirbnbSlider = styled(Slider)(({ theme }) => ({
     height: 3
   },
   [`& .${sliderClasses.rail}`]: {
-    color: theme.color.mode === 'dark' ? '#bfbfbf' : '#d8d8d8',
-    opacity: theme.color.mode === 'dark' ? undefined : 1,
+    color: '#d8d8d8',
+    opacity: 1,
     height: 3
+  },
+  '@media (prefers-color-scheme: dark)': {
+    [`& .${sliderClasses.rail}`]: {
+      color: '#bfbfbf',
+      opacity: undefined
+    }
   }
 }));
 
@@ -532,7 +544,10 @@ const Widget = styled('div')(({ theme }) => ({
   margin: 'auto',
   position: 'relative',
   zIndex: 1,
-  backgroundColor: theme.color.mode === 'dark' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.4)',
+  backgroundColor: 'rgba(255,255,255,0.4)',
+  '@media (prefers-color-scheme: dark)': {
+    backgroundColor: 'rgba(0,0,0,0.6)'
+  },
   backdropFilter: 'blur(40px)'
 }));
 
@@ -557,7 +572,7 @@ const TinyText = styled(Text)({
 });
 
 function MusicPlayerSlider() {
-  const theme = useTheme();
+  const darkMode = useMedia('@media (prefers-color-scheme: dark)', false);
   const duration = 200; // seconds
   const [position, setPosition] = React.useState(32);
   const [paused, setPaused] = React.useState(false);
@@ -566,8 +581,8 @@ function MusicPlayerSlider() {
     const secondLeft = value - minute * 60;
     return `${minute}:${secondLeft < 10 ? `0${secondLeft}` : secondLeft}`;
   }
-  const mainIconColor = theme.color.mode === 'dark' ? '#fff' : '#000';
-  const lightIconColor = theme.color.mode === 'dark' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
+  const mainIconColor = darkMode ? '#fff' : '#000';
+  const lightIconColor = darkMode ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
   return (
     <Box sx={{ width: '100%', overflow: 'hidden', padding: '1rem', height: '320px' }}>
       <Widget>
@@ -599,7 +614,7 @@ function MusicPlayerSlider() {
           max={duration}
           onChange={(_, value) => setPosition(value)}
           sx={{
-            color: theme.color.mode === 'dark' ? '#fff' : 'rgba(0,0,0,0.87)',
+            color: darkMode ? '#fff' : 'rgba(0,0,0,0.87)',
             height: 4,
             [`& .${sliderClasses.thumb}`]: {
               width: 8,
@@ -610,7 +625,7 @@ function MusicPlayerSlider() {
               },
               [`&:hover, &.${sliderClasses.thumb}`]: {
                 boxShadow: `0px 0px 0px 8px ${
-                  theme.color.mode === 'dark' ? 'rgb(255 255 255 / 16%)' : 'rgb(0 0 0 / 16%)'
+                  darkMode ? 'rgb(255 255 255 / 16%)' : 'rgb(0 0 0 / 16%)'
                 }`
               },
               [`&.${sliderClasses.active}`]: {
@@ -662,7 +677,7 @@ function MusicPlayerSlider() {
             aria-label='Volume'
             defaultValue={30}
             sx={{
-              color: theme.color.mode === 'dark' ? '#fff' : 'rgba(0,0,0,0.87)',
+              color: darkMode ? '#fff' : 'rgba(0,0,0,0.87)',
               [`& .${sliderClasses.track}`]: {
                 border: 'none'
               },

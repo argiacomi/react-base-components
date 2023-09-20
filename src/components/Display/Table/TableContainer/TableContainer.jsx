@@ -2,6 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import styled, { extractStyling } from '@styles';
 
+
 export const tableContainerClasses = {
   root: 'TableContainer-Root'
 };
@@ -13,7 +14,11 @@ const TableContainerRoot = styled('div', {
   width: '100%',
   overflowX: 'auto',
   backgroundImage: 'none',
-  backgroundColor: theme.color.mode === 'light' ? theme.color.gray[100] : theme.color.gray[1000],
+  backgroundColor: theme.color.gray[100],
+  '@media (prefers-color-scheme: dark)': {
+    backgroundColor: theme.color.gray[1000],
+  }
+
   ...ownerState.cssStyles
 }));
 

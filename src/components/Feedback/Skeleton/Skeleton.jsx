@@ -10,10 +10,10 @@ export const skeletonClasses = {
 const SkeletonRoot = styled('span')(
   ({ theme, ownerState }) => ({
     display: 'block',
-    backgroundColor: theme.alpha.add(
-      theme.color.text.primary,
-      theme.color.mode === 'light' ? 0.11 : 0.13
-    ),
+    backgroundColor: theme.alpha.add(theme.color.text.primary, 0.11),
+    '@media (prefers-color-scheme: dark)': {
+      backgroundColor: theme.alpha.add(theme.color.text.primary, 0.13)
+    },
     height: '1.2rem',
     ...(ownerState.variant === 'text' && {
       marginTop: 0,

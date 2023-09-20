@@ -2,7 +2,10 @@ import { Box, Grid, Paper, Stack, Text } from '@components';
 import styled, { useTheme } from '@styles';
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.color.mode === 'dark' ? '#1A2027' : '#fff',
+  backgroundColor: theme.color.white,
+  '@media (prefers-color-scheme: dark)': {
+    backgroundColor: '#1A2027'
+  },
   ...theme.text.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'center',
@@ -283,7 +286,10 @@ const StyledBox = styled(Box)(({ theme }) => ({
     '&::-webkit-scrollbar-thumb': {
       borderRadius: 8,
       border: '2px solid',
-      borderColor: theme.color.mode === 'dark' ? '' : '#E7EBF0',
+      borderColor: '#E7EBF0',
+      '@media (prefers-color-scheme: dark)': {
+        borderColor: ''
+      },
       backgroundColor: 'rgba(0 0 0 / 0.5)'
     }
   }

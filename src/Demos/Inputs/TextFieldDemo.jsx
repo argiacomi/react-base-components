@@ -17,6 +17,7 @@ import {
 } from '@components';
 import React from 'react';
 import styled from '@styles';
+import { useMedia } from '@components/lib';
 
 function BasicTextFields() {
   return (
@@ -730,12 +731,12 @@ function TextFieldHiddenLabel() {
 }
 
 function RedBar() {
+  const darkTheme = useMedia('@media (prefers-color-scheme: dark)', false);
   return (
     <Box
       sx={{
         height: 20,
-        backgroundColor: (theme) =>
-          theme.color.mode === 'light' ? 'rgba(255, 0, 0, 0.1)' : 'rgb(255 132 132 / 25%)'
+        backgroundColor: darkTheme ? 'rgb(255 132 132 / 25%)' : 'rgba(255, 0, 0, 0.1)'
       }}
     />
   );
@@ -912,9 +913,9 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
   '& .InputBase-Input': {
     borderRadius: 4,
     position: 'relative',
-    backgroundColor: theme.color.mode === 'light' ? '#F3F6F9' : '#1A2027',
+    backgroundColor: '#F3F6F9',
     border: '1px solid',
-    borderColor: theme.color.mode === 'light' ? '#E0E3E7' : '#2D3843',
+    borderColor: '#E0E3E7',
     fontSize: 16,
     width: 'auto',
     padding: '10px 12px',
@@ -935,6 +936,10 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     '&:focus': {
       boxShadow: `${theme.alpha.add(theme.color.primary.body, 0.25)} 0 0 0 0.2rem`,
       borderColor: theme.color.primary.body
+    },
+    '@media (prefers-color-scheme: dark)': {
+      backgroundColor: '#1A2027',
+      borderColor: '#2D3843'
     }
   }
 }));
@@ -945,10 +950,14 @@ const RedditTextField = styled((props) => (
   '& .FilledInput-Root': {
     overflow: 'hidden',
     borderRadius: 4,
-    backgroundColor: theme.color.mode === 'light' ? '#F3F6F9' : '#1A2027',
+    backgroundColor: '#F3F6F9',
     border: '1px solid',
-    borderColor: theme.color.mode === 'light' ? '#E0E3E7' : '#2D3843',
+    borderColor: '#E0E3E7',
     transition: theme.transition.create(['border-color', 'background-color', 'box-shadow']),
+    '@media (prefers-color-scheme: dark)': {
+      backgroundColor: '#1A2027',
+      borderColor: '#2D3843'
+    },
     '&:hover': {
       backgroundColor: 'transparent'
     },
